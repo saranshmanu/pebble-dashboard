@@ -1,0 +1,26 @@
+{
+  "name": "pebble-dashboard",
+  "version": "1.0.0",
+  "description": "Investment tracking dashboard",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js",
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/saranshmanu/pebble-dashboard.git"
+  },
+  "keywords": [
+    "pebble-dashboard"
+  ],
+  "author": "Saransh Mittal",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/saranshmanu/pebble-dashboard/issues"
+  },
+  "homepage": "https://github.com/saranshmanu/pebble-dashboard#readme",
+  "devDependencies": {
+    "electron": "^24.0.0"
+  }
+}
