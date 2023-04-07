@@ -11,14 +11,15 @@ function createWindow() {
   win = new BrowserWindow({ width: 800, height: 600, minWidth: 800, minHeight: 600 });
 
   // and load the index.html of the app.
-  win.loadURL("http://0.0.0.0:3000/dashboard/summary")
-  // win.loadURL(
-  //   url.format({
-  //     pathname: path.join(__dirname, "public", "index.html"),
-  //     protocol: "file:",
-  //     slashes: true,
-  //   })
-  // );
+  win.loadURL(
+    true || process.env.NODE_ENV === "development"
+      ? "http://0.0.0.0:3000/dashboard/summary"
+      : url.format({
+          pathname: path.join(__dirname, "build", "index.html"),
+          protocol: "file:",
+          slashes: true,
+        })
+  );
 
   // Open the DevTools.
   // win.webContents.openDevTools();

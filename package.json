@@ -5,7 +5,8 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "electron": "electron .",
+    "electron:dev": "PEBBLE_ENV=development electron .",
+    "electron:prod": "npm run build && PEBBLE_ENV=production electron .",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -49,11 +50,15 @@
     "@ant-design/charts": "^1.4.2",
     "@ant-design/icons": "^5.0.1",
     "@ant-design/plots": "^1.2.5",
+    "@babel/polyfill": "^7.12.1",
     "antd": "^5.4.0",
     "node-sass": "^7.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.10.0",
-    "react-scripts": "^5.0.1"
+    "react-scripts": "^5.0.1",
+    "rxdb": "^14.6.1",
+    "rxjs": "^7.8.0",
+    "uuid": "^9.0.0"
   }
 }

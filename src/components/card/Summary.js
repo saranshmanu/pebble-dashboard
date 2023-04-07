@@ -15,16 +15,16 @@ const SummaryCard = ({ data }) => {
             {"Invested Amount"}
           </Title>
           <Title level={3} style={{ margin: 0 }}>
-            {data?.invested || "₹0"}
+            + {data?.invested || "₹0"}
           </Title>
           <div style={{ marginBottom: 10 }} />
           <Title level={5} style={{ margin: 0 }}>
             {"Accumulated Interest"}
           </Title>
           <Title level={3} style={{ margin: 0 }}>
-            {data?.accumulated || "₹0"}
+            + {data?.accumulated || "₹0"}
           </Title>
-          <Divider style={{ margin: "10px 0px" }} />
+          <Divider style={{ margin: "10px 0px", borderColor: "#000" }} />
           <Title level={2} style={{ margin: 0 }}>
             = {data?.net || "₹0"}
           </Title>
