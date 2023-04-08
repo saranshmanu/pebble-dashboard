@@ -33,7 +33,6 @@ const useGetHoldings = () => {
         value: distribution[institution],
       });
     }
-    console.log(plotData);
     setHoldingDistribution(plotData);
   };
 
@@ -126,6 +125,7 @@ const useGetHoldings = () => {
       )?.toFixed(2);
 
       return {
+        uuid: record?.uuid,
         duration: record?.duration,
         institution: record?.institution,
         interestRate: record?.interestRate,

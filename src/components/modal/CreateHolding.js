@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { v4 } from "uuid";
 import dayjs from "dayjs";
-import { DatePicker, Form, Input, InputNumber, Radio, Modal, message } from "antd";
-import { getDatabase } from "../../database";
+import { DatePicker, Form, Input, InputNumber, Radio, Modal } from "antd";
 
 const { RangePicker } = DatePicker;
 
-const CreateHoldingModal = ({ isModalOpen, setModalStatus }) => {
+const CreateHoldingModal = ({ isModalOpen, setModalStatus, createHolding }) => {
   const dateFormat = "YYYY/MM/DD";
 
   const [compoundFrequency, setCompoundFrequency] = useState(null);
@@ -23,7 +22,6 @@ const CreateHoldingModal = ({ isModalOpen, setModalStatus }) => {
     setTimePeriod(null);
   };
   const onFormSubmit = async () => {
-    const database = await getDatabase();
     const payload = {
       uuid: v4(),
       institution,
@@ -33,9 +31,8 @@ const CreateHoldingModal = ({ isModalOpen, setModalStatus }) => {
       investmentDatetime: timePeriod?.[0]?.format(dateFormat),
       duration: (timePeriod?.[1] - timePeriod?.[0]) / (24 * 3600 * 1000),
     };
-    await database.investments.insert(payload);
     setModalStatus(false);
-    message.success("Created your new investment successfully");
+    createHolding(payload);
   };
   const onFormCancel = () => {
     setModalStatus(false);

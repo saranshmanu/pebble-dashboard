@@ -11,7 +11,7 @@ import DistributionCard from "../components/card/Distribution";
 import "../styles/Summary.scss";
 
 function Summary() {
-  const [{ holdingProjection, holdingStats, holdingDistribution }, refresh] = useGetHoldings([]);
+  const [{ holdingProjection, holdingStats, holdingDistribution }, refresh] = useGetHoldings();
 
   useEffect(() => {
     refresh();
