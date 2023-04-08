@@ -2,7 +2,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Layout, Menu, Typography, theme } from "antd";
-import { MenuFoldOutlined, MenuUnfoldOutlined, AppstoreOutlined, SettingOutlined } from "@ant-design/icons";
+import {
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  AppstoreOutlined,
+  SettingOutlined,
+  TableOutlined,
+} from "@ant-design/icons";
 
 import Logo from "../components/Logo";
 import "../styles/Default.scss";
@@ -13,7 +19,8 @@ const { Header, Sider, Content } = Layout;
 const Default = ({ children }) => {
   const sections = {
     1: { title: "Summary" },
-    2: { title: "Settings" },
+    2: { title: "Holdings" },
+    3: { title: "Settings" },
   };
   const [pageTitle, setPageTitle] = useState(sections["1"]?.title);
   const [collapsed, setCollapsed] = useState(false);
@@ -35,6 +42,9 @@ const Default = ({ children }) => {
         link = "/dashboard/summary";
         break;
       case "2":
+        link = "/dashboard/holdings";
+        break;
+      case "3":
         link = "/dashboard/settings";
         break;
     }
@@ -52,7 +62,8 @@ const Default = ({ children }) => {
           defaultSelectedKeys={["1"]}
           items={[
             { key: "1", icon: <AppstoreOutlined />, label: "Summary" },
-            { key: "2", icon: <SettingOutlined />, label: "Settings" },
+            { key: "2", icon: <TableOutlined />, label: "Holdings" },
+            { key: "3", icon: <SettingOutlined />, label: "Settings" },
           ]}
         />
       </Sider>

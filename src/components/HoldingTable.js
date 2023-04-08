@@ -1,6 +1,6 @@
-import { Modal, Table, Button, Tag, Badge } from "antd";
+import { Table, Button, Tag, Badge } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { formatAmount } from "../../utils/commonFunctions";
+import { formatAmount } from "../utils/commonFunctions";
 
 const columns = [
   {
@@ -99,26 +99,12 @@ const columns = [
   },
 ];
 
-const TransactionTable = ({ isModalOpen, setModalStatus, holdingData }) => {
+const TransactionTable = ({ holdingData }) => {
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
 
-  return (
-    <Modal
-      size="small"
-      title="Holdings"
-      width={"1600px"}
-      style={{ top: 20 }}
-      open={isModalOpen}
-      footer={null}
-      onCancel={() => setModalStatus(false)}
-    >
-      <div>
-        <Table size="small" columns={columns} dataSource={holdingData} onChange={onChange} scroll={{ x: 1000 }} />
-      </div>
-    </Modal>
-  );
+  return <Table size="small" columns={columns} dataSource={holdingData} onChange={onChange} scroll={{ x: 1000 }} />;
 };
 
 export default TransactionTable;

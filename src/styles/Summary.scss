@@ -1,6 +1,8 @@
 .information-card {
-  padding: 4px;
+  padding: 2px;
   height: 100%;
+  border-width: 1px;
+  border-style: dashed;
   .card-body {
     display: flex;
     height: 100%;
@@ -8,7 +10,7 @@
     padding: 25px 25px;
     min-height: 60px;
     justify-content: space-between;
-    background-color: white;
+    background-color: clear;
     overflow: hidden;
     .icon {
       font-size: 30px;

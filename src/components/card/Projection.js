@@ -7,7 +7,7 @@ const { Title } = Typography;
 
 const ProjectionCard = ({ data = [] }) => {
   return (
-    <Card icon={<LineChartOutlined />} className="orange-gradient">
+    <Card icon={<LineChartOutlined />}>
       <Title level={5} style={{ margin: "0px 0px 10px 0px" }}>
         Projection Graph
       </Title>

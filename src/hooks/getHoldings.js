@@ -148,7 +148,7 @@ const useGetHoldings = () => {
     await refreshHoldingData();
   };
 
-  return [holdingProjection, holdingStats, holdingData, holdingDistribution, refresh];
+  return [{ holdingProjection, holdingStats, holdingData, holdingDistribution }, refresh];
 };
 
 export default useGetHoldings;

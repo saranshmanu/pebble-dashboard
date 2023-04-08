@@ -7,7 +7,7 @@ const { Title } = Typography;
 
 const DistributionCard = ({ data }) => {
   return (
-    <Card icon={<AppstoreOutlined />} className="turquoise-gradient">
+    <Card icon={<AppstoreOutlined />}>
       <Title level={5} style={{ margin: "0px 0px 10px 0px" }}>
         {"Current value distribution"}
       </Title>

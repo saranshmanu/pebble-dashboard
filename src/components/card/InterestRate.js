@@ -6,7 +6,7 @@ const { Title } = Typography;
 
 const InterestRateCard = ({ data }) => {
   return (
-    <Card icon={<PercentageOutlined />} className="purple-gradient">
+    <Card icon={<PercentageOutlined />}>
       <Title level={5} style={{ margin: 0 }}>
         {"Average Interest Rate"}
       </Title>
