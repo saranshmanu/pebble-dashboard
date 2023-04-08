@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect } from "react";
 import { Col, Row, Button } from "antd";
 import { TableOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import ProjectionCard from "../components/card/Projection";
@@ -6,46 +7,60 @@ import InterestRateCard from "../components/card/InterestRate";
 import SummaryCard from "../components/card/Summary";
 import TransactionTable from "../components/modal/TransactionTable";
 import CreateHolding from "../components/modal/CreateHolding";
+import useGetHoldings from "../hooks/getHoldings";
 import "../styles/Summary.scss";
 
 function Summary() {
-  const [isModalOpen, setModalStatus] = useState(false);
+  const [holdingProjection, holdingStats, holdingData, refresh] = useGetHoldings([]);
+  const [isViewModalOpen, setViewModalStatus] = useState(false);
   const [isCreateModalOpen, setCreateModalStatus] = useState(false);
 
+  useEffect(() => {
+    refresh();
+  }, []);
+
+  useEffect(() => {
+    if (isViewModalOpen === true) {
+      refresh();
+    }
+  }, [isViewModalOpen]);
 
   return (
     <div>
       <Row gutter={[10, 10]}>
         <Col span={24}>
           <CreateHolding isModalOpen={isCreateModalOpen} setModalStatus={setCreateModalStatus} />
-          <TransactionTable isModalOpen={isModalOpen} setModalStatus={setModalStatus} />
+          <TransactionTable
+            isModalOpen={isViewModalOpen}
+            setModalStatus={setViewModalStatus}
+            holdingData={holdingData}
+          />
           <Button
             style={{ marginRight: 10 }}
             icon={<TableOutlined />}
             type="primary"
             size="large"
-            onClick={() => setModalStatus(true)}
+            onClick={() => setViewModalStatus(true)}
           >
             Holdings
           </Button>
-          <Button icon={<PlusCircleOutlined />} size="large" onClick={() => setCreateModalStatus(true)}>
+          <Button
+            style={{ marginRight: 10 }}
+            icon={<PlusCircleOutlined />}
+            size="large"
+            onClick={() => setCreateModalStatus(true)}
+          >
             Investment
           </Button>
         </Col>
         <Col xs={24} sm={12} lg={12} xl={8}>
-          <SummaryCard
-            data={{
-              invested: "₹3,034,441",
-              accumulated: "₹102,762.75",
-              net: "₹3,137,203.75",
-            }}
-          />
+          <SummaryCard data={holdingStats} />
         </Col>
         <Col xs={24} sm={12} lg={12} xl={5}>
-          <InterestRateCard data={{ interestRate: 5.2 }} />
+          <InterestRateCard data={holdingStats} />
         </Col>
         <Col xs={24} sm={24} lg={12} xl={11}>
-          <ProjectionCard />
+          <ProjectionCard data={holdingProjection} />
         </Col>
       </Row>
     </div>

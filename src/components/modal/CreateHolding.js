@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { v4 } from "uuid";
 import dayjs from "dayjs";
-import { DatePicker, Form, Input, InputNumber, Radio, Modal } from "antd";
+import { DatePicker, Form, Input, InputNumber, Radio, Modal, message } from "antd";
 import { getDatabase } from "../../database";
 
 const { RangePicker } = DatePicker;
@@ -35,6 +35,7 @@ const CreateHoldingModal = ({ isModalOpen, setModalStatus }) => {
     };
     await database.investments.insert(payload);
     setModalStatus(false);
+    message.success("Created your new investment successfully");
   };
   const onFormCancel = () => {
     setModalStatus(false);

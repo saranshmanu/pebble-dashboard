@@ -5,8 +5,9 @@ import { Routes, Route } from "react-router-dom";
 function App() {
   return (
     <Routes>
-      {routes.map((route) => (
+      {routes.map((route, index) => (
         <Route
+          key={index}
           index={route.index}
           path={route.path}
           element={

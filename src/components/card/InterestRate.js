@@ -7,7 +7,7 @@ const InterestRateCard = ({ data }) => {
   return (
     <div className="information-card interest-rate-card">
       <div className="card-body">
-        <div style={{ margin: "0px 0px 40px 0px", fontSize: "30px" }}>
+        <div className="icon">
           <PercentageOutlined fontSize="large" />
         </div>
         <div>
@@ -15,7 +15,7 @@ const InterestRateCard = ({ data }) => {
             {"Average Interest Rate"}
           </Title>
           <Title level={2} style={{ margin: 0 }}>
-            {(data?.interestRate || 0) + " %"}
+            {parseFloat(data?.averageInterestRate || 0).toFixed(2) + " %"}
           </Title>
         </div>
       </div>

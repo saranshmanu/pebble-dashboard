@@ -1,6 +1,6 @@
-import { Modal, Table } from "antd";
-import { getDatabase } from "../../database";
-import { useEffect, useState } from "react";
+import { Modal, Table, Button, Tag, Badge } from "antd";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { formatAmount } from "../../utils/commonFunctions";
 
 const columns = [
   {
@@ -12,14 +12,17 @@ const columns = [
   {
     title: "Principal",
     dataIndex: "principal",
+    width: "110px",
     sorter: {
       compare: (a, b) => parseFloat(a?.principal) - parseFloat(b?.principal),
       multiple: 1,
     },
+    render: (value) => formatAmount(value),
   },
   {
     title: "Interest Rate (in %)",
     dataIndex: "interestRate",
+    width: "110px",
     sorter: {
       compare: (a, b) => parseFloat(a?.interestRate) - parseFloat(b?.interestRate),
       multiple: 1,
@@ -28,111 +31,75 @@ const columns = [
   {
     title: "Date",
     dataIndex: "investmentDate",
+    width: "110px",
   },
   {
     title: "Compound Frequency",
     dataIndex: "compoundFrequency",
+    width: "90px",
+    render: (value) => <Tag color="purple">{value}</Tag>,
   },
   {
     title: "Duration (in days)",
     dataIndex: "duration",
+    width: "110px",
     sorter: {
       compare: (a, b) => parseFloat(a?.duration) - parseFloat(b?.duration),
       multiple: 1,
     },
+    render: (value) => <Badge color="#faad14" count={value} overflowCount={365 * 100} />,
   },
   {
     title: "Current Value",
     dataIndex: "currentValue",
+    width: "110px",
     sorter: {
       compare: (a, b) => parseFloat(a?.currentValue) - parseFloat(b?.currentValue),
       multiple: 1,
     },
+    render: (value) => <b>{formatAmount(value)}</b>,
   },
   {
     title: "Maturity Amount",
     dataIndex: "maturityAmount",
+    width: "110px",
     sorter: {
       compare: (a, b) => parseFloat(a?.maturityAmount) - parseFloat(b?.maturityAmount),
       multiple: 1,
     },
+    render: (value) => formatAmount(value),
   },
   {
     title: "Interest to be earned",
     dataIndex: "remainingInterest",
+    width: "110px",
     sorter: {
       compare: (a, b) => parseFloat(a?.remainingInterest) - parseFloat(b?.remainingInterest),
       multiple: 1,
     },
+    render: (value) => formatAmount(value),
+  },
+  {
+    title: "Action",
+    dataIndex: "",
+    width: "200px",
+    key: "x",
+    render: () => {
+      return (
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <Button type="link" size="small" icon={<EditOutlined />}>
+            Edit
+          </Button>
+          <Button type="link" size="small" icon={<DeleteOutlined />}>
+            Delete
+          </Button>
+        </div>
+      );
+    },
   },
 ];
 
-const calculateCurrentAmount = (principal = 0, interest = 0, frequency = 1, investmentDate = "") => {
-  const today = new Date().getTime();
-  const date = new Date(investmentDate).getTime();
-  const duration = (today - date) / (24 * 60 * 60 * 1000);
-  return principal * Math.pow(1 + interest / ((12 / frequency) * 100), ((12 / frequency) * duration) / 365);
-};
-
-const calculateMaturityAmount = (principal = 0, interest = 0, duration = 0, frequency = 1) => {
-  return principal * Math.pow(1 + interest / ((12 / frequency) * 100), ((12 / frequency) * duration) / 365);
-};
-
-const getCompoundFrequencyType = (frequency = 1) => {
-  const frequencyMap = {
-    1: "Monthly",
-    4: "Quaterly",
-    6: "Semiannually",
-    12: "Annually",
-  };
-  return frequencyMap[frequency] || 12;
-};
-
-const TransactionTable = ({ isModalOpen, setModalStatus }) => {
-  const [holdingData, setHoldingData] = useState([]);
-
-  const refresh = async () => {
-    const database = await getDatabase();
-    let holdings = await database.investments.find().exec();
-    holdings = holdings.map((holding) => {
-      const record = holding._data;
-      const maturityAmount = calculateMaturityAmount(
-        record?.principal,
-        record?.interestRate,
-        record?.duration,
-        record?.compoundFrequency
-      )?.toFixed(2);
-      const currentValue = calculateCurrentAmount(
-        record?.principal,
-        record?.interestRate,
-        record?.compoundFrequency,
-        record?.investmentDatetime
-      )?.toFixed(2);
-      return {
-        duration: record?.duration,
-        institution: record?.institution,
-        interestRate: record?.interestRate,
-        principal: record?.principal,
-        investmentDate: record?.investmentDatetime,
-        compoundFrequency: getCompoundFrequencyType(record?.compoundFrequency),
-        maturityAmount,
-        currentValue,
-        remainingInterest: (maturityAmount - currentValue)?.toFixed(2),
-      };
-    });
-    setHoldingData(holdings);
-  };
-
-  useEffect(() => {
-    if (isModalOpen === true) {
-      refresh();
-    }
-  }, [isModalOpen]);
-
-  useEffect(() => {
-    refresh();
-  }, []);
-
+const TransactionTable = ({ isModalOpen, setModalStatus, holdingData }) => {
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
@@ -141,7 +108,7 @@ const TransactionTable = ({ isModalOpen, setModalStatus }) => {
     <Modal
       size="small"
       title="Holdings"
-      width={"800px"}
+      width={"1600px"}
       style={{ top: 20 }}
       open={isModalOpen}
       footer={null}
@@ -153,4 +120,5 @@ const TransactionTable = ({ isModalOpen, setModalStatus }) => {
     </Modal>
   );
 };
+
 export default TransactionTable;
