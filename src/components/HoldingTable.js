@@ -99,12 +99,12 @@ const columns = [
   },
 ];
 
-const TransactionTable = ({ holdingData }) => {
+const TransactionTable = ({ data }) => {
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
 
-  return <Table size="small" columns={columns} dataSource={holdingData} onChange={onChange} scroll={{ x: 1000 }} />;
+  return <Table size="small" columns={columns} dataSource={data} onChange={onChange} scroll={{ x: 1000 }} />;
 };
 
 export default TransactionTable;

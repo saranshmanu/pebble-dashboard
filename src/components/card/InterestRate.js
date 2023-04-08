@@ -8,7 +8,7 @@ const InterestRateCard = ({ data }) => {
   return (
     <Card icon={<PercentageOutlined />}>
       <Title level={5} style={{ margin: 0 }}>
-        {"Average Interest Rate"}
+        Average Interest Rate
       </Title>
       <Title level={2} style={{ margin: 0 }}>
         {parseFloat(data?.averageInterestRate || 0).toFixed(2) + " %"}

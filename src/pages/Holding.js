@@ -8,19 +8,16 @@ import HoldingTable from "../components/HoldingTable";
 import CreateHolding from "../components/modal/CreateHolding";
 
 function Holding() {
-  const [isViewModalOpen, setViewModalStatus] = useState(false);
   const [isCreateModalOpen, setCreateModalStatus] = useState(false);
   const [{ holdingData }, refresh] = useGetHoldings([]);
 
   useEffect(() => {
     refresh();
-  }, []);
+  }, [isCreateModalOpen]);
 
   useEffect(() => {
-    if (isViewModalOpen === true) {
-      refresh();
-    }
-  }, [isViewModalOpen]);
+    refresh();
+  }, []);
 
   return (
     <div>
@@ -38,7 +35,7 @@ function Holding() {
           </Button>
         </Col>
         <Col span={24}>
-          <HoldingTable isModalOpen={isViewModalOpen} setModalStatus={setViewModalStatus} holdingData={holdingData} />
+          <HoldingTable data={holdingData} />
         </Col>
       </Row>
     </div>

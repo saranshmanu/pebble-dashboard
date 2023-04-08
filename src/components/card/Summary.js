@@ -9,14 +9,14 @@ const SummaryCard = ({ data }) => {
   return (
     <Card icon={<BankOutlined />}>
       <Title level={5} style={{ margin: 0 }}>
-        {"Invested Amount"}
+        Invested Amount
       </Title>
       <Title level={4} style={{ margin: 0 }}>
         + {formatAmount(data?.totalInvestment)}
       </Title>
       <div style={{ marginBottom: 10 }} />
       <Title level={5} style={{ margin: 0 }}>
-        {"Accumulated Interest"}
+        Accumulated Interest
       </Title>
       <Title level={4} style={{ margin: 0 }}>
         + {formatAmount(data?.accumulatedInterest)}
