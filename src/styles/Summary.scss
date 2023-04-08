@@ -12,24 +12,20 @@
     overflow: hidden;
     .icon {
       font-size: 30px;
+      margin: 0px 0px 20px 0px;
     }
   }
 }
-.interest-rate-card {
+
+.purple-gradient {
   background: linear-gradient(to right bottom, #994ecc, #3e187a 120%);
-  .icon {
-    margin: 0px 0px 40px 0px;
-  }
 }
-.summary-card {
+.blue-gradient {
   background: linear-gradient(to right bottom, rgb(0, 127, 255), rgb(0, 89, 178) 120%);
-  .icon {
-    margin: 0px 0px 40px 0px;
-  }
 }
-.projection-card {
+.orange-gradient {
   background: linear-gradient(110.1deg, rgb(241, 115, 30), rgb(231, 29, 54) 120%);
-  .icon {
-    margin: 0px 0px 10px 0px;
-  }
+}
+.turquoise-gradient {
+  background: radial-gradient(circle at 0.1% 99.8%, rgb(0, 164, 189) 0%, rgb(0, 189, 165) 90%);
 }

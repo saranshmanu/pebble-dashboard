@@ -5,13 +5,14 @@ import { TableOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import ProjectionCard from "../components/card/Projection";
 import InterestRateCard from "../components/card/InterestRate";
 import SummaryCard from "../components/card/Summary";
+import DistributionCard from "../components/card/Distribution";
 import TransactionTable from "../components/modal/TransactionTable";
 import CreateHolding from "../components/modal/CreateHolding";
 import useGetHoldings from "../hooks/getHoldings";
 import "../styles/Summary.scss";
 
 function Summary() {
-  const [holdingProjection, holdingStats, holdingData, refresh] = useGetHoldings([]);
+  const [holdingProjection, holdingStats, holdingData, holdingDistribution, refresh] = useGetHoldings([]);
   const [isViewModalOpen, setViewModalStatus] = useState(false);
   const [isCreateModalOpen, setCreateModalStatus] = useState(false);
 
@@ -53,13 +54,16 @@ function Summary() {
             Investment
           </Button>
         </Col>
-        <Col xs={24} sm={12} lg={12} xl={8}>
+        <Col xs={24} sm={12} lg={12} xl={7}>
           <SummaryCard data={holdingStats} />
         </Col>
-        <Col xs={24} sm={12} lg={12} xl={5}>
+        <Col xs={24} sm={12} lg={12} xl={6}>
           <InterestRateCard data={holdingStats} />
         </Col>
         <Col xs={24} sm={24} lg={12} xl={11}>
+          <DistributionCard data={holdingDistribution} />
+        </Col>
+        <Col xs={24} sm={24} lg={12} xl={13}>
           <ProjectionCard data={holdingProjection} />
         </Col>
       </Row>

@@ -12,6 +12,30 @@ const useGetHoldings = () => {
   });
   const [holdingData, setHoldingData] = useState([]);
   const [holdingProjection, setHoldingProjection] = useState([]);
+  const [holdingDistribution, setHoldingDistribution] = useState([]);
+
+  const refreshHoldingDistribution = async (holdings) => {
+    const distribution = {};
+
+    for (const holding of holdings) {
+      const institution = holding?.institution;
+      if (!distribution[institution]) {
+        distribution[institution] = parseFloat(holding?.currentValue || 0);
+      } else {
+        distribution[institution] += parseFloat(holding?.currentValue || 0);
+      }
+    }
+
+    const plotData = [];
+    for (const institution of Object.keys(distribution)) {
+      plotData.push({
+        name: institution,
+        value: distribution[institution],
+      });
+    }
+    console.log(plotData);
+    setHoldingDistribution(plotData);
+  };
 
   const calculateProjection = (holdings, date) => {
     let projection = 0;
@@ -117,13 +141,14 @@ const useGetHoldings = () => {
     setHoldingData(holdings);
     refreshHoldingStats(holdings);
     refreshHoldingProjection();
+    refreshHoldingDistribution(holdings);
   };
 
   const refresh = async () => {
     await refreshHoldingData();
   };
 
-  return [holdingProjection, holdingStats, holdingData, refresh];
+  return [holdingProjection, holdingStats, holdingData, holdingDistribution, refresh];
 };
 
 export default useGetHoldings;
