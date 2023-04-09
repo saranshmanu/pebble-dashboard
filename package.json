@@ -47,7 +47,7 @@
   },
   "build": {
     "appId": "com.electron.pebble",
-    "productName": "My Electron App",
+    "productName": "Pebble",
     "files": [
       "build/**/*",
       "node_modules/**/*"
@@ -56,12 +56,15 @@
       "buildResources": "public"
     },
     "mac": {
+      "icon": "./public/1024.png",
       "target": "dmg"
     },
     "win": {
+      "icon": "./public/1024.png",
       "target": "nsis"
     },
     "linux": {
+      "icon": "./public/1024.png",
       "target": "deb"
     }
   },
