@@ -1,12 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
-import { Col, Row, Button, Modal } from "antd";
+import { Col, Row, Button, Modal, Divider } from "antd";
 import { PlusCircleOutlined, ExclamationCircleFilled } from "@ant-design/icons";
 
 import useGetHoldings from "../hooks/getHoldings";
 import useCreateHolding from "../hooks/createHolding";
 import useRemoveHolding from "../hooks/removeHolding";
 import useUpdateHolding from "../hooks/updateHolding";
+import HoldingStats from "../components/HoldingStats";
 import HoldingTable from "../components/HoldingTable";
 import HoldingForm from "../components/modal/HoldingForm";
 
@@ -17,7 +18,7 @@ function Holding() {
   const [isCreateModalOpen, setCreateModalStatus] = useState(false);
   const [isUpdateModalOpen, setUpdateModalStatus] = useState(false);
 
-  const [{ holdingData }, refresh] = useGetHoldings();
+  const [{ holdingData, holdingStats }, refresh] = useGetHoldings();
   const [updatingRecord, updateHolding] = useUpdateHolding();
   const [removingRecord, deleteHolding] = useRemoveHolding();
   const [creatingRecord, createHolding, replicateHolding] = useCreateHolding();
@@ -90,12 +91,25 @@ function Holding() {
           </Button>
         </Col>
         <Col span={24}>
+          <Divider style={{ marginTop: 10, marginBottom: 10 }} />
           <HoldingTable
             data={holdingData}
             showDeleteHoldingModal={showDeleteHoldingModal}
             showUpdateHoldingModal={showUpdateHoldingModal}
             showReplicateHoldingModal={showReplicateHoldingModal}
           />
+        </Col>
+        <Col span={24}>
+          <Divider style={{ marginTop: 0 }} />
+          <HoldingStats
+            data={{
+              principal: holdingStats?.totalInvestment,
+              interest: holdingStats?.accumulatedInterest,
+              netValue: holdingStats?.netAmount,
+              averageInterestRate: holdingStats?.averageInterestRate,
+            }}
+          />
+          <Divider />
         </Col>
       </Row>
     </div>
