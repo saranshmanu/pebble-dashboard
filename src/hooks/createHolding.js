@@ -6,8 +6,8 @@ const useCreateHolding = () => {
   const [creatingRecord, setCreatingRecordStatus] = useState(false);
 
   const createHolding = async (payload) => {
-    setCreatingRecordStatus(true);
     try {
+      setCreatingRecordStatus(true);
       const database = await getDatabase();
       await database.investments.insert(payload);
 
@@ -15,7 +15,7 @@ const useCreateHolding = () => {
     } catch (error) {
       message.error("Failed to create investment record");
     }
-    
+
     setCreatingRecordStatus(false);
   };
 

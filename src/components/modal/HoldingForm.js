@@ -1,12 +1,22 @@
-import { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useState } from "react";
 import { v4 } from "uuid";
 import dayjs from "dayjs";
-import { DatePicker, Form, Input, InputNumber, Radio, Modal } from "antd";
+import { DatePicker, Form, Input, InputNumber, Radio, Modal, message } from "antd";
+import { getDatabase } from "../../database";
 
 const { RangePicker } = DatePicker;
 
-const CreateHoldingModal = ({ isModalOpen, setModalStatus, createHolding }) => {
+const HoldingForm = ({
+  isModalOpen,
+  setModalStatus,
+  createHolding,
+  updateHolding,
+  updateMode = false,
+  identifier = "",
+}) => {
   const dateFormat = "YYYY/MM/DD";
+  const [disabled, setDisabled] = useState(false);
 
   const [compoundFrequency, setCompoundFrequency] = useState(null);
   const [investmentAmount, setInvestmentAmount] = useState(null);
@@ -21,6 +31,44 @@ const CreateHoldingModal = ({ isModalOpen, setModalStatus, createHolding }) => {
     setInstitution(null);
     setTimePeriod(null);
   };
+
+  const populateFormFields = async () => {
+    try {
+      const database = await getDatabase();
+      let holding = await database.investments
+        .findOne({
+          selector: { uuid: identifier },
+        })
+        .exec();
+      holding = holding._data;
+
+      setCompoundFrequency(holding?.compoundFrequency);
+      setInvestmentAmount(holding?.principal);
+      setInterestRate(holding?.interestRate);
+      setInstitution(holding?.institution);
+      setTimePeriod([
+        dayjs(holding?.investmentDatetime, dateFormat),
+        dayjs(holding?.investmentDatetime, dateFormat).add(holding?.duration, "d"),
+      ]);
+
+      setDisabled(false);
+    } catch (error) {
+      message.error("Failed to fetch the record information");
+    }
+  };
+
+  useEffect(() => {
+    if (isModalOpen) {
+      setDisabled(false);
+    }
+    if (isModalOpen && updateMode) {
+      setDisabled(true);
+      populateFormFields();
+    } else {
+      resetField();
+    }
+  }, [isModalOpen]);
+
   const onFormSubmit = async () => {
     const payload = {
       uuid: v4(),
@@ -31,20 +79,25 @@ const CreateHoldingModal = ({ isModalOpen, setModalStatus, createHolding }) => {
       investmentDatetime: timePeriod?.[0]?.format(dateFormat),
       duration: (timePeriod?.[1] - timePeriod?.[0]) / (24 * 3600 * 1000),
     };
+
+    if (!updateMode) createHolding(payload);
+    else updateHolding(identifier, payload);
+
     setModalStatus(false);
-    createHolding(payload);
   };
+
   const onFormCancel = () => {
     setModalStatus(false);
     resetField();
   };
+
   return (
     <Modal
       size="small"
       title="Investment"
       width={"800px"}
       onCancel={onFormCancel}
-      okText="Create"
+      okText={updateMode ? "Update" : "Create"}
       onOk={onFormSubmit}
       style={{ top: 20 }}
       open={isModalOpen}
@@ -55,6 +108,7 @@ const CreateHoldingModal = ({ isModalOpen, setModalStatus, createHolding }) => {
           wrapperCol={{ span: 16 }}
           layout="horizontal"
           size="default"
+          disabled={disabled}
           style={{ width: "100%" }}
         >
           <Form.Item label="Compound Frequency" rules={[{ required: true }]}>
@@ -110,4 +164,4 @@ const CreateHoldingModal = ({ isModalOpen, setModalStatus, createHolding }) => {
   );
 };
 
-export default CreateHoldingModal;
+export default HoldingForm;

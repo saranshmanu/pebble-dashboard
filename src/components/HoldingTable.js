@@ -1,8 +1,8 @@
 import { Table, Button, Tag, Badge } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { formatAmount } from "../utils/commonFunctions";
+import { formatAmount, formatPercentage } from "../utils/commonFunctions";
 
-const TransactionTable = ({ data, deleteHolding }) => {
+const TransactionTable = ({ data, showDeleteHoldingModal, showUpdateHoldingModal }) => {
   const columns = [
     {
       title: "Institution",
@@ -28,6 +28,7 @@ const TransactionTable = ({ data, deleteHolding }) => {
         compare: (a, b) => parseFloat(a?.interestRate) - parseFloat(b?.interestRate),
         multiple: 1,
       },
+      render: (value) => formatPercentage(value),
     },
     {
       title: "Date",
@@ -37,7 +38,7 @@ const TransactionTable = ({ data, deleteHolding }) => {
     {
       title: "Compound Frequency",
       dataIndex: "compoundFrequency",
-      width: "90px",
+      width: "110px",
       render: (value) => <Tag color="purple">{value}</Tag>,
     },
     {
@@ -88,7 +89,14 @@ const TransactionTable = ({ data, deleteHolding }) => {
       render: (_, record) => {
         return (
           <div style={{ display: "flex", flexDirection: "row" }}>
-            <Button type="link" size="small" icon={<EditOutlined />}>
+            <Button
+              type="link"
+              size="small"
+              icon={<EditOutlined />}
+              onClick={() => {
+                showUpdateHoldingModal(record?.uuid);
+              }}
+            >
               Edit
             </Button>
             <Button
@@ -96,7 +104,7 @@ const TransactionTable = ({ data, deleteHolding }) => {
               size="small"
               icon={<DeleteOutlined />}
               onClick={() => {
-                deleteHolding(record?.uuid);
+                showDeleteHoldingModal(record?.uuid);
               }}
             >
               Delete

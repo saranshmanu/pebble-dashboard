@@ -29,4 +29,8 @@ const formatAmount = (amount = 0) => {
   return formattedAmount;
 };
 
-export { calculateCurrentAmount, calculateFutureAmount, getCompoundFrequencyType, formatAmount };
+const formatPercentage = (rate = 0) => {
+  return `${(rate || 0)?.toFixed(2)} %`;
+};
+
+export { calculateCurrentAmount, calculateFutureAmount, getCompoundFrequencyType, formatAmount, formatPercentage };

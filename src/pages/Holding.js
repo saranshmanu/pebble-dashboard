@@ -1,31 +1,49 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
-import { Col, Row, Button } from "antd";
-import { PlusCircleOutlined } from "@ant-design/icons";
+import { Col, Row, Button, Modal } from "antd";
+import { PlusCircleOutlined, ExclamationCircleFilled } from "@ant-design/icons";
 
 import useGetHoldings from "../hooks/getHoldings";
 import useCreateHolding from "../hooks/createHolding";
 import useRemoveHolding from "../hooks/removeHolding";
+import useUpdateHolding from "../hooks/updateHolding";
 import HoldingTable from "../components/HoldingTable";
-import CreateHolding from "../components/modal/CreateHolding";
+import HoldingForm from "../components/modal/HoldingForm";
+
+const { confirm } = Modal;
 
 function Holding() {
+  const [identifier, setIdentifier] = useState("");
   const [isCreateModalOpen, setCreateModalStatus] = useState(false);
+  const [isUpdateModalOpen, setUpdateModalStatus] = useState(false);
+
   const [{ holdingData }, refresh] = useGetHoldings();
-  const [creatingRecord, createHolding] = useCreateHolding();
+  const [updatingRecord, updateHolding] = useUpdateHolding();
   const [removingRecord, deleteHolding] = useRemoveHolding();
+  const [creatingRecord, createHolding] = useCreateHolding();
+
+  const showDeleteHoldingModal = (uuid) => {
+    confirm({
+      title: "Are you sure you want to delete the investment record?",
+      icon: <ExclamationCircleFilled />,
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
+      onOk: () => {
+        deleteHolding(uuid);
+      },
+      onCancel: () => {},
+    });
+  };
+
+  const showUpdateHoldingModal = (uuid) => {
+    setIdentifier(uuid);
+    setUpdateModalStatus(true);
+  };
 
   useEffect(() => {
     refresh();
-  }, [isCreateModalOpen]);
-
-  useEffect(() => {
-    refresh();
-  }, [removingRecord]);
-
-  useEffect(() => {
-    refresh();
-  }, [creatingRecord]);
+  }, [isCreateModalOpen, isUpdateModalOpen, updatingRecord, removingRecord, creatingRecord]);
 
   useEffect(() => {
     refresh();
@@ -33,10 +51,17 @@ function Holding() {
 
   return (
     <div>
-      <CreateHolding
+      <HoldingForm
         createHolding={createHolding}
         isModalOpen={isCreateModalOpen}
         setModalStatus={setCreateModalStatus}
+      />
+      <HoldingForm
+        updateMode={true}
+        identifier={identifier}
+        updateHolding={updateHolding}
+        isModalOpen={isUpdateModalOpen}
+        setModalStatus={setUpdateModalStatus}
       />
       <Row>
         <Col span={24}>
@@ -51,7 +76,11 @@ function Holding() {
           </Button>
         </Col>
         <Col span={24}>
-          <HoldingTable data={holdingData} deleteHolding={deleteHolding} />
+          <HoldingTable
+            data={holdingData}
+            showDeleteHoldingModal={showDeleteHoldingModal}
+            showUpdateHoldingModal={showUpdateHoldingModal}
+          />
         </Col>
       </Row>
     </div>

@@ -1,22 +1,17 @@
-import { Modal, message } from "antd";
-import { ExclamationCircleFilled } from "@ant-design/icons";
-import { getDatabase } from "../database";
+import { message } from "antd";
 import { useState } from "react";
-
-const { confirm } = Modal;
+import { getDatabase } from "../database";
 
 const useRemoveHolding = () => {
   const [removingRecord, setRemovingRecordStatus] = useState(false);
-  let uuid = "";
 
-  const removeHoldingRecord = async () => {
+  const deleteHolding = async (uuid) => {
     try {
+      setRemovingRecordStatus(true);
       const database = await getDatabase();
       let holding = await database.investments
         .findOne({
-          selector: {
-            uuid,
-          },
+          selector: { uuid },
         })
         .exec();
       await holding.remove();
@@ -29,25 +24,7 @@ const useRemoveHolding = () => {
     setRemovingRecordStatus(false);
   };
 
-  const deleteHolding = async (identifier) => {
-    setRemovingRecordStatus(true);
-    uuid = identifier;
-
-    confirm({
-      title: "Are you sure you want to delete the investment record?",
-      icon: <ExclamationCircleFilled />,
-      okText: "Yes",
-      okType: "danger",
-      cancelText: "No",
-      onOk() {
-        removeHoldingRecord();
-      },
-      onCancel() {
-        setRemovingRecordStatus(false);
-      },
-    });
-  };
-
   return [removingRecord, deleteHolding];
 };
+
 export default useRemoveHolding;
