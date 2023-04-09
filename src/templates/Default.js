@@ -1,6 +1,6 @@
 /* eslint-disable default-case */
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Layout, Menu, Typography, theme } from "antd";
 import {
   MenuFoldOutlined,
@@ -22,9 +22,11 @@ const Default = ({ children }) => {
     2: { title: "Holdings" },
     3: { title: "Settings" },
   };
+  const [selectedKeys, setSelectedKeys] = useState(["1"]);
   const [pageTitle, setPageTitle] = useState(sections["1"]?.title);
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -35,8 +37,9 @@ const Default = ({ children }) => {
   });
 
   const onMenuSelection = (options) => {
-    setPageTitle(sections[options?.key]?.title);
     let link = "";
+    setPageTitle(sections[options?.key]?.title);
+    setSelectedKeys([options?.key]);
     switch (options?.key) {
       case "1":
         link = "/dashboard/summary";
@@ -51,6 +54,23 @@ const Default = ({ children }) => {
     navigate(link);
   };
 
+  useEffect(() => {
+    switch (location.pathname.toString()) {
+      case "/dashboard/summary":
+        setSelectedKeys(["1"]);
+        setPageTitle(sections[1]?.title);
+        break;
+      case "/dashboard/holdings":
+        setSelectedKeys(["2"]);
+        setPageTitle(sections[2]?.title);
+        break;
+      case "/dashboard/settings":
+        setSelectedKeys(["3"]);
+        setPageTitle(sections[3]?.title);
+        break;
+    }
+  }, []);
+
   return (
     <Layout className="default-layout">
       <Sider className="slider" trigger={null} collapsible collapsed={collapsed}>
@@ -59,7 +79,7 @@ const Default = ({ children }) => {
           theme="dark"
           mode="inline"
           onClick={onMenuSelection}
-          defaultSelectedKeys={["1"]}
+          selectedKeys={selectedKeys}
           items={[
             { key: "1", icon: <AppstoreOutlined />, label: "Summary" },
             { key: "2", icon: <TableOutlined />, label: "Holdings" },
