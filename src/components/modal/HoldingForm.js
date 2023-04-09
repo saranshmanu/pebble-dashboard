@@ -15,21 +15,12 @@ const HoldingForm = ({
   updateMode = false,
   identifier = "",
 }) => {
-  const dateFormat = "YYYY/MM/DD";
+  const [form] = Form.useForm();
   const [disabled, setDisabled] = useState(false);
 
-  const [compoundFrequency, setCompoundFrequency] = useState(null);
-  const [investmentAmount, setInvestmentAmount] = useState(null);
-  const [interestRate, setInterestRate] = useState(null);
-  const [institution, setInstitution] = useState(null);
-  const [timePeriod, setTimePeriod] = useState([]);
-
+  const dateFormat = "YYYY/MM/DD";
   const resetField = () => {
-    setCompoundFrequency(null);
-    setInvestmentAmount(null);
-    setInterestRate(null);
-    setInstitution(null);
-    setTimePeriod(null);
+    form.resetFields();
   };
 
   const populateFormFields = async () => {
@@ -42,11 +33,11 @@ const HoldingForm = ({
         .exec();
       holding = holding._data;
 
-      setCompoundFrequency(holding?.compoundFrequency);
-      setInvestmentAmount(holding?.principal);
-      setInterestRate(holding?.interestRate);
-      setInstitution(holding?.institution);
-      setTimePeriod([
+      form.setFieldValue("investment-amount", holding?.principal);
+      form.setFieldValue("financial-institution", holding?.institution);
+      form.setFieldValue("compound-frequency", holding?.compoundFrequency);
+      form.setFieldValue("interest-rate", holding?.interestRate);
+      form.setFieldValue("time-period", [
         dayjs(holding?.investmentDatetime, dateFormat),
         dayjs(holding?.investmentDatetime, dateFormat).add(holding?.duration, "d"),
       ]);
@@ -58,32 +49,37 @@ const HoldingForm = ({
   };
 
   useEffect(() => {
+    resetField();
     if (isModalOpen) {
       setDisabled(false);
     }
     if (isModalOpen && updateMode) {
       setDisabled(true);
       populateFormFields();
-    } else {
-      resetField();
     }
   }, [isModalOpen]);
 
   const onFormSubmit = async () => {
-    const payload = {
-      uuid: v4(),
-      institution,
-      interestRate,
-      compoundFrequency,
-      principal: investmentAmount,
-      investmentDatetime: timePeriod?.[0]?.format(dateFormat),
-      duration: (timePeriod?.[1] - timePeriod?.[0]) / (24 * 3600 * 1000),
-    };
+    try {
+      await form.validateFields();
 
-    if (!updateMode) createHolding(payload);
-    else updateHolding(identifier, payload);
+      const values = form.getFieldsValue();
+      const datetime = values["time-period"];
+      const payload = {
+        uuid: v4(),
+        principal: values["investment-amount"],
+        institution: values["financial-institution"],
+        interestRate: values["interest-rate"],
+        compoundFrequency: values["compound-frequency"],
+        investmentDatetime: datetime?.[0]?.format(dateFormat),
+        duration: (datetime?.[1] - datetime?.[0]) / (24 * 3600 * 1000),
+      };
 
-    setModalStatus(false);
+      if (!updateMode) createHolding(payload);
+      else updateHolding(identifier, payload);
+
+      setModalStatus(false);
+    } catch (error) {}
   };
 
   const onFormCancel = () => {
@@ -104,6 +100,7 @@ const HoldingForm = ({
     >
       <div style={{ padding: "30px 0px" }}>
         <Form
+          form={form}
           labelCol={{ span: 6 }}
           wrapperCol={{ span: 16 }}
           layout="horizontal"
@@ -111,52 +108,55 @@ const HoldingForm = ({
           disabled={disabled}
           style={{ width: "100%" }}
         >
-          <Form.Item label="Compound Frequency" rules={[{ required: true }]}>
-            <Radio.Group
-              defaultValue="Annually"
-              value={compoundFrequency}
-              onChange={(env) => {
-                setCompoundFrequency(env.target.value);
-              }}
-            >
+          <Form.Item
+            required
+            tooltip="The principal amount is the original amount of investment made into an asset, such as a stock or fixed income asssets."
+            name="investment-amount"
+            label="Investment Amount"
+            rules={[{ required: true, message: "Initial investment amount field is required" }]}
+          >
+            <InputNumber style={{ width: "100%" }} placeholder="100,000" />
+          </Form.Item>
+          <Form.Item
+            required
+            tooltip="A financial institution (FI) is a company engaged in the business of dealing with financial and monetary transactions such as deposits, loans, investments, and currency exchange."
+            name="financial-institution"
+            label="Financial Institution"
+            rules={[{ required: true, message: "Investment compound frequency is required" }]}
+          >
+            <Input placeholder="State Bank of India" />
+          </Form.Item>
+          <Form.Item
+            required
+            tooltip="Period for which the principal amount is invested with the financial institution."
+            name="time-period"
+            label="Time Period"
+            rules={[{ required: true, message: "Investment duration is required" }]}
+          >
+            <RangePicker style={{ width: "100%" }} format={dateFormat} />
+          </Form.Item>
+          <Form.Item
+            required
+            tooltip="An interest rate is the amount of interest due per period, as a proportion of the amount lent, deposited, or borrowed."
+            name="interest-rate"
+            label="Interest Rate"
+            rules={[{ required: true, message: "Investment rate is required" }]}
+          >
+            <InputNumber style={{ width: "100%" }} placeholder="9.00" />
+          </Form.Item>
+          <Form.Item
+            required
+            tooltip="The compounding frequency is the number of times per year (or rarely, another unit of time) the accumulated interest is paid out, or capitalized (credited to the account), on a regular basis. "
+            name="compound-frequency"
+            label="Compound Frequency"
+            rules={[{ required: true, message: "Compound Frequency is required" }]}
+          >
+            <Radio.Group>
               <Radio.Button value={12}>Annually</Radio.Button>
               <Radio.Button value={6}>Semiannually</Radio.Button>
               <Radio.Button value={4}>Quaterly</Radio.Button>
               <Radio.Button value={1}>Monthly</Radio.Button>
             </Radio.Group>
-          </Form.Item>
-          <Form.Item label="Financial Institution" rules={[{ required: true }]}>
-            <Input
-              placeholder="State Bank of India"
-              value={institution}
-              onChange={(env) => setInstitution(env.currentTarget.value)}
-            />
-          </Form.Item>
-          <Form.Item label="Investment Duration" rules={[{ required: true }]}>
-            <RangePicker
-              style={{ width: "100%" }}
-              format={dateFormat}
-              value={timePeriod}
-              onCalendarChange={(value) => {
-                setTimePeriod([dayjs(value[0], dateFormat), dayjs(value[1], dateFormat)]);
-              }}
-            />
-          </Form.Item>
-          <Form.Item label="Estimated Interest Date" rules={[{ required: true }]}>
-            <InputNumber
-              style={{ width: "100%" }}
-              placeholder="9.00"
-              value={interestRate}
-              onChange={(value) => setInterestRate(value)}
-            />
-          </Form.Item>
-          <Form.Item label="Initial Investment" rules={[{ required: true }]}>
-            <InputNumber
-              style={{ width: "100%" }}
-              placeholder="100,000"
-              value={investmentAmount}
-              onChange={(value) => setInvestmentAmount(value)}
-            />
           </Form.Item>
         </Form>
       </div>
