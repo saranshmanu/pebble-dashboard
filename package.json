@@ -29,7 +29,14 @@
     "url": "https://github.com/saranshmanu/pebble-dashboard/issues"
   },
   "devDependencies": {
-    "electron": "^24.0.0"
+    "concurrently": "^8.0.1",
+    "cross-env": "^7.0.3",
+    "electron": "^24.0.0",
+    "electron-builder": "^23.6.0",
+    "electronmon": "^2.0.2",
+    "node-sass": "^7.0.3",
+    "react-scripts": "^5.0.1",
+    "wait-on": "^7.0.1"
   },
   "eslintConfig": {
     "extends": [
@@ -46,11 +53,11 @@
     ]
   },
   "build": {
-    "appId": "com.electron.pebble",
+    "appId": "com.pebble.pebble",
     "productName": "Pebble",
+    "npmRebuild": true,
     "files": [
-      "build/**/*",
-      "node_modules/**/*"
+      "build/**/*"
     ],
     "directories": {
       "buildResources": "public"
@@ -72,19 +79,12 @@
     "@ant-design/charts": "^1.4.2",
     "@ant-design/icons": "^5.0.1",
     "@ant-design/plots": "^1.2.5",
-    "@babel/polyfill": "^7.12.1",
     "antd": "^5.4.0",
-    "concurrently": "^8.0.1",
-    "cross-env": "^7.0.3",
-    "electronmon": "^2.0.2",
-    "node-sass": "^7.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.10.0",
-    "react-scripts": "^5.0.1",
     "rxdb": "^14.6.1",
     "rxjs": "^7.8.0",
-    "uuid": "^9.0.0",
-    "wait-on": "^7.0.1"
+    "uuid": "^9.0.0"
   }
 }
