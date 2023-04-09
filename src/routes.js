@@ -1,9 +1,17 @@
 import Summary from "./pages/Summary";
 import Setting from "./pages/Setting";
 import Holding from "./pages/Holding";
+import Home from "./pages/Home";
 import Default from "./templates/Default";
 
 const routes = [
+  {
+    index: false,
+    path: "/",
+    view: Home,
+    template: Default,
+    exact: false,
+  },
   {
     index: false,
     path: "/dashboard/summary",
