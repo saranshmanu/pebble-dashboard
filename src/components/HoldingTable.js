@@ -1,8 +1,8 @@
 import { Table, Button, Tag, Badge } from "antd";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { EditOutlined, DeleteOutlined, CopyOutlined } from "@ant-design/icons";
 import { formatAmount, formatPercentage } from "../utils/commonFunctions";
 
-const TransactionTable = ({ data, showDeleteHoldingModal, showUpdateHoldingModal }) => {
+const TransactionTable = ({ data, showDeleteHoldingModal, showUpdateHoldingModal, showReplicateHoldingModal }) => {
   const columns = [
     {
       title: "Institution",
@@ -84,7 +84,7 @@ const TransactionTable = ({ data, showDeleteHoldingModal, showUpdateHoldingModal
     {
       title: "Action",
       dataIndex: "uuid",
-      width: "200px",
+      width: "250px",
       key: "x",
       render: (_, record) => {
         return (
@@ -98,6 +98,16 @@ const TransactionTable = ({ data, showDeleteHoldingModal, showUpdateHoldingModal
               }}
             >
               Edit
+            </Button>
+            <Button
+              type="link"
+              size="small"
+              icon={<CopyOutlined />}
+              onClick={() => {
+                showReplicateHoldingModal(record?.uuid);
+              }}
+            >
+              Replicate
             </Button>
             <Button
               type="link"

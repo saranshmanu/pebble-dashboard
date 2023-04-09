@@ -10,7 +10,7 @@ import useUpdateHolding from "../hooks/updateHolding";
 import HoldingTable from "../components/HoldingTable";
 import HoldingForm from "../components/modal/HoldingForm";
 
-const { confirm } = Modal;
+const { confirm, info } = Modal;
 
 function Holding() {
   const [identifier, setIdentifier] = useState("");
@@ -20,7 +20,7 @@ function Holding() {
   const [{ holdingData }, refresh] = useGetHoldings();
   const [updatingRecord, updateHolding] = useUpdateHolding();
   const [removingRecord, deleteHolding] = useRemoveHolding();
-  const [creatingRecord, createHolding] = useCreateHolding();
+  const [creatingRecord, createHolding, replicateHolding] = useCreateHolding();
 
   const showDeleteHoldingModal = (uuid) => {
     confirm({
@@ -31,6 +31,20 @@ function Holding() {
       cancelText: "No",
       onOk: () => {
         deleteHolding(uuid);
+      },
+      onCancel: () => {},
+    });
+  };
+
+  const showReplicateHoldingModal = (uuid) => {
+    info({
+      title: "Are you sure you want to replicate the investment record?",
+      icon: <ExclamationCircleFilled />,
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
+      onOk: () => {
+        replicateHolding(uuid);
       },
       onCancel: () => {},
     });
@@ -80,6 +94,7 @@ function Holding() {
             data={holdingData}
             showDeleteHoldingModal={showDeleteHoldingModal}
             showUpdateHoldingModal={showUpdateHoldingModal}
+            showReplicateHoldingModal={showReplicateHoldingModal}
           />
         </Col>
       </Row>
