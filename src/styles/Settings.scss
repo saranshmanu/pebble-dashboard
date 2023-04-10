@@ -1,0 +1,15 @@
+.section {
+  padding: 0px 50px;
+  .section-illustration {
+    margin-right: 10px;
+  }
+  .toggle-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 5px 10px;
+    .toggle-item-label {
+      margin: 0;
+    }
+  }
+}
