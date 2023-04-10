@@ -6,7 +6,7 @@
   "homepage": "./",
   "main": "./public/electron.js",
   "scripts": {
-    "electron": "concurrently -k \"cross-env npm start\" \"wait-on http://localhost:3000/ && PEBBLE_ENV=development electronmon .\"",
+    "electron": "concurrently -k \"cross-env npm start\" \"wait-on http://localhost:3000/ && electronmon .\"",
     "package:mac": "npm run build && electron-builder -m -c.extraMetadata.main=build/electron.js",
     "package:win": "npm run build && electron-builder -w -c.extraMetadata.main=build/electron.js",
     "package:linux": "npm run build && electron-builder -l -c.extraMetadata.main=build/electron.js",
@@ -55,9 +55,10 @@
   "build": {
     "appId": "com.pebble.pebble",
     "productName": "Pebble",
-    "npmRebuild": true,
+    "asar": false,
     "files": [
-      "build/**/*"
+      "build/**/*",
+      "!node_modules/**/*"
     ],
     "directories": {
       "buildResources": "public"
