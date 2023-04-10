@@ -8,8 +8,15 @@
     flex-direction: row;
     justify-content: space-between;
     padding: 5px 10px;
+    .toggle-option {
+      padding-right: 40px;
+    }
     .toggle-item-label {
       margin: 0;
+    }
+    .toggle-dropdown {
+      display: flex;
+      flex-direction: row;
     }
   }
 }

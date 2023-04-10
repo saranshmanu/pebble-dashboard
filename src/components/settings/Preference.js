@@ -1,32 +1,15 @@
 import { Switch, Typography, Divider } from "antd";
+import { preferences } from "../../utils/constants";
 const { Title, Text } = Typography;
 
 const Preference = () => {
-  const preferences = [
-    {
-      label: "Summary",
-      description: "Summary",
-    },
-    {
-      label: "Interest Rate",
-      description: "Interest Rate",
-    },
-    {
-      label: "Distribution Graph",
-      description: "Distribution Graph",
-    },
-    {
-      label: "Investment Projection",
-      description: "Investment Projection",
-    },
-  ];
   return (
     <div>
       {preferences.map((preference) => (
         <div>
           <div className="toggle-item">
-            <div>
-              <Title className="toggle-item-label" level={4}>
+            <div className="toggle-option">
+              <Title className="toggle-item-label" level={5}>
                 {preference.label}
               </Title>
               <Text type="secondary">{preference.description}</Text>
