@@ -5,7 +5,7 @@ import { Layout, Menu, Typography, theme } from "antd";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  AppstoreOutlined,
+  ProjectOutlined,
   SettingOutlined,
   TableOutlined,
 } from "@ant-design/icons";
@@ -22,7 +22,7 @@ const Default = ({ children }) => {
     2: { title: "Holdings" },
     3: { title: "Settings" },
   };
-  const [selectedKeys, setSelectedKeys] = useState(["1"]);
+  const [selectedKeys, setSelectedKeys] = useState(null);
   const [pageTitle, setPageTitle] = useState(sections["1"]?.title);
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
@@ -81,7 +81,7 @@ const Default = ({ children }) => {
           onClick={onMenuSelection}
           selectedKeys={selectedKeys}
           items={[
-            { key: "1", icon: <AppstoreOutlined />, label: "Summary" },
+            { key: "1", icon: <ProjectOutlined />, label: "Summary" },
             { key: "2", icon: <TableOutlined />, label: "Holdings" },
             { key: "3", icon: <SettingOutlined />, label: "Settings" },
           ]}
