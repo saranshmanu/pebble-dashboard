@@ -43,6 +43,7 @@ function Holding() {
       icon: <ExclamationCircleFilled />,
       okText: "Yes",
       okType: "danger",
+      closable: true,
       cancelText: "No",
       onOk: () => {
         replicateHolding(uuid);

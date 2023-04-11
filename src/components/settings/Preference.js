@@ -5,8 +5,8 @@ const { Title, Text } = Typography;
 const Preference = () => {
   return (
     <div>
-      {preferences.map((preference) => (
-        <div>
+      {preferences.map((preference, index) => (
+        <div key={index}>
           <div className="toggle-item">
             <div className="toggle-option">
               <Title className="toggle-item-label" level={5}>

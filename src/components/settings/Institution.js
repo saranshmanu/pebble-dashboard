@@ -6,8 +6,8 @@ const { Title, Text } = Typography;
 const Institution = () => {
   return (
     <div>
-      {institutions.map((institution) => (
-        <div>
+      {institutions.map((institution, index) => (
+        <div key={index}>
           <div className="toggle-item">
             <div className="toggle-option">
               <Title className="toggle-item-label" level={5}>

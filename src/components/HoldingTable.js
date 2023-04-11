@@ -5,12 +5,14 @@ import { formatAmount, formatPercentage } from "../utils/commonFunctions";
 const TransactionTable = ({ data, showDeleteHoldingModal, showUpdateHoldingModal, showReplicateHoldingModal }) => {
   const columns = [
     {
+      key: "institution",
       title: "Institution",
       dataIndex: "institution",
       fixed: "left",
       width: 200,
     },
     {
+      key: "principal",
       title: "Principal",
       dataIndex: "principal",
       width: "110px",
@@ -21,6 +23,7 @@ const TransactionTable = ({ data, showDeleteHoldingModal, showUpdateHoldingModal
       render: (value) => formatAmount(value),
     },
     {
+      key: "interestRate",
       title: "Interest Rate (in %)",
       dataIndex: "interestRate",
       width: "110px",
@@ -31,17 +34,20 @@ const TransactionTable = ({ data, showDeleteHoldingModal, showUpdateHoldingModal
       render: (value) => formatPercentage(value),
     },
     {
+      key: "investmentDate",
       title: "Date",
       dataIndex: "investmentDate",
       width: "110px",
     },
     {
+      key: "compoundFrequency",
       title: "Compound Frequency",
       dataIndex: "compoundFrequency",
       width: "110px",
       render: (value) => <Tag color="purple">{value}</Tag>,
     },
     {
+      key: "duration",
       title: "Duration (in days)",
       dataIndex: "duration",
       width: "110px",
@@ -52,6 +58,7 @@ const TransactionTable = ({ data, showDeleteHoldingModal, showUpdateHoldingModal
       render: (value) => <Badge color="#faad14" count={value} overflowCount={365 * 100} />,
     },
     {
+      key: "currentValue",
       title: "Current Value",
       dataIndex: "currentValue",
       width: "110px",
@@ -62,6 +69,7 @@ const TransactionTable = ({ data, showDeleteHoldingModal, showUpdateHoldingModal
       render: (value) => <b>{formatAmount(value)}</b>,
     },
     {
+      key: "maturityAmount",
       title: "Maturity Amount",
       dataIndex: "maturityAmount",
       width: "110px",
@@ -72,6 +80,7 @@ const TransactionTable = ({ data, showDeleteHoldingModal, showUpdateHoldingModal
       render: (value) => formatAmount(value),
     },
     {
+      key: "remainingInterest",
       title: "Interest to be earned",
       dataIndex: "remainingInterest",
       width: "110px",
@@ -82,10 +91,10 @@ const TransactionTable = ({ data, showDeleteHoldingModal, showUpdateHoldingModal
       render: (value) => formatAmount(value),
     },
     {
+      key: "uuid",
       title: "Action",
       dataIndex: "uuid",
       width: "250px",
-      key: "x",
       render: (_, record) => {
         return (
           <div style={{ display: "flex", flexDirection: "row" }}>

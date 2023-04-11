@@ -8,6 +8,7 @@ const createDatabase = async () => {
   database = await createRxDatabase({
     name: "pebble-database",
     storage: getRxStorageDexie(),
+    ignoreDuplicate: true,
   });
 
   await database.addCollections({
