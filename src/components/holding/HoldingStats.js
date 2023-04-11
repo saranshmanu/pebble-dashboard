@@ -1,5 +1,5 @@
 import { Col, Row, Statistic } from "antd";
-import { formatAmount, formatPercentage } from "../utils/commonFunctions";
+import { formatAmount, formatPercentage } from "../../utils/commonFunctions";
 
 const HoldingStats = ({ data }) => {
   return (

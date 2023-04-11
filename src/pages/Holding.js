@@ -7,9 +7,9 @@ import useGetHoldings from "../hooks/getHoldings";
 import useCreateHolding from "../hooks/createHolding";
 import useRemoveHolding from "../hooks/removeHolding";
 import useUpdateHolding from "../hooks/updateHolding";
-import HoldingStats from "../components/HoldingStats";
-import HoldingTable from "../components/HoldingTable";
-import HoldingForm from "../components/modal/HoldingForm";
+import HoldingStats from "../components/holding/HoldingStats";
+import HoldingTable from "../components/holding/HoldingTable";
+import HoldingForm from "../components/holding/HoldingForm";
 
 const { confirm, info } = Modal;
 

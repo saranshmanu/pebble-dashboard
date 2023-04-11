@@ -1,6 +1,6 @@
 import { Table, Button, Tag, Badge } from "antd";
 import { EditOutlined, DeleteOutlined, CopyOutlined } from "@ant-design/icons";
-import { formatAmount, formatPercentage } from "../utils/commonFunctions";
+import { formatAmount, formatPercentage } from "../../utils/commonFunctions";
 
 const TransactionTable = ({ data, showDeleteHoldingModal, showUpdateHoldingModal, showReplicateHoldingModal }) => {
   const columns = [
