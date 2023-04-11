@@ -136,7 +136,9 @@ const TransactionTable = ({ data, showDeleteHoldingModal, showUpdateHoldingModal
 
   const onChange = (pagination, filters, sorter, extra) => {};
 
-  return <Table size="small" columns={columns} dataSource={data} onChange={onChange} scroll={{ x: 1000 }} />;
+  return (
+    <Table rowKey="uuid" size="small" columns={columns} dataSource={data} onChange={onChange} scroll={{ x: 1000 }} />
+  );
 };
 
 export default TransactionTable;
