@@ -100,13 +100,13 @@ const HoldingForm = ({
     >
       <div style={{ padding: "30px 0px" }}>
         <Form
+          className="full-width"
           form={form}
           labelCol={{ span: 6 }}
           wrapperCol={{ span: 16 }}
           layout="horizontal"
           size="default"
           disabled={disabled}
-          style={{ width: "100%" }}
         >
           <Form.Item
             required
@@ -115,7 +115,7 @@ const HoldingForm = ({
             label="Investment Amount"
             rules={[{ required: true, message: "Initial investment amount field is required" }]}
           >
-            <InputNumber style={{ width: "100%" }} placeholder="100,000" />
+            <InputNumber className="full-width" placeholder="100,000" />
           </Form.Item>
           <Form.Item
             required
@@ -133,7 +133,7 @@ const HoldingForm = ({
             label="Time Period"
             rules={[{ required: true, message: "Investment duration is required" }]}
           >
-            <RangePicker style={{ width: "100%" }} format={dateFormat} />
+            <RangePicker className="full-width" format={dateFormat} />
           </Form.Item>
           <Form.Item
             required
@@ -142,7 +142,7 @@ const HoldingForm = ({
             label="Interest Rate"
             rules={[{ required: true, message: "Investment rate is required" }]}
           >
-            <InputNumber style={{ width: "100%" }} placeholder="9.00" />
+            <InputNumber className="full-width" placeholder="9.00" />
           </Form.Item>
           <Form.Item
             required

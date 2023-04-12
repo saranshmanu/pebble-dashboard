@@ -8,21 +8,21 @@ const { Title } = Typography;
 const SummaryCard = ({ data }) => {
   return (
     <Card icon={<BankOutlined />}>
-      <Title level={5} style={{ margin: 0 }}>
+      <Title className="no-margin" level={5}>
         Invested Amount
       </Title>
-      <Title level={4} style={{ margin: 0 }}>
+      <Title className="no-margin" level={4}>
         + {formatAmount(data?.totalInvestment)}
       </Title>
       <div style={{ marginBottom: 10 }} />
-      <Title level={5} style={{ margin: 0 }}>
+      <Title className="no-margin" level={5}>
         Accumulated Interest
       </Title>
-      <Title level={4} style={{ margin: 0 }}>
+      <Title className="no-margin" level={4}>
         + {formatAmount(data?.accumulatedInterest)}
       </Title>
       <Divider style={{ margin: "10px 0px", borderColor: "#000" }} />
-      <Title level={2} style={{ margin: 0 }}>
+      <Title className="no-margin" level={2}>
         = {formatAmount(data?.netAmount)}
       </Title>
     </Card>

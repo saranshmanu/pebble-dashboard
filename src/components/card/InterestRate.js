@@ -7,10 +7,10 @@ const { Title } = Typography;
 const InterestRateCard = ({ data }) => {
   return (
     <Card icon={<PercentageOutlined />}>
-      <Title level={5} style={{ margin: 0 }}>
+      <Title className="no-margin" level={5}>
         Average Interest Rate
       </Title>
-      <Title level={2} style={{ margin: 0 }}>
+      <Title className="no-margin" level={2}>
         {parseFloat(data?.averageInterestRate || 0).toFixed(2) + " %"}
       </Title>
     </Card>
