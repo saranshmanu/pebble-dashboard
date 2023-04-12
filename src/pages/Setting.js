@@ -50,13 +50,13 @@ function Setting() {
 
   return (
     <div>
-      <Row gutter={[10, 10]} style={{ height: "100%" }}>
+      <Row className="full-height" gutter={[10, 10]}>
         <Col span={6}>
-          <div style={{ height: "100%" }}>
+          <div className="full-height">
             <Menu
+              className="full-height full-width"
               selectedKeys={selectedKeys}
               onClick={onMenuSelection}
-              style={{ width: "100%", height: "100%" }}
               defaultSelectedKeys={["general"]}
               defaultOpenKeys={["general"]}
               mode="vertical"

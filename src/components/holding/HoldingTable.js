@@ -1,4 +1,4 @@
-import { Table, Button, Tag, Badge } from "antd";
+import { Table, Button, Tag, Badge, Space } from "antd";
 import { EditOutlined, DeleteOutlined, CopyOutlined } from "@ant-design/icons";
 import { formatAmount, formatPercentage } from "../../utils/commonFunctions";
 
@@ -97,7 +97,7 @@ const TransactionTable = ({ data, showDeleteHoldingModal, showUpdateHoldingModal
       width: "250px",
       render: (_, record) => {
         return (
-          <div style={{ display: "flex", flexDirection: "row" }}>
+          <Space direction="horizontal" size={0}>
             <Button
               type="link"
               size="small"
@@ -128,7 +128,7 @@ const TransactionTable = ({ data, showDeleteHoldingModal, showUpdateHoldingModal
             >
               Delete
             </Button>
-          </div>
+          </Space>
         );
       },
     },

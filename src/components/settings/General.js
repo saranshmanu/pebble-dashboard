@@ -1,4 +1,4 @@
-import { Button, Divider } from "antd";
+import { Button, Divider, Space } from "antd";
 import {
   UsergroupAddOutlined,
   FireOutlined,
@@ -10,7 +10,7 @@ import {
 
 const General = () => {
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
+    <Space direction="vertical" size={0}>
       <div>
         <Button type="link" size="large" icon={<FolderAddOutlined />}>
           Import Holdings
@@ -43,7 +43,7 @@ const General = () => {
         </Button>
       </div>
       <Divider />
-    </div>
+    </Space>
   );
 };
 
