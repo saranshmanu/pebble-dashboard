@@ -1,4 +1,6 @@
-const { app, BrowserWindow, protocol } = require("electron");
+const { app, BrowserWindow, protocol, ipcMain } = require("electron");
+const find = require("find-process");
+
 const path = require("path");
 const url = require("url");
 
@@ -9,6 +11,9 @@ function createWindow() {
     minWidth: 800,
     minHeight: 600,
     webPreferences: {
+      nodeIntegration: true,
+      enableRemoteModule: true,
+      contextIsolation: false,
       preload: path.join(__dirname, "preload.js"),
       devTools: false,
     },
@@ -63,6 +68,19 @@ app.on("window-all-closed", function () {
   if (process.platform !== "darwin") {
     app.quit();
   }
+});
+
+ipcMain.on("close", () => {
+  find("port", 3000)
+    .then((list) => {
+      if (list[0] != null) {
+        app.quit();
+        process.kill(list[0].pid, "SIGHUP");
+      }
+    })
+    .catch((e) => {
+      console.log(e.stack || e);
+    });
 });
 
 // In this file you can include the rest of your app's specific main process

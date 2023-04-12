@@ -1,4 +1,4 @@
-import { Button, Divider, Space } from "antd";
+import { Button, Divider, Space, Modal } from "antd";
 import {
   UsergroupAddOutlined,
   FireOutlined,
@@ -6,9 +6,27 @@ import {
   ExportOutlined,
   FolderAddOutlined,
   FilePdfOutlined,
+  ExclamationCircleFilled,
 } from "@ant-design/icons";
 
+const { confirm } = Modal;
+
 const General = () => {
+  const closeApplication = () => {
+    confirm({
+      title: "Are you sure you want to close the application?",
+      icon: <ExclamationCircleFilled />,
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
+      onOk: () => {
+        const { ipcRenderer } = window.require("electron");
+        ipcRenderer.send("close", []);
+      },
+      onCancel: () => {},
+    });
+  };
+
   return (
     <Space direction="vertical" size={0}>
       <div>
@@ -38,7 +56,7 @@ const General = () => {
       </div>
       <Divider />
       <div>
-        <Button type="link" size="large" icon={<CloseCircleOutlined />} danger>
+        <Button type="link" size="large" icon={<CloseCircleOutlined />} danger onClick={closeApplication}>
           Close Application
         </Button>
       </div>
