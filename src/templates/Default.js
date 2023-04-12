@@ -1,15 +1,17 @@
 /* eslint-disable default-case */
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Layout, Menu, Typography, theme } from "antd";
+import { Button, Layout, Menu, Typography, theme } from "antd";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   ProjectOutlined,
   SettingOutlined,
   TableOutlined,
+  BellOutlined,
 } from "@ant-design/icons";
 
+import Notifications from "../components/Notifications";
 import Logo from "../components/Logo";
 import "../styles/Default.scss";
 
@@ -23,6 +25,7 @@ const Default = ({ children }) => {
     3: { title: "Settings" },
   };
   const [selectedKeys, setSelectedKeys] = useState(null);
+  const [isNotificationDrawerOpen, setNotificationDrawerOpen] = useState(false);
   const [pageTitle, setPageTitle] = useState(sections["1"]?.title);
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
@@ -35,6 +38,10 @@ const Default = ({ children }) => {
     className: "trigger",
     onClick: () => setCollapsed(!collapsed),
   });
+
+  const onNotificationDrawerClose = () => {
+    setNotificationDrawerOpen(false);
+  };
 
   const onMenuSelection = (options) => {
     let link = "";
@@ -89,10 +96,18 @@ const Default = ({ children }) => {
       </Sider>
       <Layout className="body">
         <Header className="page-header" style={{ background: colorBgContainer }}>
-          {collapseButton}
-          <Title className="page-title" level={4}>
-            {pageTitle}
-          </Title>
+          <div className="page-title-section">
+            {collapseButton}
+            <Title className="page-title" level={4}>
+              {pageTitle}
+            </Title>
+          </div>
+          <div>
+            <Notifications open={isNotificationDrawerOpen} onClose={onNotificationDrawerClose} />
+            <Button icon={<BellOutlined />} onClick={() => setNotificationDrawerOpen(true)}>
+              Notifications
+            </Button>
+          </div>
         </Header>
         <Content className="page-content" style={{ background: colorBgContainer }}>
           {children}
