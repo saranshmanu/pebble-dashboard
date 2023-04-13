@@ -1,6 +1,7 @@
 import { createRxDatabase } from "rxdb";
 import { getRxStorageDexie } from "rxdb/plugins/storage-dexie";
 import investmentTable from "./investment";
+import settingTable from "./setting";
 
 let database;
 
@@ -14,6 +15,9 @@ const createDatabase = async () => {
   await database.addCollections({
     investments: {
       schema: investmentTable,
+    },
+    settings: {
+      schema: settingTable,
     },
   });
 };
