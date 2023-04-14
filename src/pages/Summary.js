@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { Col, Row, Button } from "antd";
 import { FileDoneOutlined } from "@ant-design/icons";
 
-import useGetHoldings from "../hooks/getHoldings";
+import useHolding from "../hooks/holding";
 import SummaryCard from "../components/card/Summary";
 import ProjectionCard from "../components/card/Projection";
 import InterestRateCard from "../components/card/InterestRate";
@@ -11,7 +11,7 @@ import DistributionCard from "../components/card/Distribution";
 import "../styles/Summary.scss";
 
 function Summary() {
-  const [{ holdingProjection, holdingStats, holdingDistribution }, refresh] = useGetHoldings();
+  const [{ holdingProjection, holdingStats, holdingDistribution }, { refresh }] = useHolding();
 
   useEffect(() => {
     refresh();

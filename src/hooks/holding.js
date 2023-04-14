@@ -1,9 +1,11 @@
 import dayjs from "dayjs";
+import { v4 } from "uuid";
+import { message } from "antd";
 import { useState } from "react";
 import { getDatabase } from "../database";
 import { calculateFutureAmount, calculateCurrentAmount, getCompoundFrequencyType } from "../utils/commonFunctions";
 
-const useGetHoldings = () => {
+const useHolding = () => {
   const [holdingStats, setHoldingStats] = useState({
     averageInterestRate: 0,
     accumulatedInterest: 0,
@@ -13,6 +15,10 @@ const useGetHoldings = () => {
   const [holdingData, setHoldingData] = useState([]);
   const [holdingProjection, setHoldingProjection] = useState([]);
   const [holdingDistribution, setHoldingDistribution] = useState([]);
+
+  const [updatingRecord, setUpdatingRecordStatus] = useState(false);
+  const [removingRecord, setRemovingRecordStatus] = useState(false);
+  const [creatingRecord, setCreatingRecordStatus] = useState(false);
 
   const refreshHoldingDistribution = async (holdings) => {
     const distribution = {};
@@ -156,7 +162,93 @@ const useGetHoldings = () => {
     await refreshHoldingData();
   };
 
-  return [{ holdingProjection, holdingStats, holdingData, holdingDistribution }, refresh];
+  const updateHolding = async (uuid, payload) => {
+    try {
+      setUpdatingRecordStatus(true);
+      const database = await getDatabase();
+      let holding = await database.investments
+        .findOne({
+          selector: { uuid },
+        })
+        .exec();
+      delete payload.uuid;
+      await holding.patch({ ...payload });
+
+      message.success("Updated the investment record!");
+    } catch (error) {
+      message.error("Failed to update the investment record");
+    }
+
+    setUpdatingRecordStatus(false);
+  };
+
+  const deleteHolding = async (uuid) => {
+    try {
+      setRemovingRecordStatus(true);
+      const database = await getDatabase();
+      let holding = await database.investments
+        .findOne({
+          selector: { uuid },
+        })
+        .exec();
+      await holding.remove();
+
+      message.success("Removed the investment record!");
+    } catch (error) {
+      message.error("Failed to remove the investment record");
+    }
+
+    setRemovingRecordStatus(false);
+  };
+
+  const createHolding = async (payload) => {
+    try {
+      setCreatingRecordStatus(true);
+      const database = await getDatabase();
+      await database.investments.insert(payload);
+
+      message.success("Created the investment record successfully");
+    } catch (error) {
+      message.error("Failed to create investment record");
+    }
+
+    setCreatingRecordStatus(false);
+  };
+
+  const replicateHolding = async (uuid) => {
+    try {
+      setCreatingRecordStatus(true);
+      const database = await getDatabase();
+      const holding = await database.investments
+        .findOne({
+          selector: { uuid },
+        })
+        .exec();
+      await database.investments.insert({
+        ...holding._data,
+        uuid: v4(),
+      });
+
+      message.success("Replicated the investment record successfully");
+    } catch (error) {
+      message.error("Failed to replicate investment record");
+    }
+
+    setCreatingRecordStatus(false);
+  };
+
+  return [
+    {
+      updatingRecord,
+      removingRecord,
+      creatingRecord,
+      holdingProjection,
+      holdingStats,
+      holdingData,
+      holdingDistribution,
+    },
+    { updateHolding, deleteHolding, createHolding, replicateHolding, refresh },
+  ];
 };
 
-export default useGetHoldings;
+export default useHolding;
