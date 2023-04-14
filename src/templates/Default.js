@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable default-case */
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -24,7 +25,7 @@ const Default = ({ children }) => {
     2: { title: "Holdings" },
     3: { title: "Settings" },
   };
-  const [selectedKeys, setSelectedKeys] = useState(null);
+  const [selectedKeys, setSelectedKeys] = useState([]);
   const [isNotificationDrawerOpen, setNotificationDrawerOpen] = useState(false);
   const [pageTitle, setPageTitle] = useState(sections["1"]?.title);
   const [collapsed, setCollapsed] = useState(false);
@@ -76,7 +77,7 @@ const Default = ({ children }) => {
         setPageTitle(sections[3]?.title);
         break;
     }
-  }, []);
+  }, [location.pathname]);
 
   return (
     <Layout className="default-layout">
