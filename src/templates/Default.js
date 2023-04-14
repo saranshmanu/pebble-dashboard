@@ -28,7 +28,7 @@ const Default = ({ children }) => {
   const [selectedKeys, setSelectedKeys] = useState([]);
   const [isNotificationDrawerOpen, setNotificationDrawerOpen] = useState(false);
   const [pageTitle, setPageTitle] = useState(sections["1"]?.title);
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(window.localStorage.getItem("sidebar-collapse-status") === "true");
   const navigate = useNavigate();
   const location = useLocation();
   const {
@@ -37,7 +37,10 @@ const Default = ({ children }) => {
 
   const collapseButton = React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
     className: "trigger",
-    onClick: () => setCollapsed(!collapsed),
+    onClick: () => {
+      window.localStorage.setItem("sidebar-collapse-status", !collapsed);
+      setCollapsed(!collapsed);
+    },
   });
 
   const onNotificationDrawerClose = () => {
