@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button, Divider, Space, Modal } from "antd";
 import {
   UsergroupAddOutlined,
@@ -8,10 +9,13 @@ import {
   FilePdfOutlined,
   ExclamationCircleFilled,
 } from "@ant-design/icons";
+import InstitutionForm from "./InstitutionForm";
 
 const { confirm } = Modal;
 
 const General = () => {
+  const [isInstitutionModalOpen, setInstitutionModalOpen] = useState(false);
+
   const closeApplication = () => {
     confirm({
       title: "Are you sure you want to close the application?",
@@ -35,7 +39,13 @@ const General = () => {
         </Button>
       </div>
       <div>
-        <Button type="link" size="large" icon={<UsergroupAddOutlined />}>
+        <InstitutionForm
+          isOpen={isInstitutionModalOpen}
+          onClose={() => {
+            setInstitutionModalOpen(false);
+          }}
+        />
+        <Button type="link" size="large" icon={<UsergroupAddOutlined />} onClick={() => setInstitutionModalOpen(true)}>
           Create Institution
         </Button>
       </div>

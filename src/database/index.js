@@ -2,6 +2,7 @@ import { createRxDatabase } from "rxdb";
 import { getRxStorageDexie } from "rxdb/plugins/storage-dexie";
 import investmentTable from "./investment";
 import settingTable from "./setting";
+import institutionTable from "./institution";
 
 let database;
 
@@ -18,6 +19,9 @@ const createDatabase = async () => {
     },
     settings: {
       schema: settingTable,
+    },
+    institution: {
+      schema: institutionTable,
     },
   });
 };
