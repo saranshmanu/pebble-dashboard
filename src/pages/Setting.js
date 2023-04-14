@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Row, Col, Menu, Typography, Divider } from "antd";
 import { LayoutOutlined, ControlOutlined, BarsOutlined } from "@ant-design/icons";
-import General from "../components/settings/General";
-import Institution from "../components/settings/Institution";
-import Preference from "../components/settings/Preference";
+import GeneralSection from "../components/settings/GeneralSection";
+import InstitutionSection from "../components/settings/InstitutionSection";
+import PreferenceSection from "../components/settings/PreferenceSection";
 import "../styles/Settings.scss";
 
 const { Title } = Typography;
@@ -13,17 +13,17 @@ function Setting() {
     {
       label: "General",
       icon: ControlOutlined,
-      view: General,
+      view: GeneralSection,
     },
     {
       label: "Institutions",
       icon: BarsOutlined,
-      view: Institution,
+      view: InstitutionSection,
     },
     {
       label: "Preferences",
       icon: LayoutOutlined,
-      view: Preference,
+      view: PreferenceSection,
     },
   ];
 

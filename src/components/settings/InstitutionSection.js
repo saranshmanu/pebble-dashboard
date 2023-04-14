@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Typography, Divider, Dropdown, Button, Modal, Result } from "antd";
 import { EditOutlined, DeleteOutlined, MoreOutlined, ExclamationCircleFilled } from "@ant-design/icons";
-import InstitutionForm from "../settings/InstitutionForm";
+import InstitutionForm from "./InstitutionForm";
 import useInstitution from "../../hooks/institution";
 
 const { Title } = Typography;
