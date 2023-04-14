@@ -31,7 +31,7 @@ const Preference = () => {
               checked={settings?.summaryViewSections?.[preference?.property]}
               checkedChildren="1"
               unCheckedChildren="0"
-              size="large"
+              size="default"
             />
           </div>
           <Divider />
