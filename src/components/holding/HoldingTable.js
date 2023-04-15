@@ -55,7 +55,9 @@ const TransactionTable = ({ data, showDeleteHoldingModal, showUpdateHoldingModal
         compare: (a, b) => parseFloat(a?.duration) - parseFloat(b?.duration),
         multiple: 1,
       },
-      render: (value) => <Badge color="#faad14" count={value} overflowCount={365 * 100} />,
+      render: (value) => (
+        <Badge color="cyan" count={value} overflowCount={365 * 100} style={{ width: "50px" }} showZero />
+      ),
     },
     {
       key: "currentValue",
