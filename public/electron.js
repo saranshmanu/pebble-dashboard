@@ -1,12 +1,11 @@
 const { app, BrowserWindow, protocol, ipcMain } = require("electron");
-const find = require("find-process");
 
 const path = require("path");
 const url = require("url");
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
-    width: 1200,
+    width: 900,
     height: 800,
     minWidth: 800,
     minHeight: 600,
@@ -15,7 +14,7 @@ function createWindow() {
       enableRemoteModule: true,
       contextIsolation: false,
       preload: path.join(__dirname, "preload.js"),
-      devTools: false,
+      devTools: app.isPackaged ? false : true,
     },
   });
 
@@ -71,16 +70,22 @@ app.on("window-all-closed", function () {
 });
 
 ipcMain.on("close", () => {
-  find("port", 3000)
-    .then((list) => {
-      if (list[0] != null) {
-        app.quit();
-        process.kill(list[0].pid, "SIGHUP");
-      }
-    })
-    .catch((e) => {
-      console.log(e.stack || e);
-    });
+  if (app.isPackaged) {
+    app.quit();
+  } else {
+    const find = require("find-process");
+
+    find("port", 3000)
+      .then((list) => {
+        if (list[0] != null) {
+          app.quit();
+          process.kill(list[0].pid, "SIGHUP");
+        }
+      })
+      .catch((e) => {
+        console.log(e.stack || e);
+      });
+  }
 });
 
 // In this file you can include the rest of your app's specific main process
