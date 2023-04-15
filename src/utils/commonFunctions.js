@@ -43,6 +43,7 @@ const createNotification = async (notification = "", type = "") => {
 
     const database = await getDatabase();
     await database.notification.insert({
+      type,
       uuid: v4(),
       notification,
       datetime: new Date().toISOString(),

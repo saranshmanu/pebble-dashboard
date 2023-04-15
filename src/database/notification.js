@@ -1,6 +1,6 @@
 const notificationTable = {
   title: "notificationTable",
-  version: 0,
+  version: 1,
   primaryKey: "uuid",
   type: "object",
   properties: {
@@ -13,6 +13,10 @@ const notificationTable = {
       maxLength: 20,
     },
     datetime: {
+      type: "string",
+      maxLength: 20,
+    },
+    type: {
       type: "string",
       maxLength: 20,
     },

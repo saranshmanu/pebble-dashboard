@@ -39,8 +39,17 @@ const createDatabase = async () => {
     },
     notification: {
       schema: notificationTable,
+      migrationStrategies: {
+        1: (document) => {
+          return document;
+        },
+      },
     },
   });
+};
+
+const initDatabaseInstance = async () => {
+  await createDatabase();
 };
 
 const getDatabase = async () => {
@@ -67,4 +76,4 @@ const clearCache = async () => {
   }
 };
 
-export { createDatabase, getDatabase, clearCache };
+export { createDatabase, getDatabase, clearCache, initDatabaseInstance };

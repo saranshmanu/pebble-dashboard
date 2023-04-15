@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { getDatabase } from "../database";
+import { getDatabase, initDatabaseInstance } from "../database";
 
 const useNotification = () => {
   const [notifications, setNotifications] = useState([]);
@@ -8,18 +8,25 @@ const useNotification = () => {
   const getNotifications = async () => {
     try {
       setFetchingRecordStatus(true);
+
       const database = await getDatabase();
       if (!database.notification) {
         console.warn("Database instance cannot be found");
         return;
       }
+
       let response = await database.notification.find().exec();
       response = response.map((data) => {
         const record = data._data;
         return record;
       });
 
-      setNotifications(response.reverse());
+      // Sorts the notifications based on the creation datetime
+      response.sort((a, b) => {
+        return new Date(b.datetime) - new Date(a.datetime);
+      });
+
+      setNotifications(response);
     } catch (error) {
       //
     }
@@ -27,7 +34,20 @@ const useNotification = () => {
     setFetchingRecordStatus(false);
   };
 
-  return [{ notifications, fetchingRecord }, { getNotifications }];
+  const clearNotifications = async () => {
+    try {
+      const database = await getDatabase();
+      await database.notification.remove();
+      await initDatabaseInstance();
+    } catch (error) {}
+
+    getNotifications();
+  };
+
+  return [
+    { notifications, fetchingRecord },
+    { getNotifications, clearNotifications },
+  ];
 };
 
 export default useNotification;
