@@ -4,6 +4,7 @@ import { Col, Row, Button, Modal, Divider } from "antd";
 import { PlusCircleOutlined, ExclamationCircleFilled } from "@ant-design/icons";
 
 import useHolding from "../hooks/holding";
+import useInstitution from "../hooks/institution";
 import HoldingStats from "../components/holding/HoldingStats";
 import HoldingTable from "../components/holding/HoldingTable";
 import HoldingForm from "../components/holding/HoldingForm";
@@ -19,6 +20,7 @@ function Holding() {
     { updatingRecord, removingRecord, creatingRecord, holdingData, holdingStats },
     { updateHolding, deleteHolding, createHolding, replicateHolding, refresh },
   ] = useHolding();
+  const [{ institutions }, { getInstitutions }] = useInstitution();
 
   const showDeleteHoldingModal = (uuid) => {
     confirm({
@@ -56,6 +58,7 @@ function Holding() {
 
   useEffect(() => {
     refresh();
+    getInstitutions();
   }, [isCreateModalOpen, isUpdateModalOpen, updatingRecord, removingRecord, creatingRecord]);
 
   useEffect(() => {
@@ -65,6 +68,7 @@ function Holding() {
   return (
     <div>
       <HoldingForm
+        institutions={institutions}
         createHolding={createHolding}
         isModalOpen={isCreateModalOpen}
         setModalStatus={setCreateModalStatus}
@@ -72,6 +76,7 @@ function Holding() {
       <HoldingForm
         updateMode={true}
         identifier={identifier}
+        institutions={institutions}
         updateHolding={updateHolding}
         isModalOpen={isUpdateModalOpen}
         setModalStatus={setUpdateModalStatus}

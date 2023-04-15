@@ -2,10 +2,11 @@
 import { useEffect, useState } from "react";
 import { v4 } from "uuid";
 import dayjs from "dayjs";
-import { DatePicker, Form, Input, InputNumber, Radio, Modal, message } from "antd";
+import { DatePicker, Form, Select, InputNumber, Radio, Modal, message } from "antd";
 import { getDatabase } from "../../database";
 
 const { RangePicker } = DatePicker;
+const { Option } = Select;
 
 const HoldingForm = ({
   isModalOpen,
@@ -14,6 +15,7 @@ const HoldingForm = ({
   updateHolding,
   updateMode = false,
   identifier = "",
+  institutions = [],
 }) => {
   const [form] = Form.useForm();
   const [disabled, setDisabled] = useState(false);
@@ -122,9 +124,15 @@ const HoldingForm = ({
             tooltip="A financial institution (FI) is a company engaged in the business of dealing with financial and monetary transactions such as deposits, loans, investments, and currency exchange."
             name="financial-institution"
             label="Financial Institution"
-            rules={[{ required: true, message: "Investment compound frequency is required" }]}
+            rules={[{ required: true, message: "Financial Institution is required" }]}
           >
-            <Input placeholder="State Bank of India" />
+            <Select placeholder="State Bank of India">
+              {institutions.map((institution, index) => (
+                <Option value={institution?.uuid} key={index}>
+                  {institution?.label}
+                </Option>
+              ))}
+            </Select>
           </Form.Item>
           <Form.Item
             required

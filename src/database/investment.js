@@ -1,6 +1,6 @@
 const investmentTable = {
   title: "investmentTable",
-  version: 0,
+  version: 3,
   primaryKey: "uuid",
   type: "object",
   properties: {
@@ -10,7 +10,7 @@ const investmentTable = {
     },
     institution: {
       type: "string",
-      maxLength: 20,
+      ref: "institution",
     },
     investmentDatetime: {
       type: "string",

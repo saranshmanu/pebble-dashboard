@@ -122,9 +122,13 @@ const useHolding = () => {
     }
     let holdings = await database.investments.find().exec();
 
-    holdings = holdings.map((holding) => {
-      const record = holding._data;
+    let response = [];
+    for (const holding of holdings) {
+      const institution = await holding.populate("institution");
+      response.push({ ...holding._data, institution: institution._data });
+    }
 
+    holdings = response.map((record) => {
       const maturityAmount = calculateFutureAmount(
         record?.principal,
         record?.interestRate,
@@ -141,7 +145,7 @@ const useHolding = () => {
       return {
         uuid: record?.uuid,
         duration: record?.duration,
-        institution: record?.institution,
+        institution: record?.institution?.label,
         interestRate: record?.interestRate,
         principal: record?.principal,
         investmentDate: record?.investmentDatetime,
