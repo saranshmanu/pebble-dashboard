@@ -4,6 +4,7 @@ import { RxDBMigrationPlugin } from "rxdb/plugins/migration";
 import investmentTable from "./investment";
 import settingTable from "./setting";
 import institutionTable from "./institution";
+import { message } from "antd";
 
 let database;
 
@@ -47,4 +48,18 @@ const getDatabase = async () => {
   }
   return database;
 };
-export { createDatabase, getDatabase };
+
+const clearCache = async () => {
+  try {
+    const database = await getDatabase();
+    await database.institution.remove();
+    await database.investments.remove();
+
+    message.info("Cleared the system cache!");
+  } catch (error) {
+    console.error("Failed to clear cache", error);
+    message.error("Failed to clear the system cache!");
+  }
+};
+
+export { createDatabase, getDatabase, clearCache };

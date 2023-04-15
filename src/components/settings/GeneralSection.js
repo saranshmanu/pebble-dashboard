@@ -10,6 +10,7 @@ import {
   ExclamationCircleFilled,
 } from "@ant-design/icons";
 import InstitutionForm from "./InstitutionForm";
+import { clearCache } from "../../database";
 
 const { confirm } = Modal;
 
@@ -26,6 +27,20 @@ const General = () => {
       onOk: () => {
         const { ipcRenderer } = window.require("electron");
         ipcRenderer.send("close", []);
+      },
+      onCancel: () => {},
+    });
+  };
+
+  const clearSystemCache = () => {
+    confirm({
+      title: "Are you sure you want to clear the system cache?",
+      icon: <ExclamationCircleFilled />,
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
+      onOk: () => {
+        clearCache();
       },
       onCancel: () => {},
     });
@@ -50,7 +65,7 @@ const General = () => {
         </Button>
       </div>
       <div>
-        <Button type="link" size="large" icon={<FireOutlined />}>
+        <Button type="link" size="large" icon={<FireOutlined />} onClick={clearSystemCache}>
           Format Cache
         </Button>
       </div>
