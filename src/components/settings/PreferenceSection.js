@@ -34,7 +34,7 @@ const Preference = () => {
               size="default"
             />
           </div>
-          <Divider />
+          <Divider className="divider-margin" />
         </div>
       ))}
     </div>

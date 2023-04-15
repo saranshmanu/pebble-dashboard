@@ -47,7 +47,7 @@ const General = () => {
   };
 
   return (
-    <Space direction="vertical" size={0}>
+    <Space direction="vertical" size={0} className="full-width">
       <div>
         <Button type="link" size="large" icon={<FolderAddOutlined />}>
           Import Holdings

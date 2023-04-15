@@ -71,11 +71,13 @@ const Institution = () => {
                     onClick: () => {},
                   }}
                 >
-                  <Button icon={<MoreOutlined />}></Button>
+                  <Button icon={<MoreOutlined />} type="link" block>
+                    Actions
+                  </Button>
                 </Dropdown>
               </div>
             </div>
-            <Divider className="no-margin" />
+            <Divider className="divider-margin" />
           </div>
         ))
       ) : (
