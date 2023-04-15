@@ -64,10 +64,7 @@ const useHolding = () => {
 
   const refreshHoldingProjection = async () => {
     const database = await getDatabase();
-    if (!database.investments) {
-      console.warn("Database instance cannot be found");
-      return;
-    }
+
     let holdings = await database.investments.find().exec();
     holdings = holdings.map((holding) => holding._data);
 
@@ -120,10 +117,7 @@ const useHolding = () => {
 
   const refreshHoldingData = async () => {
     const database = await getDatabase();
-    if (!database.investments) {
-      console.warn("Database instance cannot be found");
-      return;
-    }
+
     let holdings = await database.investments.find().exec();
 
     let response = [];

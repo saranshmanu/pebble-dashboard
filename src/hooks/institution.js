@@ -15,10 +15,6 @@ const useInstitution = () => {
     try {
       setFetchingRecordStatus(true);
       const database = await getDatabase();
-      if (!database.investments) {
-        console.warn("Database instance cannot be found");
-        return;
-      }
       let response = await database.institution.find().exec();
       response = response.map((data) => {
         const record = data._data;

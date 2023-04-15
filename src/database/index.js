@@ -7,16 +7,18 @@ import settingTable from "./setting";
 import institutionTable from "./institution";
 import { createNotification } from "../utils/commonFunctions";
 
-let database;
-
 const createDatabase = async () => {
-  database = await createRxDatabase({
+  // Migration instructions
+  // https://rxdb.info/questions-answers.html#cant-change-the-schema
+  addRxPlugin(RxDBMigrationPlugin);
+
+  window.database = await createRxDatabase({
     name: "pebble-database",
     storage: getRxStorageDexie(),
     ignoreDuplicate: true,
   });
 
-  await database.addCollections({
+  await window.database.addCollections({
     investments: {
       schema: investmentTable,
       migrationStrategies: {
@@ -53,13 +55,7 @@ const initDatabaseInstance = async () => {
 };
 
 const getDatabase = async () => {
-  if (!database) {
-    // Migration instructions
-    // https://rxdb.info/questions-answers.html#cant-change-the-schema
-    addRxPlugin(RxDBMigrationPlugin);
-    await createDatabase();
-  }
-  return database;
+  return window.database;;
 };
 
 const clearCache = async () => {

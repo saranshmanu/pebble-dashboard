@@ -25,7 +25,6 @@ const useSettings = () => {
   const getUserSettings = async () => {
     try {
       const database = await getDatabase();
-
       let settings = await database.settings.find().exec();
       if (!settings.length) {
         await createUserSettings();

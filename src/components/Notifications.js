@@ -8,7 +8,6 @@ import {
   ExclamationCircleOutlined,
   ClockCircleOutlined,
 } from "@ant-design/icons";
-import useNotification from "../hooks/notification";
 
 const { Text } = Typography;
 
@@ -64,9 +63,7 @@ const Notification = ({ notification = {} }) => {
   );
 };
 
-const Notifications = ({ open, onClose }) => {
-  const [{ notifications }, { getNotifications, clearNotifications }] = useNotification();
-
+const Notifications = ({ notifications, open, onClose, getNotifications, clearNotifications }) => {
   useEffect(() => {
     if (open) {
       // fetch the notifications from the database

@@ -10,11 +10,6 @@ const useNotification = () => {
       setFetchingRecordStatus(true);
 
       const database = await getDatabase();
-      if (!database.notification) {
-        console.warn("Database instance cannot be found");
-        return;
-      }
-
       let response = await database.notification.find().exec();
       response = response.map((data) => {
         const record = data._data;
