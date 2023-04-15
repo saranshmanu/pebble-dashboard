@@ -89,6 +89,12 @@ const HoldingForm = ({
     resetField();
   };
 
+  const handleKeypress = (e) => {
+    if (e.keyCode === 13) {
+      onFormSubmit();
+    }
+  };
+
   return (
     <Modal
       size="small"
@@ -109,6 +115,7 @@ const HoldingForm = ({
           layout="horizontal"
           size="default"
           disabled={disabled}
+          onKeyUpCapture={handleKeypress}
         >
           <Form.Item
             required

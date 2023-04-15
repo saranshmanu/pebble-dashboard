@@ -61,6 +61,12 @@ const InstitutionForm = ({ isOpen, onClose, inUpdateMode = false, selected, upda
     } catch (error) {}
   };
 
+  const handleKeypress = (e) => {
+    if (e.keyCode === 13) {
+      onFormSubmit();
+    }
+  };
+
   return (
     <Modal
       title="Institution"
@@ -69,7 +75,14 @@ const InstitutionForm = ({ isOpen, onClose, inUpdateMode = false, selected, upda
       okText={inUpdateMode ? "Update" : "Create"}
       onOk={onFormSubmit}
     >
-      <Form form={form} layout="vertical" size="default" requiredMark={true} disabled={disabled}>
+      <Form
+        form={form}
+        layout="vertical"
+        size="default"
+        requiredMark={true}
+        disabled={disabled}
+        onKeyUpCapture={handleKeypress}
+      >
         <Form.Item
           required
           name="name"
