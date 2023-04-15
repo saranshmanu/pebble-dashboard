@@ -1,9 +1,13 @@
 import dayjs from "dayjs";
 import { v4 } from "uuid";
-import { message } from "antd";
 import { useState } from "react";
 import { getDatabase } from "../database";
-import { calculateFutureAmount, calculateCurrentAmount, getCompoundFrequencyType } from "../utils/commonFunctions";
+import {
+  calculateFutureAmount,
+  calculateCurrentAmount,
+  getCompoundFrequencyType,
+  createNotification,
+} from "../utils/commonFunctions";
 
 const useHolding = () => {
   const [holdingStats, setHoldingStats] = useState({
@@ -178,9 +182,9 @@ const useHolding = () => {
       delete payload.uuid;
       await holding.patch({ ...payload });
 
-      message.success("Updated the investment record!");
+      createNotification("Updated the investment record!", "success");
     } catch (error) {
-      message.error("Failed to update the investment record");
+      createNotification("Failed to update the investment record", "error");
     }
 
     setUpdatingRecordStatus(false);
@@ -197,9 +201,9 @@ const useHolding = () => {
         .exec();
       await holding.remove();
 
-      message.success("Removed the investment record!");
+      createNotification("Removed the investment record!", "success");
     } catch (error) {
-      message.error("Failed to remove the investment record");
+      createNotification("Failed to remove the investment record", "error");
     }
 
     setRemovingRecordStatus(false);
@@ -211,9 +215,9 @@ const useHolding = () => {
       const database = await getDatabase();
       await database.investments.insert(payload);
 
-      message.success("Created the investment record successfully");
+      createNotification("Created the investment record successfully", "success");
     } catch (error) {
-      message.error("Failed to create investment record");
+      createNotification("Failed to create investment record", "error");
     }
 
     setCreatingRecordStatus(false);
@@ -233,9 +237,9 @@ const useHolding = () => {
         uuid: v4(),
       });
 
-      message.success("Replicated the investment record successfully");
+      createNotification("Replicated the investment record successfully", "success");
     } catch (error) {
-      message.error("Failed to replicate investment record");
+      createNotification("Failed to replicate investment record", "error");
     }
 
     setCreatingRecordStatus(false);

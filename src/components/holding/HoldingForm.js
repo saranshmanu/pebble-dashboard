@@ -2,8 +2,9 @@
 import { useEffect, useState } from "react";
 import { v4 } from "uuid";
 import dayjs from "dayjs";
-import { DatePicker, Form, Select, InputNumber, Radio, Modal, message } from "antd";
+import { DatePicker, Form, Select, InputNumber, Radio, Modal } from "antd";
 import { getDatabase } from "../../database";
+import { createNotification } from "../../utils/commonFunctions";
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -46,7 +47,7 @@ const HoldingForm = ({
 
       setDisabled(false);
     } catch (error) {
-      message.error("Failed to fetch the record information");
+      createNotification("Failed to fetch the record information", "error");
     }
   };
 

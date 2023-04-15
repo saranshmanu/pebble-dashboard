@@ -1,9 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Modal, Form, Input, message } from "antd";
+import { Modal, Form, Input } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import useInstitution from "../../hooks/institution";
 import { getDatabase } from "../../database";
+import { createNotification } from "../../utils/commonFunctions";
 
 const InstitutionForm = ({ isOpen, onClose, inUpdateMode = false, selected, updatingRecord, updateInstitution }) => {
   const [form] = Form.useForm();
@@ -24,7 +25,7 @@ const InstitutionForm = ({ isOpen, onClose, inUpdateMode = false, selected, upda
 
       setDisabled(false);
     } catch (error) {
-      message.error("Failed to fetch the record information");
+      createNotification("Failed to fetch the record information", "error");
     }
   };
 

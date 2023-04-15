@@ -1,3 +1,7 @@
+import { v4 } from "uuid";
+import { message } from "antd";
+import { getDatabase } from "../database";
+
 const calculateCurrentAmount = (principal = 0, interest = 0, frequency = 1, investmentDate = "") => {
   const today = new Date().getTime();
   const date = new Date(investmentDate).getTime();
@@ -33,4 +37,38 @@ const formatPercentage = (rate = 0) => {
   return `${(rate || 0)?.toFixed(2)} %`;
 };
 
-export { calculateCurrentAmount, calculateFutureAmount, getCompoundFrequencyType, formatAmount, formatPercentage };
+const createNotification = async (notification = "", type = "") => {
+  try {
+    if (notification === "" || !notification) return;
+
+    const database = await getDatabase();
+    await database.notification.insert({
+      uuid: v4(),
+      notification,
+      datetime: new Date().toISOString(),
+    });
+
+    switch (type) {
+      case "error":
+        message.error(notification);
+        break;
+      case "success":
+        message.success(notification);
+        break;
+      case "info":
+        message.info(notification);
+        break;
+      default:
+        break;
+    }
+  } catch (error) {}
+};
+
+export {
+  calculateCurrentAmount,
+  calculateFutureAmount,
+  getCompoundFrequencyType,
+  formatAmount,
+  formatPercentage,
+  createNotification,
+};

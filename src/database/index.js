@@ -2,9 +2,10 @@ import { createRxDatabase, addRxPlugin } from "rxdb";
 import { getRxStorageDexie } from "rxdb/plugins/storage-dexie";
 import { RxDBMigrationPlugin } from "rxdb/plugins/migration";
 import investmentTable from "./investment";
+import notificationTable from "./notification";
 import settingTable from "./setting";
 import institutionTable from "./institution";
-import { message } from "antd";
+import { createNotification } from "../utils/commonFunctions";
 
 let database;
 
@@ -36,6 +37,9 @@ const createDatabase = async () => {
     institution: {
       schema: institutionTable,
     },
+    notification: {
+      schema: notificationTable,
+    },
   });
 };
 
@@ -54,11 +58,12 @@ const clearCache = async () => {
     const database = await getDatabase();
     await database.institution.remove();
     await database.investments.remove();
+    await database.notification.remove();
 
-    message.info("Cleared the system cache!");
+    createNotification("Cleared the system cache!", "info");
   } catch (error) {
+    createNotification("Failed to clear the system cache!", "error");
     console.error("Failed to clear cache", error);
-    message.error("Failed to clear the system cache!");
   }
 };
 

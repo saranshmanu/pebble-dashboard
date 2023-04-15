@@ -1,7 +1,7 @@
 import { v4 } from "uuid";
 import { useState } from "react";
-import { message } from "antd";
 import { getDatabase } from "../database";
+import { createNotification } from "../utils/commonFunctions";
 
 const useInstitution = () => {
   const [institutions, setInstitutions] = useState([]);
@@ -40,9 +40,9 @@ const useInstitution = () => {
       await database.institution.insert({ ...payload, uuid: v4() });
       getInstitutions();
 
-      message.success("Created the organisation successfully");
+      createNotification("Created the organisation successfully", "success");
     } catch (error) {
-      message.error("Failed to create organisation");
+      createNotification("Failed to create organisation", "error");
     }
 
     setCreatingRecordStatus(false);
@@ -60,9 +60,9 @@ const useInstitution = () => {
       await institution.remove();
       getInstitutions();
 
-      message.success("Removed the organisation!");
+      createNotification("Removed the organisation!", "success");
     } catch (error) {
-      message.error("Failed to remove the organisation");
+      createNotification("Failed to remove the organisation", "error");
     }
 
     setRemovingRecordStatus(false);
@@ -80,9 +80,9 @@ const useInstitution = () => {
       await holding.patch({ label });
       getInstitutions();
 
-      message.success("Updated the organisation!");
+      createNotification("Updated the organisation!", "success");
     } catch (error) {
-      message.error("Failed to update the organisation");
+      createNotification("Failed to update the organisation", "error");
     }
 
     setUpdatingRecordStatus(false);

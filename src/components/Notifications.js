@@ -1,7 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Divider, Drawer, Typography, Space } from "antd";
-import { notifications as placeholders } from "../utils/constants";
+import useNotification from "../hooks/notification";
 
 const { Text } = Typography;
 
@@ -12,7 +13,7 @@ const Notification = ({ notification = {} }) => {
   };
   return (
     <Space direction="vertical" size={1}>
-      <Text strong>{notification?.title}</Text>
+      <Text strong>{notification?.notification}</Text>
       <Text type="secondary">{formatDateTime(notification?.datetime)}</Text>
       <Divider className="divider" />
     </Space>
@@ -20,12 +21,12 @@ const Notification = ({ notification = {} }) => {
 };
 
 const Notifications = ({ open, onClose }) => {
-  const [notifications, setNotifications] = useState([]);
+  const [{ notifications }, { getNotifications }] = useNotification();
 
   useEffect(() => {
     if (open) {
       // fetch the notifications from the database
-      setNotifications([...placeholders]);
+      getNotifications();
     }
   }, [open]);
 
