@@ -55,7 +55,8 @@ const Institution = () => {
                         icon: <DeleteOutlined />,
                         onClick: () => {
                           confirm({
-                            title: "Are you sure you want to delete the organisation?",
+                            title:
+                              "All the associated investment holdings will be removed. Are you sure you want to delete the organisation?",
                             icon: <ExclamationCircleFilled />,
                             okText: "Yes",
                             okType: "danger",

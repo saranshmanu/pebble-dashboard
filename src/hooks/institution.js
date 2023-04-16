@@ -48,12 +48,27 @@ const useInstitution = () => {
     try {
       setRemovingRecordStatus(true);
       const database = await getDatabase();
+
+      // Removes the institution
       let institution = await database.institution
         .findOne({
           selector: { uuid },
         })
         .exec();
       await institution.remove();
+
+      // Removes all the associated holdings along with the institution
+      let holdings = await database.investments
+        .find({
+          selector: { institution: uuid },
+        })
+        .exec();
+      holdings = holdings.map((holding) => {
+        return holding._data.uuid;
+      });
+      await database.investments.bulkRemove(holdings);
+
+      // Fetches the institutions after updation
       getInstitutions();
 
       createNotification("Removed the organisation!", "success");

@@ -129,7 +129,7 @@ const useHolding = () => {
     let response = [];
     for (const holding of holdings) {
       const institution = await holding.populate("institution");
-      response.push({ ...holding._data, institution: institution._data });
+      response.push({ ...holding._data, institution: institution?._data });
     }
 
     holdings = response.map((record) => {
@@ -150,7 +150,7 @@ const useHolding = () => {
         ...record,
         currentValue,
         maturityAmount,
-        institution: record?.institution?.label,
+        institution: record?.institution?.label || "-",
         investmentDate: record?.investmentDatetime,
         compoundFrequency: getCompoundFrequencyType(record?.compoundFrequency),
         remainingInterest: maturityAmount - currentValue,
