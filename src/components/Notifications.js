@@ -47,7 +47,7 @@ const Notification = ({ notification = {} }) => {
   };
 
   return (
-    <Space direction="vertical" size={2}>
+    <Space className="full-width" direction="vertical" size={2}>
       <Text strong ellipsis>
         {notification?.notification}
       </Text>
