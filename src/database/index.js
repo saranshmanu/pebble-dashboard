@@ -67,6 +67,8 @@ const clearCache = async () => {
     await database.investments.remove();
     await database.notification.remove();
 
+    await initDatabaseInstance();
+
     createNotification("Cleared the system cache!", "info");
   } catch (error) {
     createNotification("Failed to clear the system cache!", "error");
