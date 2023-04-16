@@ -11,16 +11,16 @@ const Report = ({ children }) => {
       justifyContent: "flex-start",
     },
     section: {
-      margin: 30,
+      margin: "30px",
     },
     table: {
       display: "table",
       width: "auto",
       borderStyle: "solid",
-      borderWidth: 1,
+      borderWidth: "1px",
       borderRightWidth: 0,
       borderBottomWidth: 0,
-      marginBottom: 20,
+      marginBottom: "20px",
     },
     tableRow: {
       margin: "auto",
@@ -29,35 +29,35 @@ const Report = ({ children }) => {
     tableCol12P5: {
       width: "12.5%",
       borderStyle: "solid",
-      borderWidth: 1,
+      borderWidth: "1px",
       borderLeftWidth: 0,
       borderTopWidth: 0,
     },
     tableCol50P0: {
       width: "50%",
       borderStyle: "solid",
-      borderWidth: 1,
+      borderWidth: "1px",
       borderLeftWidth: 0,
       borderTopWidth: 0,
     },
     tableCell: {
       margin: "5px",
-      marginTop: 5,
-      fontSize: 9,
+      marginTop: "5px",
+      fontSize: "6px",
     },
     subheading: {
       margin: "10px 0 20px 0",
     },
     bodyText: {
-      fontSize: 13,
-      marginBottom: 20,
+      fontSize: "13px",
+      marginBottom: "20px",
     },
     companyLogo: {
       display: "block",
       height: "auto",
       width: "auto",
-      maxHeight: 100,
-      maxWidth: 106,
+      maxHeight: "100px",
+      maxWidth: "106px",
     },
   });
 
@@ -86,9 +86,9 @@ const Report = ({ children }) => {
             {[
               ["Statement Date", new Date().toLocaleDateString()],
               ["Average Interest Rate", formatPercentage(holdingStats?.averageInterestRate)],
-              ["Principal Amount", formatAmount(holdingStats?.principal, true)],
-              ["Accumulated Interest", formatAmount(holdingStats?.interest, true)],
-              ["Net Value", formatAmount(holdingStats?.netValue, true)],
+              ["Principal Amount", formatAmount(holdingStats?.totalInvestment, true)],
+              ["Accumulated Interest", formatAmount(holdingStats?.accumulatedInterest, true)],
+              ["Net Value", formatAmount(holdingStats?.netAmount, true)],
             ].map((value) => (
               <View style={styles.tableRow}>
                 <View style={styles.tableCol50P0}>
