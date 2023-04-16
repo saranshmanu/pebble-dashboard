@@ -75,9 +75,27 @@ const clearCache = async () => {
 };
 
 const exportDatabase = async () => {
-  const database = await getDatabase();
-  const data = await database.exportJSON();
-  return data;
+  try {
+    const database = await getDatabase();
+    const data = await database.exportJSON();
+
+    createNotification("Generated a snapshot of the database!", "info");
+    return data;
+  } catch (error) {
+    createNotification("Failed to generate a snapshot of the database.", "info");
+  }
 };
 
-export { createDatabase, getDatabase, clearCache, initDatabaseInstance, exportDatabase };
+const importDatabase = async (json = {}) => {
+  try {
+    const database = await getDatabase();
+    await database.importJSON(json);
+
+    createNotification("Imported the snapshot JSON to the database!", "info");
+  } catch (error) {
+    console.log(error);
+    createNotification("Failed to import the JSON dump!", "error");
+  }
+};
+
+export { createDatabase, getDatabase, clearCache, initDatabaseInstance, exportDatabase, importDatabase };

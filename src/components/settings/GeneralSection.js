@@ -12,10 +12,12 @@ import {
 import InstitutionForm from "./InstitutionForm";
 import { clearCache, exportDatabase } from "../../database";
 import Report from "../Report";
+import UploadJSON from "../UploadJSON";
 
 const { confirm } = Modal;
 
 const General = () => {
+  const [isUploadModalOpen, setUploadModalOpen] = useState(false);
   const [isInstitutionModalOpen, setInstitutionModalOpen] = useState(false);
 
   const closeApplication = () => {
@@ -79,7 +81,8 @@ const General = () => {
   return (
     <Space direction="vertical" size={0} className="full-width">
       <div>
-        <Button type="link" size="large" icon={<FolderAddOutlined />}>
+        <UploadJSON isModalOpen={isUploadModalOpen} onFormCancel={() => setUploadModalOpen(false)} />
+        <Button type="link" size="large" icon={<FolderAddOutlined />} onClick={() => setUploadModalOpen(true)}>
           Import Holdings
         </Button>
       </div>
