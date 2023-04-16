@@ -10,7 +10,7 @@ import {
   ExclamationCircleFilled,
 } from "@ant-design/icons";
 import InstitutionForm from "./InstitutionForm";
-import { clearCache } from "../../database";
+import { clearCache, exportDatabase } from "../../database";
 import Report from "../Report";
 
 const { confirm } = Modal;
@@ -47,6 +47,35 @@ const General = () => {
     });
   };
 
+  const exportDatabaseData = () => {
+    confirm({
+      title: "Are you sure you want to export the database?",
+      icon: <ExclamationCircleFilled />,
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
+      onOk: async () => {
+        const data = await exportDatabase();
+        const href = URL.createObjectURL(
+          new Blob([JSON.stringify(data, null, 2)], {
+            type: "application/json",
+          })
+        );
+
+        const link = document.createElement("a");
+        link.download = "pebble-database.json";
+        link.href = href;
+
+        document.body.appendChild(link);
+        link.click();
+
+        document.body.removeChild(link);
+        URL.revokeObjectURL(href);
+      },
+      onCancel: () => {},
+    });
+  };
+
   return (
     <Space direction="vertical" size={0} className="full-width">
       <div>
@@ -78,7 +107,7 @@ const General = () => {
         </Report>
       </div>
       <div>
-        <Button type="link" size="large" icon={<ExportOutlined />}>
+        <Button type="link" size="large" icon={<ExportOutlined />} onClick={exportDatabaseData}>
           Export Data (in JSON format)
         </Button>
       </div>

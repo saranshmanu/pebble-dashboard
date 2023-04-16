@@ -1,6 +1,7 @@
 import { createRxDatabase, addRxPlugin } from "rxdb";
 import { getRxStorageDexie } from "rxdb/plugins/storage-dexie";
 import { RxDBMigrationPlugin } from "rxdb/plugins/migration";
+import { RxDBJsonDumpPlugin } from "rxdb/plugins/json-dump";
 import investmentTable from "./investment";
 import notificationTable from "./notification";
 import settingTable from "./setting";
@@ -11,6 +12,7 @@ const createDatabase = async () => {
   // Migration instructions
   // https://rxdb.info/questions-answers.html#cant-change-the-schema
   addRxPlugin(RxDBMigrationPlugin);
+  addRxPlugin(RxDBJsonDumpPlugin);
 
   window.database = await createRxDatabase({
     name: "pebble-database",
@@ -55,7 +57,7 @@ const initDatabaseInstance = async () => {
 };
 
 const getDatabase = async () => {
-  return window.database;;
+  return window.database;
 };
 
 const clearCache = async () => {
@@ -72,4 +74,10 @@ const clearCache = async () => {
   }
 };
 
-export { createDatabase, getDatabase, clearCache, initDatabaseInstance };
+const exportDatabase = async () => {
+  const database = await getDatabase();
+  const data = await database.exportJSON();
+  return data;
+};
+
+export { createDatabase, getDatabase, clearCache, initDatabaseInstance, exportDatabase };
