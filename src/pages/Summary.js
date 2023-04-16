@@ -55,23 +55,28 @@ function Summary() {
           </Col>
         ) : null}
         {settings?.summaryViewSections?.investmentSummary ? (
-          <Col xs={24} sm={12} lg={12} xl={7}>
+          <Col xs={24} sm={12} lg={12} xl={8}>
             <SummaryCard data={holdingStats} />
           </Col>
         ) : null}
         {settings?.summaryViewSections?.interestRate ? (
-          <Col xs={24} sm={12} lg={12} xl={6}>
+          <Col xs={24} sm={12} lg={12} xl={8}>
             <InterestRateCard data={holdingStats} />
           </Col>
         ) : null}
         {settings?.summaryViewSections?.distributionGraph ? (
-          <Col xs={24} sm={24} lg={12} xl={11}>
+          <Col xs={24} sm={12} lg={12} xl={8}>
             <DistributionCard data={holdingDistribution} />
           </Col>
         ) : null}
         {settings?.summaryViewSections?.projectionGraph ? (
-          <Col xs={24} sm={24} lg={12} xl={13}>
+          <Col xs={24} sm={12} lg={12} xl={8}>
             <ProjectionCard data={holdingProjection} />
+          </Col>
+        ) : null}
+        {settings?.summaryViewSections?.projectionGraph ? (
+          <Col xs={24} sm={12} lg={12} xl={8}>
+            <ProjectionCard data={holdingProjection} segregated={true} />
           </Col>
         ) : null}
       </Row>

@@ -1,37 +1,58 @@
 import { Typography } from "antd";
 import { LineChartOutlined } from "@ant-design/icons";
-import { Line } from "@ant-design/plots";
+import { Line, Column } from "@ant-design/plots";
 import Card from "../Card";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
-const ProjectionCard = ({ data = [] }) => {
+const ProjectionCard = ({ data = [], segregated = false }) => {
   return (
     <Card icon={<LineChartOutlined />}>
-      <Title level={5} style={{ margin: "0px 0px 10px 0px" }}>
-        Projection Graph
-      </Title>
-      <Line
-        {...{
-          data,
-          padding: "auto",
-          xField: "Period",
-          yField: "Amount",
-          height: 200,
-          animation: { appear: { animation: "path-in", duration: 1000 } },
-          lineStyle: {
-            stroke: "#e71d36",
-          },
-          xAxis: {
-            tickCount: 5,
-          },
-          yAxis: {
-            tickCount: 4,
-            title: { text: "Projected value" },
-            label: false,
-          },
-        }}
-      />
+      <div style={{ marginBottom: 20 }}>
+        <Title level={5}>Projection Graph</Title>
+      </div>
+
+      {segregated ? (
+        <Column
+          {...{
+            data: data.filter((value) => value?.type === "Interest" || value?.type === "Invested").slice(0, 20),
+            isStack: true,
+            xField: "year",
+            yField: "value",
+            height: 200,
+            seriesField: "type",
+            xAxis: { tickCount: 5 },
+            yAxis: {
+              // tickCount: 4,
+              title: { text: "Projected value" },
+            },
+            columnstyle: { radius: [20, 20, 0, 0] },
+            legend: false,
+          }}
+        />
+      ) : (
+        <Line
+          {...{
+            data: data.filter((value) => value?.type === "Combined"),
+            padding: "auto",
+            xField: "year",
+            yField: "value",
+            height: 200,
+            animation: { appear: { animation: "path-in", duration: 1000 } },
+            lineStyle: { stroke: "#e71d36" },
+            xAxis: { tickCount: 5 },
+            yAxis: {
+              tickCount: 4,
+              title: { text: "Projected value" },
+              label: false,
+            },
+          }}
+        />
+      )}
+
+      <div style={{ marginTop: 20 }}>
+        <Text type="secondary">(Projections based on next {!segregated ? 50 : 10} years of continuous investment)</Text>
+      </div>
     </Card>
   );
 };

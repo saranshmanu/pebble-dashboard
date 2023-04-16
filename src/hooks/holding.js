@@ -3,6 +3,7 @@ import { v4 } from "uuid";
 import { useState } from "react";
 import { getDatabase } from "../database";
 import {
+  calculateDateDifference,
   calculateFutureAmount,
   calculateCurrentAmount,
   getCompoundFrequencyType,
@@ -36,60 +37,66 @@ const useHolding = () => {
       }
     }
 
-    const plotData = [];
+    const data = [];
     for (const institution of Object.keys(distribution)) {
-      plotData.push({
+      data.push({
         name: institution,
-        value: distribution[institution],
+        value: parseFloat(distribution[institution]?.toFixed(2)),
       });
     }
-    setHoldingDistribution(plotData);
-  };
-
-  const calculateProjection = (holdings, date) => {
-    let projection = 0;
-
-    for (const holding of holdings) {
-      const duration = (dayjs(date) - dayjs(holding?.investmentDatetime)) / (24 * 60 * 60 * 1000);
-      const amount = calculateFutureAmount(
-        holding?.principal,
-        holding?.interestRate,
-        duration,
-        holding?.compoundFrequency
-      );
-      projection += amount;
-    }
-    return projection?.toFixed(2);
+    setHoldingDistribution(data);
   };
 
   const refreshHoldingProjection = async () => {
     const database = await getDatabase();
-
     let holdings = await database.investments.find().exec();
     holdings = holdings.map((holding) => holding._data);
 
-    const duration = 30;
-    const today = dayjs();
+    // Number of years for which projection is to be calculated
+    const duration = 50;
 
-    const periods = [];
     const projections = [];
-    for (let i = 1; i <= duration; i += 1) {
-      const futureDate = today.add(i, "month");
-      periods.push(futureDate.format("DD/MM/YY"));
+    for (let i = 0; i <= duration; i += 1) {
+      const today = dayjs().startOf("day");
+      const future = today.add(i, "year");
 
-      const projection = calculateProjection(holdings, futureDate);
-      projections.push(projection);
-    }
+      // Iterate over all the holdings and sumup to calculation projection
+      let invested = 0;
+      let projection = 0;
+      for (const holding of holdings) {
+        const duration = calculateDateDifference(holding?.investmentDatetime, future);
 
-    const plottingData = [];
-    for (let i = 0; i < periods.length; i += 1) {
-      plottingData.push({
-        Period: periods[i],
-        Amount: projections[i],
+        const amount = calculateFutureAmount(
+          holding?.principal,
+          holding?.interestRate,
+          Math.abs(duration),
+          holding?.compoundFrequency
+        );
+        projection += amount;
+        invested += holding?.principal;
+      }
+
+      // Create custom map for plotting line graph
+      projections.push({
+        value: parseFloat((projection - invested)?.toFixed(2)),
+        year: future.format("DD/MM/YY"),
+        type: "Interest",
+      });
+
+      projections.push({
+        value: parseFloat(invested?.toFixed(2)),
+        year: future.format("DD/MM/YY"),
+        type: "Invested",
+      });
+
+      projections.push({
+        value: parseFloat(projection?.toFixed(2)),
+        year: future.format("DD/MM/YY"),
+        type: "Combined",
       });
     }
 
-    setHoldingProjection(plottingData);
+    setHoldingProjection(projections);
   };
 
   const refreshHoldingStats = async (holdings) => {
@@ -117,7 +124,6 @@ const useHolding = () => {
 
   const refreshHoldingData = async () => {
     const database = await getDatabase();
-
     let holdings = await database.investments.find().exec();
 
     let response = [];
@@ -132,25 +138,22 @@ const useHolding = () => {
         record?.interestRate,
         record?.duration,
         record?.compoundFrequency
-      )?.toFixed(2);
+      );
       const currentValue = calculateCurrentAmount(
         record?.principal,
         record?.interestRate,
         record?.compoundFrequency,
         record?.investmentDatetime
-      )?.toFixed(2);
+      );
 
       return {
-        uuid: record?.uuid,
-        duration: record?.duration,
+        ...record,
+        currentValue,
+        maturityAmount,
         institution: record?.institution?.label,
-        interestRate: record?.interestRate,
-        principal: record?.principal,
         investmentDate: record?.investmentDatetime,
         compoundFrequency: getCompoundFrequencyType(record?.compoundFrequency),
-        maturityAmount: maturityAmount,
-        currentValue: currentValue,
-        remainingInterest: (maturityAmount - currentValue)?.toFixed(2),
+        remainingInterest: maturityAmount - currentValue,
       };
     });
 

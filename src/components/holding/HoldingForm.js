@@ -4,7 +4,7 @@ import { v4 } from "uuid";
 import dayjs from "dayjs";
 import { DatePicker, Form, Select, InputNumber, Radio, Modal } from "antd";
 import { getDatabase } from "../../database";
-import { createNotification } from "../../utils/commonFunctions";
+import { calculateDateDifference, createNotification } from "../../utils/commonFunctions";
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -36,14 +36,16 @@ const HoldingForm = ({
         .exec();
       holding = holding._data;
 
-      form.setFieldValue("investment-amount", holding?.principal);
-      form.setFieldValue("financial-institution", holding?.institution);
-      form.setFieldValue("compound-frequency", holding?.compoundFrequency);
-      form.setFieldValue("interest-rate", holding?.interestRate);
-      form.setFieldValue("time-period", [
-        dayjs(holding?.investmentDatetime, dateFormat),
-        dayjs(holding?.investmentDatetime, dateFormat).add(holding?.duration, "d"),
-      ]);
+      form.setFieldsValue({
+        "investment-amount": holding?.principal,
+        "financial-institution": holding?.institution,
+        "compound-frequency": holding?.compoundFrequency,
+        "interest-rate": holding?.interestRate,
+        "time-period": [
+          dayjs(holding?.investmentDatetime, dateFormat),
+          dayjs(holding?.investmentDatetime, dateFormat).add(holding?.duration, "d"),
+        ],
+      });
 
       setDisabled(false);
     } catch (error) {
@@ -75,7 +77,7 @@ const HoldingForm = ({
         interestRate: values["interest-rate"],
         compoundFrequency: values["compound-frequency"],
         investmentDatetime: datetime?.[0]?.format(dateFormat),
-        duration: (datetime?.[1] - datetime?.[0]) / (24 * 3600 * 1000),
+        duration: calculateDateDifference(datetime?.[0], datetime?.[1]),
       };
 
       if (!updateMode) createHolding(payload);

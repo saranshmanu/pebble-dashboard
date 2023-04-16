@@ -1,16 +1,19 @@
+import dayjs from "dayjs";
 import { v4 } from "uuid";
 import { message } from "antd";
 import { getDatabase } from "../database";
 
-const calculateCurrentAmount = (principal = 0, interest = 0, frequency = 1, investmentDate = "") => {
-  const today = new Date().getTime();
-  const date = new Date(investmentDate).getTime();
-  const duration = (today - date) / (24 * 60 * 60 * 1000);
-  return principal * Math.pow(1 + interest / ((12 / frequency) * 100), ((12 / frequency) * duration) / 365);
+const calculateDateDifference = (start, end) => {
+  return dayjs(end).diff(dayjs(start), "day");
+};
+
+const calculateCurrentAmount = (principal = 0, interest = 0, frequency = 1, date = "") => {
+  const duration = calculateDateDifference(date, new Date());
+  return principal * Math.pow(1 + interest / ((12 / frequency) * 100), ((12 / frequency) * duration) / 365.25);
 };
 
 const calculateFutureAmount = (principal = 0, interest = 0, duration = 0, frequency = 1) => {
-  return principal * Math.pow(1 + interest / ((12 / frequency) * 100), ((12 / frequency) * duration) / 365);
+  return principal * Math.pow(1 + interest / ((12 / frequency) * 100), ((12 / frequency) * duration) / 365.25);
 };
 
 const getCompoundFrequencyType = (frequency = 1) => {
@@ -66,6 +69,8 @@ const createNotification = async (notification = "", type = "") => {
 };
 
 export {
+  formatNumber,
+  calculateDateDifference,
   calculateCurrentAmount,
   calculateFutureAmount,
   getCompoundFrequencyType,
