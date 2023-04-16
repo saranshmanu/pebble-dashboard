@@ -11,6 +11,7 @@ import {
 } from "@ant-design/icons";
 import InstitutionForm from "./InstitutionForm";
 import { clearCache } from "../../database";
+import Report from "../Report";
 
 const { confirm } = Modal;
 
@@ -70,9 +71,11 @@ const General = () => {
         </Button>
       </div>
       <div>
-        <Button type="link" size="large" icon={<FilePdfOutlined />}>
-          Generate Holding Report
-        </Button>
+        <Report>
+          <Button type="link" size="large" icon={<FilePdfOutlined />}>
+            Generate Holding Report
+          </Button>
+        </Report>
       </div>
       <div>
         <Button type="link" size="large" icon={<ExportOutlined />}>

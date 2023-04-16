@@ -31,8 +31,8 @@ const formatNumber = (number) => {
   return formattedNumber;
 };
 
-const formatAmount = (amount = 0) => {
-  const formattedAmount = "₹" + formatNumber(parseFloat(amount || 0).toFixed(2));
+const formatAmount = (amount = 0, traditionalFormat = false) => {
+  const formattedAmount = (!traditionalFormat ? "₹" : "Rs.") + formatNumber(parseFloat(amount || 0).toFixed(2));
   return formattedAmount;
 };
 

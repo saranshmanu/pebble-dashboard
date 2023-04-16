@@ -5,6 +5,7 @@ import { Col, Row, Button, Result } from "antd";
 import { FileDoneOutlined } from "@ant-design/icons";
 
 import useHolding from "../hooks/holding";
+import Report from "../components/Report";
 import useSettings from "../hooks/settings";
 import SummaryCard from "../components/card/Summary";
 import ProjectionCard from "../components/card/Projection";
@@ -38,9 +39,11 @@ function Summary() {
     <div>
       <Row gutter={[10, 10]}>
         <Col span={24}>
-          <Button style={{ marginRight: 10 }} icon={<FileDoneOutlined />} size="large" onClick={() => {}}>
-            Generate Report
-          </Button>
+          <Report>
+            <Button style={{ marginRight: 10 }} icon={<FileDoneOutlined />} size="large">
+              Generate Report
+            </Button>
+          </Report>
         </Col>
         {isScreenEmpty(settings) ? (
           <Col span={24} style={{ marginTop: "80px" }}>
