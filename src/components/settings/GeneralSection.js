@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { connect } from "react-redux";
 import { Button, Divider, Space, Modal, Typography, Switch } from "antd";
 import {
   UsergroupAddOutlined,
@@ -17,8 +18,7 @@ import UploadJSON from "../UploadJSON";
 const { confirm } = Modal;
 const { Title } = Typography;
 
-const General = () => {
-  const [darkMode, setDarkMode] = useState(window.localStorage.getItem("dark-mode-status") === "true");
+const General = ({ darkMode, switchMode }) => {
   const [isUploadModalOpen, setUploadModalOpen] = useState(false);
   const [isInstitutionModalOpen, setInstitutionModalOpen] = useState(false);
 
@@ -121,13 +121,7 @@ const General = () => {
         <Title className="no-margin" level={5}>
           Dark Mode
         </Title>
-        <Switch
-          checked={darkMode}
-          onChange={() => {
-            window.localStorage.setItem("dark-mode-status", !darkMode);
-            setDarkMode(!darkMode);
-          }}
-        />
+        <Switch checked={darkMode} onChange={switchMode} />
       </div>
       <Divider />
       <div>
@@ -140,4 +134,11 @@ const General = () => {
   );
 };
 
-export default General;
+export default connect(
+  (state) => ({
+    darkMode: state.settings.darkMode,
+  }),
+  (dispatch) => ({
+    switchMode: dispatch.settings.switchMode,
+  })
+)(General);
