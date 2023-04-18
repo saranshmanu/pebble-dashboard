@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, cloneElement } from "react";
 import LogoImage from "../images/logo-dark.png";
 import { Page, Text, View, Document, StyleSheet, PDFDownloadLink, Image } from "@react-pdf/renderer";
 import { formatAmount, formatPercentage } from "../utils/commonFunctions";
@@ -153,8 +153,7 @@ const Report = ({ children }) => {
   return (
     <PDFDownloadLink document={<>{document}</>} fileName="Investment Summary.pdf">
       {({ blob, url, loading, error }) => {
-        if (loading) return null;
-        return <>{children}</>;
+        return cloneElement(children, { disabled: loading });
       }}
     </PDFDownloadLink>
   );

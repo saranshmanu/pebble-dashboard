@@ -17,7 +17,7 @@ const Preference = () => {
     <div>
       {preferences.map((preference, index) => (
         <div key={index}>
-          <div className="toggle-item">
+          <div className="toggle-item flex-expand">
             <div className="toggle-option">
               <Title className="toggle-item-label" level={5}>
                 {preference.label}

@@ -15,4 +15,10 @@ body {
   .divider-margin {
     margin: 10px 0 10px 0;
   }
+
+  .flex-expand {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
 }

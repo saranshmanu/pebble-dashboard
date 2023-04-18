@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Divider, Space, Modal } from "antd";
+import { Button, Divider, Space, Modal, Typography, Switch } from "antd";
 import {
   UsergroupAddOutlined,
   FireOutlined,
@@ -15,8 +15,10 @@ import Report from "../Report";
 import UploadJSON from "../UploadJSON";
 
 const { confirm } = Modal;
+const { Title } = Typography;
 
 const General = () => {
+  const [darkMode, setDarkMode] = useState(window.localStorage.getItem("dark-mode-status") === "true");
   const [isUploadModalOpen, setUploadModalOpen] = useState(false);
   const [isInstitutionModalOpen, setInstitutionModalOpen] = useState(false);
 
@@ -79,7 +81,7 @@ const General = () => {
   };
 
   return (
-    <Space direction="vertical" size={0} className="full-width">
+    <Space direction="vertical" size={0} className="general-section full-width">
       <div>
         <UploadJSON isModalOpen={isUploadModalOpen} onFormCancel={() => setUploadModalOpen(false)} />
         <Button type="link" size="large" icon={<FolderAddOutlined />} onClick={() => setUploadModalOpen(true)}>
@@ -113,6 +115,19 @@ const General = () => {
         <Button type="link" size="large" icon={<ExportOutlined />} onClick={exportDatabaseData}>
           Export Data (in JSON format)
         </Button>
+      </div>
+      <Divider />
+      <div className="dark-mode-toggle-container flex-expand">
+        <Title className="no-margin" level={5}>
+          Dark Mode
+        </Title>
+        <Switch
+          checked={darkMode}
+          onChange={() => {
+            window.localStorage.setItem("dark-mode-status", !darkMode);
+            setDarkMode(!darkMode);
+          }}
+        />
       </div>
       <Divider />
       <div>

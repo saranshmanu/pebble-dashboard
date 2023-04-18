@@ -106,7 +106,7 @@ const Default = ({ children }) => {
         />
       </Sider>
       <Layout className="body">
-        <Header className="page-header" style={{ background: colorBgContainer }}>
+        <Header className="page-header flex-expand" style={{ background: colorBgContainer }}>
           <div className="page-title-section">
             {collapseButton}
             <Title className="page-title" level={4}>

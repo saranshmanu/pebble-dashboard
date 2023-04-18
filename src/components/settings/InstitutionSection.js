@@ -30,7 +30,7 @@ const Institution = () => {
       {institutions.length ? (
         institutions.map((institution, index) => (
           <div key={index}>
-            <div className="toggle-item">
+            <div className="toggle-item flex-expand">
               <div className="toggle-option">
                 <Title className="toggle-item-label" level={5}>
                   {institution.label}

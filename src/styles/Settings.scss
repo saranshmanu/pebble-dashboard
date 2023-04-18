@@ -4,9 +4,6 @@
     margin-right: 10px;
   }
   .toggle-item {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
     padding: 5px 10px;
     .toggle-option {
       padding-right: 40px;
@@ -18,5 +15,11 @@
       display: flex;
       flex-direction: row;
     }
+  }
+}
+
+.general-section {
+  .dark-mode-toggle-container {
+    margin: 0 17px;
   }
 }
