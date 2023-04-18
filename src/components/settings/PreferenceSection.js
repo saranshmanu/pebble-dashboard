@@ -7,7 +7,7 @@ import useSettings from "../../hooks/settings";
 const { Title, Text } = Typography;
 
 const Preference = () => {
-  const [settings, getUserSettings, updateUserSettings] = useSettings();
+  const [{ settings }, { getUserSettings, updateUserSettings }] = useSettings();
 
   useEffect(() => {
     getUserSettings();
@@ -26,7 +26,9 @@ const Preference = () => {
             </div>
             <Switch
               onChange={(value) => {
-                updateUserSettings({ [preference?.property]: value });
+                updateUserSettings({
+                  summaryViewSections: { [preference?.property]: value },
+                });
               }}
               checked={settings?.summaryViewSections?.[preference?.property]}
               checkedChildren="1"

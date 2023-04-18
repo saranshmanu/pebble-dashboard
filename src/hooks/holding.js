@@ -53,7 +53,7 @@ const useHolding = () => {
     holdings = holdings.map((holding) => holding._data);
 
     // Number of years for which projection is to be calculated
-    const duration = 50;
+    const duration = 100;
 
     const projections = [];
     for (let i = 0; i <= duration; i += 1) {

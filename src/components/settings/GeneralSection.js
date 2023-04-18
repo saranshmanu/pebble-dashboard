@@ -9,17 +9,20 @@ import {
   FolderAddOutlined,
   FilePdfOutlined,
   ExclamationCircleFilled,
+  BarChartOutlined,
 } from "@ant-design/icons";
 import InstitutionForm from "./InstitutionForm";
 import { clearCache, exportDatabase } from "../../database";
 import Report from "../Report";
 import UploadJSON from "../UploadJSON";
+import InvestmentProjectionForm from "./InvestmentProjectionForm";
 
 const { confirm } = Modal;
 const { Title } = Typography;
 
 const General = ({ darkMode, switchMode }) => {
   const [isUploadModalOpen, setUploadModalOpen] = useState(false);
+  const [isProjectionModalOpen, setProjectionModalOpen] = useState(false);
   const [isInstitutionModalOpen, setInstitutionModalOpen] = useState(false);
 
   const closeApplication = () => {
@@ -89,12 +92,7 @@ const General = ({ darkMode, switchMode }) => {
         </Button>
       </div>
       <div>
-        <InstitutionForm
-          isOpen={isInstitutionModalOpen}
-          onClose={() => {
-            setInstitutionModalOpen(false);
-          }}
-        />
+        <InstitutionForm isOpen={isInstitutionModalOpen} onClose={() => setInstitutionModalOpen(false)} />
         <Button type="link" size="large" icon={<UsergroupAddOutlined />} onClick={() => setInstitutionModalOpen(true)}>
           Create Institution
         </Button>
@@ -114,6 +112,12 @@ const General = ({ darkMode, switchMode }) => {
       <div>
         <Button type="link" size="large" icon={<ExportOutlined />} onClick={exportDatabaseData}>
           Export Data (in JSON format)
+        </Button>
+      </div>
+      <div>
+        <InvestmentProjectionForm isOpen={isProjectionModalOpen} onClose={() => setProjectionModalOpen(false)} />
+        <Button type="link" size="large" icon={<BarChartOutlined />} onClick={() => setProjectionModalOpen(true)}>
+          Investment Value Projection Cap
         </Button>
       </div>
       <Divider />

@@ -15,7 +15,7 @@ import "../styles/Summary.scss";
 
 function Summary() {
   const navigate = useNavigate();
-  const [settings, getUserSettings] = useSettings();
+  const [{ settings }, { getUserSettings }] = useSettings();
   const [{ holdingProjection, holdingStats, holdingDistribution }, { refresh }] = useHolding();
 
   useEffect(() => {
@@ -74,12 +74,16 @@ function Summary() {
         ) : null}
         {settings?.summaryViewSections?.projectionGraph ? (
           <Col xs={24} sm={12} lg={12} xl={8}>
-            <ProjectionCard data={holdingProjection} />
+            <ProjectionCard data={holdingProjection} lineGraphCap={settings?.investmentProjectionCap?.lineGraph || 0} />
           </Col>
         ) : null}
         {settings?.summaryViewSections?.projectionGraph ? (
           <Col xs={24} sm={12} lg={12} xl={8}>
-            <ProjectionCard data={holdingProjection} segregated={true} />
+            <ProjectionCard
+              data={holdingProjection}
+              segregated={true}
+              barGraphCap={settings?.investmentProjectionCap?.segregatedBarGraph || 0}
+            />
           </Col>
         ) : null}
       </Row>

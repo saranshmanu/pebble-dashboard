@@ -1,6 +1,6 @@
 const settingTable = {
   title: "settingTable",
-  version: 0,
+  version: 1,
   primaryKey: "uuid",
   type: "object",
   properties: {
@@ -26,6 +26,25 @@ const settingTable = {
         investmentSummary: {
           type: "boolean",
           default: false,
+        },
+      },
+    },
+    investmentProjectionCap: {
+      type: "object",
+      properties: {
+        segregatedBarGraph: {
+          type: "number",
+          default: 10,
+          min: 0,
+          max: 100,
+          multipleOf: 1,
+        },
+        lineGraph: {
+          type: "number",
+          default: 50,
+          min: 0,
+          max: 100,
+          multipleOf: 1,
         },
       },
     },

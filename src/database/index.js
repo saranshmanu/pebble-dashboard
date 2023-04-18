@@ -37,6 +37,17 @@ const createDatabase = async () => {
     },
     settings: {
       schema: settingTable,
+      migrationStrategies: {
+        1: (document) => {
+          return {
+            ...document,
+            investmentProjectionCap: {
+              segregatedBarGraph: 10,
+              lineGraph: 50,
+            },
+          };
+        },
+      },
     },
     institution: {
       schema: institutionTable,
@@ -66,6 +77,7 @@ const clearCache = async () => {
     await database.institution.remove();
     await database.investments.remove();
     await database.notification.remove();
+    await database.settings.remove();
 
     await initDatabaseInstance();
 

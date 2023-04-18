@@ -5,7 +5,7 @@ import Card from "../Card";
 
 const { Title, Text } = Typography;
 
-const ProjectionCard = ({ data = [], segregated = false }) => {
+const ProjectionCard = ({ data = [], segregated = false, lineGraphCap = 0, barGraphCap = 0 }) => {
   return (
     <Card icon={<LineChartOutlined />}>
       <div style={{ marginBottom: 20 }}>
@@ -15,7 +15,9 @@ const ProjectionCard = ({ data = [], segregated = false }) => {
       {segregated ? (
         <Column
           {...{
-            data: data.filter((value) => value?.type === "Interest" || value?.type === "Invested").slice(0, 20),
+            data: data
+              .filter((value) => value?.type === "Interest" || value?.type === "Invested")
+              .slice(0, barGraphCap * 2),
             isStack: true,
             xField: "year",
             yField: "value",
@@ -23,7 +25,6 @@ const ProjectionCard = ({ data = [], segregated = false }) => {
             seriesField: "type",
             xAxis: { tickCount: 5 },
             yAxis: {
-              // tickCount: 4,
               title: { text: "Projected value" },
             },
             columnstyle: { radius: [20, 20, 0, 0] },
@@ -33,7 +34,7 @@ const ProjectionCard = ({ data = [], segregated = false }) => {
       ) : (
         <Line
           {...{
-            data: data.filter((value) => value?.type === "Combined"),
+            data: data.filter((value) => value?.type === "Combined").slice(0, lineGraphCap),
             padding: "auto",
             xField: "year",
             yField: "value",
@@ -51,7 +52,9 @@ const ProjectionCard = ({ data = [], segregated = false }) => {
       )}
 
       <div style={{ marginTop: 20 }}>
-        <Text type="secondary">(Projections based on next {!segregated ? 50 : 10} years of continuous investment)</Text>
+        <Text type="secondary">
+          (Projections based on next {!segregated ? lineGraphCap : barGraphCap} years of continuous investment)
+        </Text>
       </div>
     </Card>
   );

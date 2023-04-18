@@ -4,6 +4,8 @@ import { getDatabase } from "../database";
 
 const useSettings = () => {
   const [settings, setSettings] = useState({});
+  const [fetchingRecord, setFetchingRecordStatus] = useState(false);
+  const [updatingRecord, setUpdatingRecordStatus] = useState(false);
 
   const createUserSettings = async () => {
     try {
@@ -16,6 +18,10 @@ const useSettings = () => {
           projectionGraph: true,
           investmentSummary: true,
         },
+        investmentProjectionCap: {
+          segregatedBarGraph: 10,
+          lineGraph: 50,
+        },
       });
     } catch (error) {
       //
@@ -24,6 +30,7 @@ const useSettings = () => {
 
   const getUserSettings = async () => {
     try {
+      setFetchingRecordStatus(true);
       const database = await getDatabase();
       let settings = await database.settings.find().exec();
       if (!settings.length) {
@@ -35,10 +42,13 @@ const useSettings = () => {
     } catch (error) {
       //
     }
+
+    setFetchingRecordStatus(false);
   };
 
   const updateUserSettings = async (payload) => {
     try {
+      setUpdatingRecordStatus(true);
       const database = await getDatabase();
 
       let settings = await database.settings.find().exec();
@@ -50,7 +60,11 @@ const useSettings = () => {
       await settings[0].patch({
         summaryViewSections: {
           ...settings?.[0]?._data?.summaryViewSections,
-          ...payload,
+          ...payload?.summaryViewSections,
+        },
+        investmentProjectionCap: {
+          ...settings?.[0]?._data?.investmentProjectionCap,
+          ...payload?.investmentProjectionCap,
         },
       });
 
@@ -58,9 +72,14 @@ const useSettings = () => {
     } catch (error) {
       //
     }
+
+    setUpdatingRecordStatus(false);
   };
 
-  return [settings, getUserSettings, updateUserSettings];
+  return [
+    { settings, updatingRecord, fetchingRecord },
+    { getUserSettings, updateUserSettings },
+  ];
 };
 
 export default useSettings;
