@@ -1,3 +1,4 @@
+import { connect } from "react-redux";
 import { Typography, Divider } from "antd";
 import { BankOutlined } from "@ant-design/icons";
 import { formatAmount } from "../../utils/commonFunctions";
@@ -5,7 +6,7 @@ import Card from "../Card";
 
 const { Title } = Typography;
 
-const SummaryCard = ({ data }) => {
+const SummaryCard = ({ data, darkMode }) => {
   return (
     <Card icon={<BankOutlined />}>
       <Title className="no-margin" level={5}>
@@ -21,7 +22,7 @@ const SummaryCard = ({ data }) => {
       <Title className="no-margin" level={4}>
         + {formatAmount(data?.accumulatedInterest)}
       </Title>
-      <Divider style={{ margin: "10px 0px", borderColor: "#000" }} />
+      <Divider style={{ margin: "10px 0px", borderColor: !darkMode ? "#000" : "#fff" }} />
       <Title className="no-margin" level={2}>
         = {formatAmount(data?.netAmount)}
       </Title>
@@ -29,4 +30,9 @@ const SummaryCard = ({ data }) => {
   );
 };
 
-export default SummaryCard;
+export default connect(
+  (state) => ({
+    darkMode: state.settings.darkMode,
+  }),
+  () => ({})
+)(SummaryCard);

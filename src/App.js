@@ -7,15 +7,14 @@ import "./styles/App.scss";
 const { darkAlgorithm } = theme;
 
 function App({ darkMode }) {
+  const theme = {
+    ...(darkMode ? { algorithm: darkAlgorithm } : {}),
+    token: {
+      // colorPrimary: "#00b96b",
+    },
+  };
   return (
-    <ConfigProvider
-      theme={{
-        ...(darkMode ? { algorithm: darkAlgorithm } : {}),
-        token: {
-          // colorPrimary: "#00b96b",
-        },
-      }}
-    >
+    <ConfigProvider theme={theme}>
       <Routes>
         {routes.map((route, index) => (
           <Route
