@@ -7,6 +7,7 @@ import notificationTable from "./notification";
 import settingTable from "./setting";
 import institutionTable from "./institution";
 import { createNotification } from "../utils/commonFunctions";
+import useHolding from "../hooks/holding";
 
 const createDatabase = async () => {
   // Migration instructions
@@ -73,6 +74,8 @@ const getDatabase = async () => {
 
 const clearCache = async () => {
   try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const [{ refresh }] = useHolding();
     const database = await getDatabase();
     await database.institution.remove();
     await database.investments.remove();
@@ -80,6 +83,7 @@ const clearCache = async () => {
     await database.settings.remove();
 
     await initDatabaseInstance();
+    refresh();
 
     createNotification("Cleared the system cache!", "info");
   } catch (error) {
@@ -102,8 +106,11 @@ const exportDatabase = async () => {
 
 const importDatabase = async (json = {}) => {
   try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const [{ refresh }] = useHolding();
     const database = await getDatabase();
     await database.importJSON(json);
+    refresh();
 
     createNotification("Imported the snapshot JSON to the database!", "info");
   } catch (error) {

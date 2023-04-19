@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { connect } from "react-redux";
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Col, Row, Button, Result } from "antd";
@@ -13,10 +14,10 @@ import InterestRateCard from "../components/card/InterestRate";
 import DistributionCard from "../components/card/Distribution";
 import "../styles/Summary.scss";
 
-function Summary() {
+function Summary({ holdingDistribution, holdingProjection, holdingStats, holdingData }) {
   const navigate = useNavigate();
   const [{ settings }, { getUserSettings }] = useSettings();
-  const [{ holdingProjection, holdingStats, holdingDistribution }, { refresh }] = useHolding();
+  const [{ refresh }] = useHolding();
 
   useEffect(() => {
     refresh();
@@ -91,4 +92,12 @@ function Summary() {
   );
 }
 
-export default Summary;
+export default connect(
+  (state) => ({
+    holdingDistribution: state.holdings.distribution,
+    holdingProjection: state.holdings.projection,
+    holdingStats: state.holdings.summary,
+    holdingData: state.holdings.holdings,
+  }),
+  () => ({})
+)(Summary);

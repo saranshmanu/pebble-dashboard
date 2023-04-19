@@ -1,10 +1,11 @@
+import { connect } from "react-redux";
 import { useEffect, cloneElement } from "react";
 import LogoImage from "../images/logo-dark.png";
 import { Page, Text, View, Document, StyleSheet, PDFDownloadLink, Image } from "@react-pdf/renderer";
 import { formatAmount, formatPercentage } from "../utils/commonFunctions";
 import useHolding from "../hooks/holding";
 
-const Report = ({ children }) => {
+const Report = ({ children, holdingStats, holdingData }) => {
   const styles = StyleSheet.create({
     page: {
       flexDirection: "column",
@@ -61,7 +62,7 @@ const Report = ({ children }) => {
     },
   });
 
-  const [{ holdingData, holdingStats }, { refresh }] = useHolding();
+  const [{ refresh }] = useHolding();
   useEffect(() => {
     refresh();
   }, []);
@@ -158,4 +159,10 @@ const Report = ({ children }) => {
     </PDFDownloadLink>
   );
 };
-export default Report;
+export default connect(
+  (state) => ({
+    holdingStats: state.holdings.summary,
+    holdingData: state.holdings.holdings,
+  }),
+  () => ({})
+)(Report);

@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { v4 } from "uuid";
-import { useState } from "react";
+import store from "../store";
 import { getDatabase } from "../database";
 import {
   calculateDateDifference,
@@ -11,19 +11,7 @@ import {
 } from "../utils/commonFunctions";
 
 const useHolding = () => {
-  const [holdingStats, setHoldingStats] = useState({
-    averageInterestRate: 0,
-    accumulatedInterest: 0,
-    totalInvestment: 0,
-    netAmount: 0,
-  });
-  const [holdingData, setHoldingData] = useState([]);
-  const [holdingProjection, setHoldingProjection] = useState([]);
-  const [holdingDistribution, setHoldingDistribution] = useState([]);
-
-  const [updatingRecord, setUpdatingRecordStatus] = useState(false);
-  const [removingRecord, setRemovingRecordStatus] = useState(false);
-  const [creatingRecord, setCreatingRecordStatus] = useState(false);
+  const { dispatch } = store;
 
   const refreshHoldingDistribution = async (holdings) => {
     const distribution = {};
@@ -44,7 +32,7 @@ const useHolding = () => {
         value: parseFloat(distribution[institution]?.toFixed(2)),
       });
     }
-    setHoldingDistribution(data);
+    dispatch({ type: "holdings/setDistribution", payload: data });
   };
 
   const refreshHoldingProjection = async () => {
@@ -96,7 +84,7 @@ const useHolding = () => {
       });
     }
 
-    setHoldingProjection(projections);
+    dispatch({ type: "holdings/setProjection", payload: projections });
   };
 
   const refreshHoldingStats = async (holdings) => {
@@ -119,10 +107,12 @@ const useHolding = () => {
     payload.netAmount = payload.totalInvestment + payload.accumulatedInterest;
     payload.averageInterestRate /= payload.totalInvestment;
 
-    setHoldingStats(payload);
+    dispatch({ type: "holdings/setSummary", payload: payload });
   };
 
-  const refreshHoldingData = async () => {
+  const refresh = async () => {
+    dispatch({ type: "holdings/setStatus", payload: { fetchingholdings: true } });
+
     const database = await getDatabase();
     let holdings = await database.investments.find().exec();
 
@@ -157,19 +147,17 @@ const useHolding = () => {
       };
     });
 
-    setHoldingData(holdings);
+    dispatch({ type: "holdings/setStatus", payload: { fetchingholdings: false } });
+    dispatch({ type: "holdings/setHoldings", payload: holdings });
+
     refreshHoldingStats(holdings);
     refreshHoldingProjection();
     refreshHoldingDistribution(holdings);
   };
 
-  const refresh = async () => {
-    await refreshHoldingData();
-  };
-
   const updateHolding = async (uuid, payload) => {
     try {
-      setUpdatingRecordStatus(true);
+      dispatch({ type: "holdings/setStatus", payload: { updatingholdings: true } });
       const database = await getDatabase();
       let holding = await database.investments
         .findOne({
@@ -179,17 +167,18 @@ const useHolding = () => {
       delete payload.uuid;
       await holding.patch({ ...payload });
 
+      refresh();
       createNotification("Updated the investment record!", "success");
     } catch (error) {
       createNotification("Failed to update the investment record", "error");
     }
 
-    setUpdatingRecordStatus(false);
+    dispatch({ type: "holdings/setStatus", payload: { updatingholdings: false } });
   };
 
   const deleteHolding = async (uuid) => {
     try {
-      setRemovingRecordStatus(true);
+      dispatch({ type: "holdings/setStatus", payload: { removingholdings: true } });
       const database = await getDatabase();
       let holding = await database.investments
         .findOne({
@@ -198,31 +187,33 @@ const useHolding = () => {
         .exec();
       await holding.remove();
 
+      dispatch({ type: "holdings/removeHolding", payload: { uuid } });
       createNotification("Removed the investment record!", "success");
     } catch (error) {
       createNotification("Failed to remove the investment record", "error");
     }
 
-    setRemovingRecordStatus(false);
+    dispatch({ type: "holdings/setStatus", payload: { removingholdings: false } });
   };
 
   const createHolding = async (payload) => {
     try {
-      setCreatingRecordStatus(true);
+      dispatch({ type: "holdings/setStatus", payload: { creatingholdings: true } });
       const database = await getDatabase();
       await database.investments.insert(payload);
 
+      refresh();
       createNotification("Created the investment record successfully", "success");
     } catch (error) {
       createNotification("Failed to create investment record", "error");
     }
 
-    setCreatingRecordStatus(false);
+    dispatch({ type: "holdings/setStatus", payload: { creatingholdings: false } });
   };
 
   const replicateHolding = async (uuid) => {
     try {
-      setCreatingRecordStatus(true);
+      dispatch({ type: "holdings/setStatus", payload: { replicatingholdings: true } });
       const database = await getDatabase();
       const holding = await database.investments
         .findOne({
@@ -234,26 +225,16 @@ const useHolding = () => {
         uuid: v4(),
       });
 
+      refresh();
       createNotification("Replicated the investment record successfully", "success");
     } catch (error) {
       createNotification("Failed to replicate investment record", "error");
     }
 
-    setCreatingRecordStatus(false);
+    dispatch({ type: "holdings/setStatus", payload: { replicatingholdings: false } });
   };
 
-  return [
-    {
-      updatingRecord,
-      removingRecord,
-      creatingRecord,
-      holdingProjection,
-      holdingStats,
-      holdingData,
-      holdingDistribution,
-    },
-    { updateHolding, deleteHolding, createHolding, replicateHolding, refresh },
-  ];
+  return [{ updateHolding, deleteHolding, createHolding, replicateHolding, refresh }];
 };
 
 export default useHolding;

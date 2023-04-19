@@ -12,15 +12,12 @@ import HoldingForm from "../components/holding/HoldingForm";
 
 const { confirm, info } = Modal;
 
-function Holding({ institutions }) {
+function Holding({ institutions, holdingData, holdingStats }) {
   const [identifier, setIdentifier] = useState("");
   const [isCreateModalOpen, setCreateModalStatus] = useState(false);
   const [isUpdateModalOpen, setUpdateModalStatus] = useState(false);
 
-  const [
-    { updatingRecord, removingRecord, creatingRecord, holdingData, holdingStats },
-    { updateHolding, deleteHolding, createHolding, replicateHolding, refresh },
-  ] = useHolding();
+  const [{ updateHolding, deleteHolding, createHolding, replicateHolding, refresh }] = useHolding();
   const [{ getInstitutions }] = useInstitution();
 
   const showDeleteHoldingModal = (uuid) => {
@@ -60,10 +57,6 @@ function Holding({ institutions }) {
   useEffect(() => {
     refresh();
     getInstitutions();
-  }, [isCreateModalOpen, isUpdateModalOpen, updatingRecord, removingRecord, creatingRecord]);
-
-  useEffect(() => {
-    refresh();
   }, []);
 
   return (
@@ -123,6 +116,8 @@ function Holding({ institutions }) {
 export default connect(
   (state) => ({
     institutions: state.institutions.institutions,
+    holdingStats: state.holdings.summary,
+    holdingData: state.holdings.holdings,
   }),
   () => ({})
 )(Holding);
