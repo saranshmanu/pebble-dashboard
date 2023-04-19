@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable default-case */
-import React, { useEffect, useState } from "react";
+import { connect } from "react-redux";
+import { useEffect, useState, createElement } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button, Layout, Menu, Typography, theme, Badge } from "antd";
 import {
@@ -20,7 +21,7 @@ import "../styles/Default.scss";
 const { Title } = Typography;
 const { Header, Sider, Content } = Layout;
 
-const Default = ({ children }) => {
+const Default = ({ children, notifications }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -30,13 +31,13 @@ const Default = ({ children }) => {
     3: { title: "Settings" },
   };
   const [selectedKeys, setSelectedKeys] = useState([]);
+  const [{ getNotifications, clearNotifications }] = useNotification();
   const [isNotificationDrawerOpen, setNotificationDrawerOpen] = useState(false);
-  const [{ notifications }, { getNotifications, clearNotifications }] = useNotification();
 
   const [pageTitle, setPageTitle] = useState(sections["1"]?.title);
   const [collapsed, setCollapsed] = useState(window.localStorage.getItem("sidebar-collapse-status") === "true");
 
-  const collapseButton = React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
+  const collapseButton = createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
     className: "trigger",
     onClick: () => {
       window.localStorage.setItem("sidebar-collapse-status", !collapsed);
@@ -81,10 +82,6 @@ const Default = ({ children }) => {
     getNotifications();
   }, [location.pathname]);
 
-  useEffect(() => {
-    getNotifications();
-  }, []);
-
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -118,7 +115,6 @@ const Default = ({ children }) => {
               notifications={notifications}
               open={isNotificationDrawerOpen}
               onClose={() => setNotificationDrawerOpen(false)}
-              getNotifications={getNotifications}
               clearNotifications={clearNotifications}
             />
             <Badge count={notifications.length || 0}>
@@ -136,4 +132,7 @@ const Default = ({ children }) => {
   );
 };
 
-export default Default;
+export default connect(
+  (state) => ({ notifications: state.notifications.notifications }),
+  () => ({})
+)(Default);

@@ -1,13 +1,13 @@
-import { useState } from "react";
+import { v4 } from "uuid";
+import store from "../store";
 import { getDatabase, initDatabaseInstance } from "../database";
 
 const useNotification = () => {
-  const [notifications, setNotifications] = useState([]);
-  const [fetchingRecord, setFetchingRecordStatus] = useState(false);
+  const { dispatch } = store;
 
   const getNotifications = async () => {
     try {
-      setFetchingRecordStatus(true);
+      dispatch({ type: "notifications/setFetchStatus", payload: true });
 
       const database = await getDatabase();
       let response = await database.notification.find().exec();
@@ -21,28 +21,42 @@ const useNotification = () => {
         return new Date(b.datetime) - new Date(a.datetime);
       });
 
-      setNotifications(response);
+      dispatch({ type: "notifications/setNotifications", payload: response });
     } catch (error) {
       //
     }
 
-    setFetchingRecordStatus(false);
+    dispatch({ type: "notifications/setFetchStatus", payload: false });
   };
 
   const clearNotifications = async () => {
     try {
       const database = await getDatabase();
       await database.notification.remove();
+
+      dispatch({ type: "notifications/setNotifications", payload: [] });
       await initDatabaseInstance();
     } catch (error) {}
-
-    getNotifications();
   };
 
-  return [
-    { notifications, fetchingRecord },
-    { getNotifications, clearNotifications },
-  ];
+  const createNotification = async (notification = "", type = "") => {
+    try {
+      if (notification === "" || !notification) return;
+
+      const database = await getDatabase();
+      const payload = {
+        type,
+        uuid: v4(),
+        notification,
+        datetime: new Date().toISOString(),
+      };
+      await database.notification.insert(payload);
+
+      dispatch({ type: "notifications/createNotification", payload });
+    } catch (error) {}
+  };
+
+  return [{ createNotification, getNotifications, clearNotifications }];
 };
 
 export default useNotification;

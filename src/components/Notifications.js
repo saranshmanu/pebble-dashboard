@@ -63,14 +63,7 @@ const Notification = ({ notification = {} }) => {
   );
 };
 
-const Notifications = ({ notifications, open, onClose, getNotifications, clearNotifications }) => {
-  useEffect(() => {
-    if (open) {
-      // fetch the notifications from the database
-      getNotifications();
-    }
-  }, [open]);
-
+const Notifications = ({ notifications, open, onClose, clearNotifications }) => {
   return (
     <Drawer
       className="notification-section"

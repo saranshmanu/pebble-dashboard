@@ -1,7 +1,6 @@
 import dayjs from "dayjs";
-import { v4 } from "uuid";
 import { message } from "antd";
-import { getDatabase } from "../database";
+import useNotification from "../hooks/notification";
 
 const calculateDateDifference = (start, end) => {
   return dayjs(end).diff(dayjs(start), "day");
@@ -41,31 +40,24 @@ const formatPercentage = (rate = 0) => {
 };
 
 const createNotification = async (notification = "", type = "") => {
-  try {
-    if (notification === "" || !notification) return;
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [{ createNotification }] = useNotification();
 
-    const database = await getDatabase();
-    await database.notification.insert({
-      type,
-      uuid: v4(),
-      notification,
-      datetime: new Date().toISOString(),
-    });
+  createNotification(notification, type);
 
-    switch (type) {
-      case "error":
-        message.error(notification);
-        break;
-      case "success":
-        message.success(notification);
-        break;
-      case "info":
-        message.info(notification);
-        break;
-      default:
-        break;
-    }
-  } catch (error) {}
+  switch (type) {
+    case "error":
+      message.error(notification);
+      break;
+    case "success":
+      message.success(notification);
+      break;
+    case "info":
+      message.info(notification);
+      break;
+    default:
+      break;
+  }
 };
 
 export {
