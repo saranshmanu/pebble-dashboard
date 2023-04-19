@@ -16,8 +16,6 @@ const UploadJSON = ({ isModalOpen, onFormCancel }) => {
   };
 
   const handleChange = (info) => {
-    setFile(info.file);
-
     if (info.file.status === "uploading") {
       setLoading(true);
       return;
@@ -29,25 +27,38 @@ const UploadJSON = ({ isModalOpen, onFormCancel }) => {
   };
 
   const getJSON = (file, callback) => {
+    // Reads the file and extracts the text
     const reader = new FileReader();
     reader.addEventListener("load", () => callback(reader.result));
     reader.readAsText(file);
   };
 
-  const onUpload = () => {
+  const beforeUpload = (file) => {
+    // Checks if the file is in JSON format
     const isJSON = file.type === "application/json";
     if (!isJSON) {
       message.error("You can only upload JSON file!");
-      return;
+      return true;
     }
 
-    const isLt2M = file.size / 1024 / 1024 < 1;
-    if (!isLt2M) {
+    // Checks if the size of the file is less than 1MB
+    const isLt1M = file.size / 1024 / 1024 < 1;
+    if (!isLt1M) {
       message.error("File size must smaller than 1MB!");
-      return;
+      return true;
     }
 
-    getJSON(file.originFileObj, (json) => {
+    // The file is valid
+    setFile(file);
+    return false;
+  };
+
+  const onUpload = () => {
+    if (!file) {
+      message.error("Selection is not valid");
+      return;
+    }
+    getJSON(file, (json) => {
       importDatabase(JSON.parse(json));
       onModalClose();
     });
@@ -65,10 +76,14 @@ const UploadJSON = ({ isModalOpen, onFormCancel }) => {
     >
       <Upload
         fileList={file ? [file] : []}
+        onRemove={() => {
+          // Removes the selected file if any
+          setFile();
+        }}
         maxCount={1}
         multiple={false}
         listType="picture"
-        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+        beforeUpload={beforeUpload}
         showUploadList={true}
         onChange={handleChange}
       >
