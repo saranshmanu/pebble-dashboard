@@ -3,14 +3,13 @@ import { connect } from "react-redux";
 import { Modal, Form, Input } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
-import useInstitution from "../../hooks/institution";
+import { createInstitution } from "../../database/actions/institution";
 import { getDatabase } from "../../database";
 import { createNotification } from "../../utils/commonFunctions";
 
 const InstitutionForm = ({ isOpen, onClose, inUpdateMode = false, selected, updatingRecord, updateInstitution, creatingRecord }) => {
   const [form] = Form.useForm();
   const [disabled, setDisabled] = useState(false);
-  const [{ createInstitution }] = useInstitution();
 
   const populateFormFields = async () => {
     try {

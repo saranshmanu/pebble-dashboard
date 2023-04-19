@@ -4,8 +4,8 @@ import React, { useState, useEffect } from "react";
 import { Col, Row, Button, Modal, Divider } from "antd";
 import { PlusCircleOutlined, ExclamationCircleFilled } from "@ant-design/icons";
 
-import useHolding from "../hooks/holding";
-import useInstitution from "../hooks/institution";
+import { updateHolding, deleteHolding, createHolding, replicateHolding, getHoldings } from "../database/actions/holding";
+import { getInstitutions } from "../database/actions/institution";
 import HoldingStats from "../components/holding/HoldingStats";
 import HoldingTable from "../components/holding/HoldingTable";
 import HoldingForm from "../components/holding/HoldingForm";
@@ -16,9 +16,6 @@ function Holding({ institutions, holdingData, holdingStats }) {
   const [identifier, setIdentifier] = useState("");
   const [isCreateModalOpen, setCreateModalStatus] = useState(false);
   const [isUpdateModalOpen, setUpdateModalStatus] = useState(false);
-
-  const [{ updateHolding, deleteHolding, createHolding, replicateHolding, refresh }] = useHolding();
-  const [{ getInstitutions }] = useInstitution();
 
   const showDeleteHoldingModal = (uuid) => {
     confirm({
@@ -55,7 +52,7 @@ function Holding({ institutions, holdingData, holdingStats }) {
   };
 
   useEffect(() => {
-    refresh();
+    getHoldings();
     getInstitutions();
   }, []);
 

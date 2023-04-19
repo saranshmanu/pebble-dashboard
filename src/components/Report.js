@@ -3,7 +3,7 @@ import { useEffect, cloneElement } from "react";
 import LogoImage from "../images/logo-dark.png";
 import { Page, Text, View, Document, StyleSheet, PDFDownloadLink, Image } from "@react-pdf/renderer";
 import { formatAmount, formatPercentage } from "../utils/commonFunctions";
-import useHolding from "../hooks/holding";
+import { getHoldings } from "../database/actions/holding";
 
 const Report = ({ children, holdingStats, holdingData }) => {
   const styles = StyleSheet.create({
@@ -62,9 +62,8 @@ const Report = ({ children, holdingStats, holdingData }) => {
     },
   });
 
-  const [{ refresh }] = useHolding();
   useEffect(() => {
-    refresh();
+    getHoldings();
   }, []);
 
   const document = (

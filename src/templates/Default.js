@@ -13,7 +13,7 @@ import {
   BellOutlined,
 } from "@ant-design/icons";
 
-import useNotification from "../hooks/notification";
+import { getNotifications, clearNotifications } from "../database/actions/notification";
 import Notifications from "../components/Notifications";
 import Logo from "../components/Logo";
 import "../styles/Default.scss";
@@ -31,7 +31,6 @@ const Default = ({ children, notifications }) => {
     3: { title: "Settings" },
   };
   const [selectedKeys, setSelectedKeys] = useState([]);
-  const [{ getNotifications, clearNotifications }] = useNotification();
   const [isNotificationDrawerOpen, setNotificationDrawerOpen] = useState(false);
 
   const [pageTitle, setPageTitle] = useState(sections["1"]?.title);

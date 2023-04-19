@@ -2,12 +2,17 @@ import { createRxDatabase, addRxPlugin } from "rxdb";
 import { getRxStorageDexie } from "rxdb/plugins/storage-dexie";
 import { RxDBMigrationPlugin } from "rxdb/plugins/migration";
 import { RxDBJsonDumpPlugin } from "rxdb/plugins/json-dump";
-import investmentTable from "./investment";
-import notificationTable from "./notification";
-import settingTable from "./setting";
-import institutionTable from "./institution";
+
+import settingTable from "./schemas/setting";
+import investmentTable from "./schemas/investment";
+import institutionTable from "./schemas/institution";
+import notificationTable from "./schemas/notification";
+
 import { createNotification } from "../utils/commonFunctions";
-import useHolding from "../hooks/holding";
+
+import { getHoldings } from "./actions/holding";
+import { getInstitutions } from "./actions/institution";
+import { getNotifications } from "./actions/notification";
 
 const createDatabase = async () => {
   // Migration instructions
@@ -72,10 +77,14 @@ const getDatabase = async () => {
   return window.database;
 };
 
+const refreshStore = async () => {
+  await getNotifications();
+  await getInstitutions();
+  await getHoldings();
+};
+
 const clearCache = async () => {
   try {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [{ refresh }] = useHolding();
     const database = await getDatabase();
     await database.institution.remove();
     await database.investments.remove();
@@ -83,7 +92,7 @@ const clearCache = async () => {
     await database.settings.remove();
 
     await initDatabaseInstance();
-    refresh();
+    refreshStore();
 
     createNotification("Cleared the system cache!", "info");
   } catch (error) {
@@ -106,11 +115,9 @@ const exportDatabase = async () => {
 
 const importDatabase = async (json = {}) => {
   try {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [{ refresh }] = useHolding();
     const database = await getDatabase();
     await database.importJSON(json);
-    refresh();
+    refreshStore();
 
     createNotification("Imported the snapshot JSON to the database!", "info");
   } catch (error) {

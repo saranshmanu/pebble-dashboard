@@ -2,14 +2,13 @@ import { connect } from "react-redux";
 import { useEffect, useState } from "react";
 import { Typography, Divider, Dropdown, Button, Modal, Result } from "antd";
 import { EditOutlined, DeleteOutlined, MoreOutlined, ExclamationCircleFilled } from "@ant-design/icons";
+import { getInstitutions, removeInstitution, updateInstitution } from "../../database/actions/institution";
 import InstitutionForm from "./InstitutionForm";
-import useInstitution from "../../hooks/institution";
 
 const { Title } = Typography;
 const { confirm } = Modal;
 
 const Institution = ({ institutions, updatingRecord }) => {
-  const [{ getInstitutions, removeInstitution, updateInstitution }] = useInstitution();
   const [isModalOpen, setModalOpen] = useState(null);
   const [selected, setSelected] = useState(null);
 

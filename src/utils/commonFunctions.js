@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { message } from "antd";
-import useNotification from "../hooks/notification";
+import { createNotification as create } from "../database/actions/notification";
 
 const calculateDateDifference = (start, end) => {
   return dayjs(end).diff(dayjs(start), "day");
@@ -40,10 +40,7 @@ const formatPercentage = (rate = 0) => {
 };
 
 const createNotification = async (notification = "", type = "") => {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const [{ createNotification }] = useNotification();
-
-  createNotification(notification, type);
+  create(notification, type);
 
   switch (type) {
     case "error":

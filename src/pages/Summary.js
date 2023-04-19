@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Col, Row, Button, Result } from "antd";
 import { FileDoneOutlined } from "@ant-design/icons";
 
-import useHolding from "../hooks/holding";
+import { getHoldings } from "../database/actions/holding";
 import Report from "../components/Report";
 import useSettings from "../hooks/settings";
 import SummaryCard from "../components/card/Summary";
@@ -17,10 +17,9 @@ import "../styles/Summary.scss";
 function Summary({ holdingDistribution, holdingProjection, holdingStats, holdingData }) {
   const navigate = useNavigate();
   const [{ settings }, { getUserSettings }] = useSettings();
-  const [{ refresh }] = useHolding();
 
   useEffect(() => {
-    refresh();
+    getHoldings();
   }, [settings]);
 
   useEffect(() => {
