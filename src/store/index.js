@@ -1,8 +1,8 @@
 import { init } from "@rematch/core";
-import settingsModel from "./settings";
-import holdingsModel from "./holdings";
-import institutionsModel from "./institutions";
-import notificationsModel from "./notifications";
+import settingsModel from "./models/settings";
+import holdingsModel from "./models/holdings";
+import institutionsModel from "./models/institutions";
+import notificationsModel from "./models/notifications";
 
 const store = init({
   models: {
