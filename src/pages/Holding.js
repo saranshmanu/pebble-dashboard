@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { connect } from "react-redux";
 import React, { useState, useEffect } from "react";
 import { Col, Row, Button, Modal, Divider } from "antd";
 import { PlusCircleOutlined, ExclamationCircleFilled } from "@ant-design/icons";
@@ -11,7 +12,7 @@ import HoldingForm from "../components/holding/HoldingForm";
 
 const { confirm, info } = Modal;
 
-function Holding() {
+function Holding({ institutions }) {
   const [identifier, setIdentifier] = useState("");
   const [isCreateModalOpen, setCreateModalStatus] = useState(false);
   const [isUpdateModalOpen, setUpdateModalStatus] = useState(false);
@@ -20,7 +21,7 @@ function Holding() {
     { updatingRecord, removingRecord, creatingRecord, holdingData, holdingStats },
     { updateHolding, deleteHolding, createHolding, replicateHolding, refresh },
   ] = useHolding();
-  const [{ institutions }, { getInstitutions }] = useInstitution();
+  const [{ getInstitutions }] = useInstitution();
 
   const showDeleteHoldingModal = (uuid) => {
     confirm({
@@ -119,4 +120,9 @@ function Holding() {
   );
 }
 
-export default Holding;
+export default connect(
+  (state) => ({
+    institutions: state.institutions.institutions,
+  }),
+  () => ({})
+)(Holding);

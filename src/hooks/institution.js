@@ -1,19 +1,14 @@
 import { v4 } from "uuid";
-import { useState } from "react";
+import store from "../store";
 import { getDatabase } from "../database";
 import { createNotification } from "../utils/commonFunctions";
 
 const useInstitution = () => {
-  const [institutions, setInstitutions] = useState([]);
-
-  const [fetchingRecord, setFetchingRecordStatus] = useState(false);
-  const [creatingRecord, setCreatingRecordStatus] = useState(false);
-  const [removingRecord, setRemovingRecordStatus] = useState(false);
-  const [updatingRecord, setUpdatingRecordStatus] = useState(false);
+  const { dispatch } = store;
 
   const getInstitutions = async () => {
     try {
-      setFetchingRecordStatus(true);
+      dispatch({ type: "institutions/setStatus", payload: { fetchingInstitutions: true } });
       const database = await getDatabase();
       let response = await database.institution.find().exec();
       response = response.map((data) => {
@@ -21,32 +16,34 @@ const useInstitution = () => {
         return record;
       });
 
-      setInstitutions(response);
+      dispatch({ type: "institutions/setInstitutions", payload: response });
     } catch (error) {
       //
     }
 
-    setFetchingRecordStatus(false);
+    dispatch({ type: "institutions/setStatus", payload: { fetchingInstitutions: false } });
   };
 
   const createInstitution = async (payload) => {
     try {
-      setCreatingRecordStatus(true);
+      dispatch({ type: "institutions/setStatus", payload: { creatingInstitutions: true } });
       const database = await getDatabase();
-      await database.institution.insert({ ...payload, uuid: v4() });
-      getInstitutions();
 
+      payload = { ...payload, uuid: v4() };
+      await database.institution.insert(payload);
+
+      dispatch({ type: "institutions/createInstitution", payload: payload });
       createNotification("Created the organisation successfully", "success");
     } catch (error) {
       createNotification("Failed to create organisation", "error");
     }
 
-    setCreatingRecordStatus(false);
+    dispatch({ type: "institutions/setStatus", payload: { creatingInstitutions: false } });
   };
 
   const removeInstitution = async ({ uuid }) => {
     try {
-      setRemovingRecordStatus(true);
+      dispatch({ type: "institutions/setStatus", payload: { removingInstitutions: true } });
       const database = await getDatabase();
 
       // Removes the institution
@@ -68,20 +65,18 @@ const useInstitution = () => {
       });
       await database.investments.bulkRemove(holdings);
 
-      // Fetches the institutions after updation
-      getInstitutions();
-
+      dispatch({ type: "institutions/removeInstitution", payload: { uuid } });
       createNotification("Removed the organisation!", "success");
     } catch (error) {
       createNotification("Failed to remove the organisation", "error");
     }
 
-    setRemovingRecordStatus(false);
+    dispatch({ type: "institutions/setStatus", payload: { removingInstitutions: false } });
   };
 
   const updateInstitution = async ({ uuid, label }) => {
     try {
-      setUpdatingRecordStatus(true);
+      dispatch({ type: "institutions/setStatus", payload: { updatingInstitutions: true } });
       const database = await getDatabase();
       let holding = await database.institution
         .findOne({
@@ -89,20 +84,17 @@ const useInstitution = () => {
         })
         .exec();
       await holding.patch({ label });
-      getInstitutions();
 
+      dispatch({ type: "institutions/updateInstitution", payload: { uuid, label } });
       createNotification("Updated the organisation!", "success");
     } catch (error) {
       createNotification("Failed to update the organisation", "error");
     }
 
-    setUpdatingRecordStatus(false);
+    dispatch({ type: "institutions/setStatus", payload: { updatingInstitutions: false } });
   };
 
-  return [
-    { creatingRecord, fetchingRecord, removingRecord, updatingRecord, institutions },
-    { createInstitution, getInstitutions, removeInstitution, updateInstitution },
-  ];
+  return [{ createInstitution, getInstitutions, removeInstitution, updateInstitution }];
 };
 
 export default useInstitution;
