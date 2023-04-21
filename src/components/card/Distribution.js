@@ -19,6 +19,18 @@ const DistributionCard = ({ data, darkMode }) => {
             children: data,
           },
           legend: false,
+          color: [
+            "#bbbbed",
+            "#a6a6be",
+            "#9292af",
+            "#7d7da0",
+            "#696990",
+            "#5a5a7b",
+            "#4b4b66",
+            "#3c3c52",
+            "#2d2d3d",
+            "#1ele29",
+          ],
           height: 150,
           colorField: "name",
           rectStyle: {

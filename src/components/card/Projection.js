@@ -23,6 +23,7 @@ const ProjectionCard = ({ data = [], segregated = false, lineGraphCap = 0, barGr
             xField: "year",
             yField: "value",
             height: 200,
+            color: ["#98daef", "#7899a4"],
             seriesField: "type",
             xAxis: { tickCount: 5 },
             yAxis: {
