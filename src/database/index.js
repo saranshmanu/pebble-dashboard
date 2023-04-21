@@ -121,7 +121,6 @@ const importDatabase = async (json = {}) => {
 
     createNotification("Imported the snapshot JSON to the database!", "info");
   } catch (error) {
-    console.log(error);
     createNotification("Failed to import the JSON dump!", "error");
   }
 };
