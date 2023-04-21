@@ -1,0 +1,18 @@
+.selection-container {
+  .section {
+    padding: 150px 20px;
+    .label-container {
+      translate: 0 -60px;
+      .illustration {
+        font-size: 50px;
+        margin-bottom: 10px;
+      }
+      .placeholder {
+        font-size: 20px;
+        text-overflow: ellipsis;
+        white-space: pre-line;
+        margin-bottom: 10px;
+      }
+    }
+  }
+}

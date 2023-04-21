@@ -1,120 +1,129 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { v4 } from "uuid";
+import { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import React, { useState, useEffect } from "react";
-import { Col, Row, Button, Modal, Divider } from "antd";
-import { PlusCircleOutlined, ExclamationCircleFilled } from "@ant-design/icons";
+import { Tabs, Button, Row, Col, Tag, Result } from "antd";
+import { GoldOutlined } from "@ant-design/icons";
+import FixedIncomeHolding from "../components/fixedIncomeHoldings";
+import "../styles/Holdings.scss";
 
-import { updateHolding, deleteHolding, createHolding, replicateHolding, getHoldings } from "../database/actions/holding";
-import { getInstitutions } from "../database/actions/institution";
-import HoldingStats from "../components/holding/HoldingStats";
-import HoldingTable from "../components/holding/HoldingTable";
-import HoldingForm from "../components/holding/HoldingForm";
+const Window = () => {
+  const options = [
+    { key: 1, title: "Fixed Income Securities", live: true },
+    { key: 2, title: "Employees Provident Fund (EPF)", live: false },
+    { key: 3, title: "National Pension Scheme (NPS)", live: false },
+    { key: 3, title: "Public Provident Fund (PPF)", live: false },
+    { key: 4, title: "Mutual Funds", live: false },
+    { key: 5, title: "Equity Holdings", live: false },
+    { key: 6, title: "G-Sec Bonds", live: false },
+  ];
+  const [selectedWindow, setSelectedWindow] = useState(0);
 
-const { confirm, info } = Modal;
-
-function Holding({ institutions, holdingData, holdingStats }) {
-  const [identifier, setIdentifier] = useState("");
-  const [isCreateModalOpen, setCreateModalStatus] = useState(false);
-  const [isUpdateModalOpen, setUpdateModalStatus] = useState(false);
-
-  const showDeleteHoldingModal = (uuid) => {
-    confirm({
-      title: "Are you sure you want to delete the investment record?",
-      icon: <ExclamationCircleFilled />,
-      okText: "Yes",
-      okType: "danger",
-      cancelText: "No",
-      onOk: () => {
-        deleteHolding(uuid);
-      },
-      onCancel: () => {},
-    });
+  const onOptionSelection = (option) => {
+    setSelectedWindow(option?.key);
   };
 
-  const showReplicateHoldingModal = (uuid) => {
-    info({
-      title: "Are you sure you want to replicate the investment record?",
-      icon: <ExclamationCircleFilled />,
-      okText: "Yes",
-      okType: "danger",
+  return (
+    <div className="selection-container">
+      {!selectedWindow && (
+        <Row gutter={[20, 20]}>
+          {options?.map((option, index) => (
+            <Col key={index} xs={24} sm={12} lg={8} xl={6}>
+              <Button disabled={!option?.live} className="section" block onClick={() => onOptionSelection(option)}>
+                <div className="label-container" direction="vertical" size={5}>
+                  <GoldOutlined className="illustration" />
+                  <div className="placeholder">{option?.title}</div>
+                  {!option?.live ? (
+                    <Tag bordered={false} color="gold">
+                      Coming Soon
+                    </Tag>
+                  ) : null}
+                </div>
+              </Button>
+            </Col>
+          ))}
+        </Row>
+      )}
+      {selectedWindow === 1 && <FixedIncomeHolding />}
+    </div>
+  );
+};
+
+function Holding() {
+  const [active, setActive] = useState();
+  const [sections, setSections] = useState([]);
+
+  const initialSections = [
+    {
+      label: "Investment Classes",
+      children: <Window />,
       closable: true,
-      cancelText: "No",
-      onOk: () => {
-        replicateHolding(uuid);
-      },
-      onCancel: () => {},
-    });
-  };
+      key: v4(),
+    },
+  ];
 
-  const showUpdateHoldingModal = (uuid) => {
-    setIdentifier(uuid);
-    setUpdateModalStatus(true);
+  const onInitialSelection = () => {
+    setSections(initialSections);
+    setActive(initialSections[0].key);
   };
 
   useEffect(() => {
-    getHoldings();
-    getInstitutions();
+    onInitialSelection();
   }, []);
+
+  const remove = (targetKey) => {
+    let key = active;
+    let lastIndex = -1;
+    sections.forEach((item, i) => {
+      if (item.key === targetKey) {
+        lastIndex = i - 1;
+      }
+    });
+
+    // Filters the section array and removes the targetKey
+    const newSections = sections.filter((item) => item.key !== targetKey);
+    if (newSections.length && key === targetKey) {
+      key = lastIndex >= 0 ? newSections[lastIndex].key : newSections[0].key;
+    }
+    setSections(newSections);
+    setActive(key);
+  };
+
+  const onEdit = (targetKey, action) => {
+    if (action === "add") {
+      const key = v4();
+      setSections([...sections, { ...initialSections[0], key }]);
+      setActive(key);
+    } else {
+      remove(targetKey);
+    }
+  };
 
   return (
     <div>
-      <HoldingForm
-        institutions={institutions}
-        createHolding={createHolding}
-        isModalOpen={isCreateModalOpen}
-        setModalStatus={setCreateModalStatus}
+      <Tabs
+        type="editable-card"
+        onChange={(key) => setActive(key)}
+        activeKey={active}
+        onEdit={onEdit}
+        items={sections}
       />
-      <HoldingForm
-        updateMode={true}
-        identifier={identifier}
-        institutions={institutions}
-        updateHolding={updateHolding}
-        isModalOpen={isUpdateModalOpen}
-        setModalStatus={setUpdateModalStatus}
-      />
-      <Row>
-        <Col span={24}>
-          <Button
-            onClick={() => setCreateModalStatus(true)}
-            style={{ marginRight: 10 }}
-            icon={<PlusCircleOutlined />}
-            type="primary"
-            size="large"
-          >
-            Investment
-          </Button>
-        </Col>
-        <Col span={24}>
-          <Divider style={{ marginTop: 10, marginBottom: 10 }} />
-          <HoldingTable
-            data={holdingData}
-            showDeleteHoldingModal={showDeleteHoldingModal}
-            showUpdateHoldingModal={showUpdateHoldingModal}
-            showReplicateHoldingModal={showReplicateHoldingModal}
-          />
-        </Col>
-        <Col span={24}>
-          <Divider style={{ marginTop: 0 }} />
-          <HoldingStats
-            data={{
-              principal: holdingStats?.totalInvestment,
-              interest: holdingStats?.accumulatedInterest,
-              netValue: holdingStats?.netAmount,
-              averageInterestRate: holdingStats?.averageInterestRate,
-            }}
-          />
-          <Divider />
-        </Col>
-      </Row>
+      {sections.length === 0 ? (
+        <Result
+          status="warning"
+          title="No investment class selected"
+          extra={
+            <Button type="primary" key="console" onClick={onInitialSelection}>
+              Select a new class
+            </Button>
+          }
+        />
+      ) : null}
     </div>
   );
 }
 
 export default connect(
-  (state) => ({
-    institutions: state.institutions.institutions,
-    holdingStats: state.holdings.summary,
-    holdingData: state.holdings.holdings,
-  }),
-  () => ({})
+  (state) => ({}),
+  (dispatch) => ({})
 )(Holding);
