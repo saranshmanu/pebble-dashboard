@@ -22,7 +22,7 @@ const SummaryCard = ({ data, darkMode }) => {
       <Title className="no-margin" level={4}>
         + {formatAmount(data?.accumulatedInterest)}
       </Title>
-      <Divider style={{ margin: "10px 0px", borderColor: !darkMode ? "#000" : "#fff" }} />
+      <Divider style={{ margin: "10px 0px", borderColor: !darkMode ? "#d9d9d9" : "#424242" }} />
       <Title className="no-margin" level={2}>
         = {formatAmount(data?.netAmount)}
       </Title>

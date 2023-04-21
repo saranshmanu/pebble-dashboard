@@ -1,11 +1,12 @@
 import { Typography } from "antd";
+import { connect } from "react-redux";
 import { LineChartOutlined } from "@ant-design/icons";
 import { Line, Column } from "@ant-design/plots";
 import Card from "../Card";
 
 const { Title, Text } = Typography;
 
-const ProjectionCard = ({ data = [], segregated = false, lineGraphCap = 0, barGraphCap = 0 }) => {
+const ProjectionCard = ({ data = [], segregated = false, lineGraphCap = 0, barGraphCap = 0, darkMode }) => {
   return (
     <Card icon={<LineChartOutlined />}>
       <div style={{ marginBottom: 20 }}>
@@ -26,6 +27,8 @@ const ProjectionCard = ({ data = [], segregated = false, lineGraphCap = 0, barGr
             xAxis: { tickCount: 5 },
             yAxis: {
               title: { text: "Projected value" },
+              grid: { line: { style: { stroke: darkMode ? "#424242" : "#d9d9d9" } } },
+              label: false,
             },
             columnstyle: { radius: [20, 20, 0, 0] },
             legend: false,
@@ -41,11 +44,15 @@ const ProjectionCard = ({ data = [], segregated = false, lineGraphCap = 0, barGr
             height: 200,
             animation: { appear: { animation: "path-in", duration: 1000 } },
             lineStyle: { stroke: "#e71d36" },
-            xAxis: { tickCount: 5 },
+            xAxis: {
+              tickCount: 5,
+              grid: { line: { style: { stroke: darkMode ? "#424242" : "#d9d9d9" } } },
+            },
             yAxis: {
               tickCount: 4,
               title: { text: "Projected value" },
               label: false,
+              grid: { line: { style: { stroke: darkMode ? "#424242" : "#d9d9d9" } } },
             },
           }}
         />
@@ -60,4 +67,7 @@ const ProjectionCard = ({ data = [], segregated = false, lineGraphCap = 0, barGr
   );
 };
 
-export default ProjectionCard;
+export default connect(
+  (state) => ({ darkMode: state.settings.darkMode }),
+  (dispatch) => ({})
+)(ProjectionCard);

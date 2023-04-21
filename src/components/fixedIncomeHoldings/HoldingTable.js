@@ -1,8 +1,15 @@
+import { connect } from "react-redux";
 import { Table, Button, Tag, Badge, Space } from "antd";
 import { EditOutlined, DeleteOutlined, CopyOutlined } from "@ant-design/icons";
 import { formatAmount, formatPercentage } from "../../utils/commonFunctions";
 
-const TransactionTable = ({ data, showDeleteHoldingModal, showUpdateHoldingModal, showReplicateHoldingModal }) => {
+const TransactionTable = ({
+  data,
+  showDeleteHoldingModal,
+  showUpdateHoldingModal,
+  showReplicateHoldingModal,
+  darkMode,
+}) => {
   const columns = [
     {
       key: "institution",
@@ -44,7 +51,11 @@ const TransactionTable = ({ data, showDeleteHoldingModal, showUpdateHoldingModal
       title: "Compound Frequency",
       dataIndex: "compoundFrequency",
       width: "110px",
-      render: (value) => <Tag color="purple">{value}</Tag>,
+      render: (value) => (
+        <Tag color={darkMode ? "gold" : "purple"} bordered={!darkMode}>
+          {value}
+        </Tag>
+      ),
     },
     {
       key: "duration",
@@ -56,7 +67,13 @@ const TransactionTable = ({ data, showDeleteHoldingModal, showUpdateHoldingModal
         multiple: 1,
       },
       render: (value) => (
-        <Badge color="cyan" count={value} overflowCount={365 * 100} style={{ width: "50px" }} showZero />
+        <Badge
+          color={darkMode ? "#999" : "#faad14"}
+          count={value}
+          overflowCount={365 * 100}
+          style={{ width: "50px" }}
+          showZero
+        />
       ),
     },
     {
@@ -143,4 +160,7 @@ const TransactionTable = ({ data, showDeleteHoldingModal, showUpdateHoldingModal
   );
 };
 
-export default TransactionTable;
+export default connect(
+  (state) => ({ darkMode: state.settings.darkMode }),
+  (dispatch) => ({})
+)(TransactionTable);

@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 
 const Card = ({ children, icon, darkMode }) => {
   const style = {
-    ...(darkMode ? { color: "#fff" } : {}),
+    ...(darkMode ? { color: "#fff", borderColor: "#424242" } : { borderColor: "#d9d9d9" }),
   };
 
   return (
@@ -16,8 +16,6 @@ const Card = ({ children, icon, darkMode }) => {
 };
 
 export default connect(
-  (state) => ({
-    darkMode: state.settings.darkMode,
-  }),
+  (state) => ({ darkMode: state.settings.darkMode }),
   () => ({})
 )(Card);
