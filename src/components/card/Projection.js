@@ -10,7 +10,7 @@ const ProjectionCard = ({ data = [], segregated = false, lineGraphCap = 0, barGr
   return (
     <Card icon={<LineChartOutlined />}>
       <div style={{ marginBottom: 20 }}>
-        <Title level={5}>Projection Graph</Title>
+        <Title className="title" level={5}>Projection Graph</Title>
       </div>
 
       {segregated ? (
@@ -22,7 +22,7 @@ const ProjectionCard = ({ data = [], segregated = false, lineGraphCap = 0, barGr
             isStack: true,
             xField: "year",
             yField: "value",
-            height: 200,
+            height: 150,
             color: ["#98daef", "#7899a4"],
             seriesField: "type",
             xAxis: { tickCount: 5 },
@@ -42,7 +42,7 @@ const ProjectionCard = ({ data = [], segregated = false, lineGraphCap = 0, barGr
             padding: "auto",
             xField: "year",
             yField: "value",
-            height: 200,
+            height: 150,
             animation: { appear: { animation: "path-in", duration: 1000 } },
             lineStyle: { stroke: "#e71d36" },
             xAxis: {

@@ -9,7 +9,7 @@ const { Title } = Typography;
 const DistributionCard = ({ data, darkMode }) => {
   return (
     <Card icon={<AppstoreOutlined />}>
-      <Title level={5} style={{ margin: "0px 0px 10px 0px" }}>
+      <Title className="title" level={5} style={{ margin: "0px 0px 10px 0px" }}>
         Current value distribution
       </Title>
       <Treemap

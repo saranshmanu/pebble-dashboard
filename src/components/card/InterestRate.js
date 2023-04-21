@@ -7,7 +7,7 @@ const { Title } = Typography;
 const InterestRateCard = ({ data }) => {
   return (
     <Card icon={<PercentageOutlined />}>
-      <Title className="no-margin" level={5}>
+      <Title className="no-margin title" level={5}>
         Average Interest Rate
       </Title>
       <Title className="no-margin" level={2}>

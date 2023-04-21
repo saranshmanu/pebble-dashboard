@@ -9,14 +9,14 @@ const { Title } = Typography;
 const SummaryCard = ({ data, darkMode }) => {
   return (
     <Card icon={<BankOutlined />}>
-      <Title className="no-margin" level={5}>
+      <Title className="no-margin title" level={5}>
         Invested Amount
       </Title>
       <Title className="no-margin" level={4}>
         + {formatAmount(data?.totalInvestment)}
       </Title>
       <div style={{ marginBottom: 10 }} />
-      <Title className="no-margin" level={5}>
+      <Title className="no-margin title" level={5}>
         Accumulated Interest
       </Title>
       <Title className="no-margin" level={4}>
