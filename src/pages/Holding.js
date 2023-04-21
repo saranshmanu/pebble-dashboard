@@ -52,7 +52,7 @@ const Window = ({ onClassSelection }) => {
   );
 };
 
-const Windows = ({ sections, active, setSections, setActive }) => {
+const Windows = ({ sections, active, setSections, setActive, onInitialSelection, initialSections }) => {
   const onOptionSelection = (label) => {
     const updated = sections.map((section) => {
       if (section?.key === active) {
@@ -63,23 +63,6 @@ const Windows = ({ sections, active, setSections, setActive }) => {
     });
     setSections(updated);
   };
-
-  const initialSections = [
-    {
-      label: "Investment Classes",
-      closable: true,
-      key: v4(),
-    },
-  ];
-
-  const onInitialSelection = () => {
-    setSections(initialSections);
-    setActive(initialSections[0].key);
-  };
-
-  useEffect(() => {
-    onInitialSelection();
-  }, []);
 
   const remove = (targetKey) => {
     let key = active;
@@ -129,15 +112,32 @@ function Holding() {
   const [active, setActive] = useState();
   const [sections, setSections] = useState([]);
 
+  const initialSections = [{ label: "Investment Classes", closable: true, key: v4() }];
+  const onInitialSelection = () => {
+    setSections(initialSections);
+    setActive(initialSections[0].key);
+  };
+
+  useEffect(() => {
+    onInitialSelection();
+  }, []);
+
   return (
     <div>
-      <Windows active={active} sections={sections} setActive={setActive} setSections={setSections} />
+      <Windows
+        active={active}
+        sections={sections}
+        setActive={setActive}
+        setSections={setSections}
+        initialSections={initialSections}
+        onInitialSelection={onInitialSelection}
+      />
       {sections.length === 0 ? (
         <Result
           status="warning"
           title="No investment class selected"
           extra={
-            <Button type="primary" key="console" onClick={() => {}}>
+            <Button type="primary" key="console" onClick={onInitialSelection}>
               Select a new class
             </Button>
           }
