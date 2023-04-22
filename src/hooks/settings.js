@@ -14,7 +14,6 @@ const useSettings = () => {
         uuid: v4(),
         summaryViewSections: {
           distributionGraph: true,
-          interestRate: true,
           projectionGraph: true,
           investmentSummary: true,
         },

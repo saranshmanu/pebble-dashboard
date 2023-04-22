@@ -7,11 +7,6 @@ const preferences = [
     description: "Summary",
   },
   {
-    property: "interestRate",
-    label: "Interest Rate",
-    description: "Interest Rate",
-  },
-  {
     property: "distributionGraph",
     label: "Distribution Graph",
     description: "Distribution Graph",

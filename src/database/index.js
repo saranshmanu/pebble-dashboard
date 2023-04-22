@@ -53,6 +53,9 @@ const createDatabase = async () => {
             },
           };
         },
+        2: (document) => {
+          return { ...document };
+        },
       },
     },
     institution: {

@@ -8,7 +8,6 @@ import Report from "../Report";
 import { getHoldings } from "../../database/actions/holding";
 import SummaryCard from "../card/Summary";
 import ProjectionCard from "../card/Projection";
-import InterestRateCard from "../card/InterestRate";
 import DistributionCard from "../card/Distribution";
 import useSettings from "../../hooks/settings";
 
@@ -26,7 +25,6 @@ const Summary = ({ holdingDistribution, holdingProjection, holdingStats }) => {
   const isScreenEmpty = (settings = {}) => {
     return (
       !settings?.summaryViewSections?.investmentSummary &&
-      !settings?.summaryViewSections?.interestRate &&
       !settings?.summaryViewSections?.distributionGraph &&
       !settings?.summaryViewSections?.projectionGraph
     );
@@ -56,11 +54,6 @@ const Summary = ({ holdingDistribution, holdingProjection, holdingStats }) => {
       {settings?.summaryViewSections?.investmentSummary ? (
         <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={8}>
           <SummaryCard data={holdingStats} />
-        </Col>
-      ) : null}
-      {settings?.summaryViewSections?.interestRate ? (
-        <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={8}>
-          <InterestRateCard data={holdingStats} />
         </Col>
       ) : null}
       {settings?.summaryViewSections?.distributionGraph ? (

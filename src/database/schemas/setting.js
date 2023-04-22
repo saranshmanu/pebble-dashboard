@@ -1,6 +1,6 @@
 const settingTable = {
   title: "settingTable",
-  version: 1,
+  version: 2,
   primaryKey: "uuid",
   type: "object",
   properties: {
@@ -12,10 +12,6 @@ const settingTable = {
       type: "object",
       properties: {
         distributionGraph: {
-          type: "boolean",
-          default: false,
-        },
-        interestRate: {
           type: "boolean",
           default: false,
         },

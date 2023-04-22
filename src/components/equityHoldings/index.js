@@ -51,8 +51,9 @@ const EquityHolding = () => {
         <HoldingTable />
       </Col>
       <Col span={24}>
-        <Divider style={{ marginTop: 10, marginBottom: 10 }} />
+        <Divider style={{ marginTop: 10 }} />
         <HoldingStats />
+        <Divider />
       </Col>
     </Row>
   );

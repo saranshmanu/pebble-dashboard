@@ -57,6 +57,7 @@ const TransactionTable = ({ darkMode, setVisible, isOpen }) => {
       key: "uuid",
       title: "Action",
       dataIndex: "uuid",
+      width: 250,
       render: (_, record) => {
         return (
           <Space direction="horizontal" size={0}>
