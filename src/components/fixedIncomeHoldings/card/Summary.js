@@ -1,8 +1,8 @@
 import { connect } from "react-redux";
 import { Typography, Divider } from "antd";
 import { BankOutlined } from "@ant-design/icons";
-import { formatAmount } from "../../utils/commonFunctions";
-import Card from "../Card";
+import { formatAmount } from "../../../utils/commonFunctions";
+import Card from "../../Card";
 
 const { Title } = Typography;
 

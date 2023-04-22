@@ -6,9 +6,9 @@ import { FileDoneOutlined } from "@ant-design/icons";
 import Report from "../Report";
 
 import { getHoldings } from "../../database/actions/holding";
-import SummaryCard from "../card/Summary";
-import ProjectionCard from "../card/Projection";
-import DistributionCard from "../card/Distribution";
+import SummaryCard from "./card/Summary";
+import ProjectionCard from "./card/Projection";
+import DistributionCard from "./card/Distribution";
 import useSettings from "../../hooks/settings";
 
 const Summary = ({ holdingDistribution, holdingProjection, holdingStats }) => {

@@ -2,7 +2,7 @@ import { Typography } from "antd";
 import { connect } from "react-redux";
 import { Treemap } from "@ant-design/plots";
 import { AppstoreOutlined } from "@ant-design/icons";
-import Card from "../Card";
+import Card from "../../Card";
 
 const { Title } = Typography;
 

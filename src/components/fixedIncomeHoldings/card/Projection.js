@@ -2,7 +2,7 @@ import { Typography } from "antd";
 import { connect } from "react-redux";
 import { LineChartOutlined } from "@ant-design/icons";
 import { Line, Column } from "@ant-design/plots";
-import Card from "../Card";
+import Card from "../../Card";
 
 const { Title, Text } = Typography;
 
