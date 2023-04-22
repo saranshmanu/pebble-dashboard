@@ -3,22 +3,14 @@ import { v4 } from "uuid";
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Tabs, Button, Row, Col, Tag, Result } from "antd";
-import { GoldOutlined, CloseCircleOutlined } from "@ant-design/icons";
+import { CloseCircleOutlined } from "@ant-design/icons";
+import { investmentClasses } from "../utils/constants";
 import FixedIncomeHolding from "../components/fixedIncomeHoldings";
+import EquityHolding from "../components/equityHoldings";
 import "../styles/Holdings.scss";
 
-const { TabPane } = Tabs;
-
 const Window = ({ onClassSelection }) => {
-  const options = [
-    { key: 1, title: "Fixed Income Securities", live: true },
-    { key: 2, title: "Employees Provident Fund (EPF)", live: false },
-    { key: 3, title: "National Pension Scheme (NPS)", live: false },
-    { key: 3, title: "Public Provident Fund (PPF)", live: false },
-    { key: 4, title: "Mutual Funds", live: false },
-    { key: 5, title: "Equity Holdings", live: false },
-    { key: 6, title: "G-Sec Bonds", live: false },
-  ];
+  const options = investmentClasses;
   const [selectedWindow, setSelectedWindow] = useState(0);
 
   const onOptionSelection = (option) => {
@@ -34,7 +26,7 @@ const Window = ({ onClassSelection }) => {
             <Col key={index} xs={24} sm={12} lg={8} xl={6}>
               <Button disabled={!option?.live} className="section" block onClick={() => onOptionSelection(option)}>
                 <div className="label-container" direction="vertical" size={5}>
-                  <GoldOutlined className="illustration" />
+                  {option?.icon}
                   <div className="placeholder">{option?.title}</div>
                   {!option?.live ? (
                     <Tag bordered={false} color="gold">
@@ -48,6 +40,7 @@ const Window = ({ onClassSelection }) => {
         </Row>
       )}
       {selectedWindow === 1 && <FixedIncomeHolding />}
+      {selectedWindow === 2 && <EquityHolding />}
     </div>
   );
 };
@@ -95,14 +88,14 @@ const Windows = ({ sections, active, setSections, setActive, onInitialSelection,
   return (
     <Tabs type="editable-card" onChange={(key) => setActive(key)} activeKey={active} onEdit={onEdit}>
       {sections.map((section, index) => (
-        <TabPane
+        <Tabs.TabPane
           key={section?.key}
           tab={section?.label}
           closable={section?.closable}
           closeIcon={<CloseCircleOutlined />}
         >
           <Window onClassSelection={onOptionSelection} />
-        </TabPane>
+        </Tabs.TabPane>
       ))}
     </Tabs>
   );

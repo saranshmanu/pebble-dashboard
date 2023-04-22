@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { connect } from "react-redux";
 import React, { useState, useEffect } from "react";
-import { Col, Row, Button, Modal, Divider } from "antd";
+import { Col, Row, Button, Modal, Divider, Typography } from "antd";
 import { PlusCircleOutlined, ExclamationCircleFilled } from "@ant-design/icons";
 
 import {
@@ -17,6 +17,7 @@ import HoldingTable from "./HoldingTable";
 import HoldingForm from "./HoldingForm";
 
 const { confirm, info } = Modal;
+const { Title } = Typography;
 
 function FixedIncomeHolding({ institutions, holdingData, holdingStats }) {
   const [identifier, setIdentifier] = useState("");
@@ -92,6 +93,7 @@ function FixedIncomeHolding({ institutions, holdingData, holdingStats }) {
         </Col>
         <Col span={24}>
           <Divider style={{ marginTop: 10, marginBottom: 10 }} />
+          <Title level={3}>Position</Title>
           <HoldingTable
             data={holdingData}
             showDeleteHoldingModal={showDeleteHoldingModal}
