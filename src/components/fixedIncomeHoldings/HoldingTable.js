@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { Table, Button, Tag, Badge, Space } from "antd";
+import { Table, Button, Tag, Space } from "antd";
 import { EditOutlined, DeleteOutlined, CopyOutlined } from "@ant-design/icons";
 import { formatAmount, formatPercentage } from "../../utils/commonFunctions";
 
@@ -52,7 +52,11 @@ const TransactionTable = ({
       dataIndex: "compoundFrequency",
       width: "110px",
       render: (value) => (
-        <Tag color={darkMode ? "gold" : "purple"} bordered={!darkMode}>
+        <Tag
+          color={darkMode ? "gold" : "purple"}
+          bordered={!darkMode}
+          style={{ minWidth: "80px", textAlign: "center" }}
+        >
           {value}
         </Tag>
       ),
@@ -67,13 +71,9 @@ const TransactionTable = ({
         multiple: 1,
       },
       render: (value) => (
-        <Badge
-          color={darkMode ? "#999" : "#faad14"}
-          count={value}
-          overflowCount={365 * 100}
-          style={{ width: "50px" }}
-          showZero
-        />
+        <Tag color="blue" bordered={!darkMode} style={{ minWidth: "70px", textAlign: "center" }}>
+          {value}
+        </Tag>
       ),
     },
     {
@@ -156,7 +156,15 @@ const TransactionTable = ({
   const onChange = (pagination, filters, sorter, extra) => {};
 
   return (
-    <Table rowKey="uuid" size="small" columns={columns} dataSource={data} onChange={onChange} scroll={{ x: 1000 }} />
+    <Table
+      bordered
+      rowKey="uuid"
+      size="small"
+      columns={columns}
+      dataSource={data}
+      onChange={onChange}
+      scroll={{ x: 1000 }}
+    />
   );
 };
 
