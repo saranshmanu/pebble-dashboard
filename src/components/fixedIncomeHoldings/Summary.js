@@ -52,22 +52,22 @@ const Summary = ({ holdingDistribution, holdingProjection, holdingStats }) => {
         </Col>
       ) : null}
       {settings?.summaryViewSections?.investmentSummary ? (
-        <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={8}>
+        <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
           <SummaryCard data={holdingStats} />
         </Col>
       ) : null}
       {settings?.summaryViewSections?.distributionGraph ? (
-        <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={8}>
+        <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
           <DistributionCard data={holdingDistribution} />
         </Col>
       ) : null}
       {settings?.summaryViewSections?.projectionGraph ? (
-        <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={8}>
+        <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
           <ProjectionCard data={holdingProjection} lineGraphCap={settings?.investmentProjectionCap?.lineGraph || 0} />
         </Col>
       ) : null}
       {settings?.summaryViewSections?.projectionGraph ? (
-        <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={8}>
+        <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
           <ProjectionCard
             data={holdingProjection}
             segregated={true}

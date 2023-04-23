@@ -12,6 +12,11 @@ const ProjectionCard = ({ data = [], segregated = false, lineGraphCap = 0, barGr
       <div style={{ marginBottom: 20 }}>
         <Title className="title" level={5}>Projection Graph</Title>
       </div>
+      <div style={{ marginBottom: 20 }}>
+        <Text type="secondary">
+          (Projections based on next {!segregated ? lineGraphCap : barGraphCap} years of continuous investment)
+        </Text>
+      </div>
 
       {segregated ? (
         <Column
@@ -22,7 +27,7 @@ const ProjectionCard = ({ data = [], segregated = false, lineGraphCap = 0, barGr
             isStack: true,
             xField: "year",
             yField: "value",
-            height: 150,
+            height: 200,
             color: ["#98daef", "#7899a4"],
             seriesField: "type",
             xAxis: { tickCount: 5 },
@@ -42,7 +47,7 @@ const ProjectionCard = ({ data = [], segregated = false, lineGraphCap = 0, barGr
             padding: "auto",
             xField: "year",
             yField: "value",
-            height: 150,
+            height: 200,
             animation: { appear: { animation: "path-in", duration: 1000 } },
             lineStyle: { stroke: "#e71d36" },
             xAxis: {
@@ -59,11 +64,7 @@ const ProjectionCard = ({ data = [], segregated = false, lineGraphCap = 0, barGr
         />
       )}
 
-      <div style={{ marginTop: 20 }}>
-        <Text type="secondary">
-          (Projections based on next {!segregated ? lineGraphCap : barGraphCap} years of continuous investment)
-        </Text>
-      </div>
+      
     </Card>
   );
 };
