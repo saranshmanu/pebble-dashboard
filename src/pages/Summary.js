@@ -2,6 +2,7 @@
 import { connect } from "react-redux";
 import { Tabs } from "antd";
 import FixedIncomeSummary from "../components/fixedIncomeHoldings/Summary";
+import EquitySummary from "../components/equityHoldings/Summary";
 import "../styles/Summary.scss";
 
 function Summary() {
@@ -17,7 +18,7 @@ function Summary() {
         {
           key: 2,
           label: "Equity Holdings",
-          children: <></>,
+          children: <EquitySummary />,
         },
       ]}
     />
