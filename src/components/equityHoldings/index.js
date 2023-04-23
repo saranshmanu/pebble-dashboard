@@ -1,14 +1,27 @@
+import { useState } from "react";
 import { Col, Button, Row, Typography, Divider } from "antd";
 import { PlusCircleOutlined, MinusCircleOutlined, ProfileOutlined } from "@ant-design/icons";
-import HoldingTable from "./HoldingTable";
 import TransactionTable from "./TransactionTable";
+import HoldingTable from "./HoldingTable";
 import HoldingStats from "./HoldingStats";
-import { useState } from "react";
+import { equityTransactionData } from "../../utils/constants";
 
 const { Title } = Typography;
 
 const EquityHolding = () => {
   const [transactionModalVisible, setTransactionModalVisible] = useState(false);
+
+  const calculateStats = () => {
+    let current = 0;
+    let net = 0;
+
+    for (const data of equityTransactionData) {
+      current += data?.Quantity * data?.Average;
+      net += data?.Quantity * (data?.Current - data?.Average);
+    }
+
+    return { current, net };
+  };
 
   return (
     <Row gutter={[40, 0]}>
@@ -52,7 +65,7 @@ const EquityHolding = () => {
       </Col>
       <Col span={24}>
         <Divider style={{ marginTop: 10 }} />
-        <HoldingStats />
+        <HoldingStats data={calculateStats()} />
         <Divider />
       </Col>
     </Row>

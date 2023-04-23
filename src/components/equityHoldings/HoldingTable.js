@@ -1,10 +1,17 @@
 import { connect } from "react-redux";
+import { useEffect, useState } from "react";
 import { FullscreenOutlined, BarsOutlined } from "@ant-design/icons";
 import { Table, Tag, Space, Button } from "antd";
-import { equityHoldingData as data } from "../../utils/constants";
+import { equityHoldingData } from "../../utils/constants";
 import { formatAmount } from "../../utils/commonFunctions";
 
 const HoldingTable = ({ darkMode }) => {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    setData([...equityHoldingData]);
+  }, []);
+
   const columns = [
     {
       key: "Instrument",
@@ -91,13 +98,7 @@ const HoldingTable = ({ darkMode }) => {
   };
 
   return (
-    <Table
-      size="small"
-      columns={columns}
-      dataSource={[...data, ...data, ...data, ...data, ...data, ...data, ...data]}
-      onChange={onChange}
-      scroll={{ x: 1200 }}
-    />
+    <Table bordered rowKey="Key" size="small" columns={columns} dataSource={data} onChange={onChange} scroll={{ x: 1200 }} />
   );
 };
 

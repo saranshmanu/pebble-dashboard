@@ -1,10 +1,56 @@
+import dayjs from "dayjs";
+import { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import { Col, Row, Table, Tag, Button, Space, Modal } from "antd";
-import { EditOutlined, CopyOutlined, DeleteOutlined } from "@ant-design/icons";
-import { equityTransactionData as data } from "../../utils/constants";
+import { Col, Row, Table, Tag, Button, Space, Modal, Popconfirm } from "antd";
+import { Form, InputNumber, Input, DatePicker, Select } from "antd";
+import { EditOutlined, DeleteOutlined, SaveOutlined, CloseCircleOutlined } from "@ant-design/icons";
+import { equityTransactionData } from "../../utils/constants";
 import { formatAmount } from "../../utils/commonFunctions";
 
+const EditableTransactionCell = ({ editing, dataIndex, title, inputType, record, index, children, ...restProps }) => {
+  let inputNode;
+
+  if (inputType === "number") {
+    inputNode = <InputNumber />;
+  } else if (inputType === "date") {
+    inputNode = <DatePicker />;
+  } else if (inputType === "switch") {
+    inputNode = (
+      <Select
+        defaultValue={true}
+        options={[
+          { value: false, label: "Sell" },
+          { value: true, label: "Buy" },
+        ]}
+      />
+    );
+  } else {
+    inputNode = <Input />;
+  }
+
+  return (
+    <td {...restProps}>
+      {editing ? (
+        <Form.Item name={dataIndex} style={{ margin: 0 }} rules={[{ required: true, message: "" }]}>
+          {inputNode}
+        </Form.Item>
+      ) : (
+        children
+      )}
+    </td>
+  );
+};
+
 const TransactionTable = ({ darkMode, setVisible, isOpen }) => {
+  const [form] = Form.useForm();
+  const [data, setData] = useState([]);
+  const [identifier, setIdentifier] = useState("");
+  const isEditing = (record) => record.Key === identifier;
+
+  useEffect(() => {
+    setData([...equityTransactionData]);
+  }, []);
+
   const columns = [
     {
       key: "Instrument",
@@ -12,23 +58,26 @@ const TransactionTable = ({ darkMode, setVisible, isOpen }) => {
       dataIndex: "Instrument",
       width: 150,
       fixed: "left",
+      editable: true,
     },
     {
-      key: "Date",
-      title: "Date",
-      dataIndex: "Date",
+      key: "Datetime",
+      title: "Transaction Date",
+      dataIndex: "Datetime",
       width: 150,
+      editable: true,
     },
     {
       key: "Type",
       title: "B/S",
       dataIndex: "Buy",
-      width: 60,
+      width: 90,
       render: (value) => (
         <Tag color="orange" bordered={!darkMode} style={{ width: "40px", textAlign: "center" }}>
           {value ? "Buy" : "Sell"}
         </Tag>
       ),
+      editable: true,
     },
     {
       key: "Quantity",
@@ -39,37 +88,51 @@ const TransactionTable = ({ darkMode, setVisible, isOpen }) => {
           {value}
         </Tag>
       ),
+      editable: true,
     },
     {
       key: "Average",
       title: "Average (in ₹)",
       dataIndex: "Average",
       render: (value) => formatAmount(value),
+      editable: true,
     },
     {
       key: "Net",
       title: "Net (in ₹)",
       dataIndex: "Net",
       sorter: (a, b) => a.Net - b.Net,
-      render: (value) => <b>{value}</b>,
+      render: (value) => <b>{formatAmount(value)}</b>,
     },
     {
       key: "uuid",
       title: "Action",
-      dataIndex: "uuid",
-      width: 250,
+      dataIndex: "Key",
+      width: 240,
       render: (_, record) => {
+        const editable = isEditing(record);
+
         return (
           <Space direction="horizontal" size={0}>
-            <Button type="link" size="small" icon={<EditOutlined />} onClick={() => {}}>
-              Edit
-            </Button>
-            <Button type="link" size="small" icon={<CopyOutlined />} onClick={() => {}}>
-              Replicate
-            </Button>
-            <Button type="link" size="small" icon={<DeleteOutlined />} onClick={() => {}}>
-              Delete
-            </Button>
+            {editable ? (
+              <>
+                <Button type="link" size="small" icon={<SaveOutlined />} onClick={() => onSave(record)}>
+                  Save
+                </Button>
+                <Button type="link" size="small" icon={<CloseCircleOutlined />} onClick={onCancel}>
+                  Cancel
+                </Button>
+              </>
+            ) : (
+              <Button type="link" size="small" icon={<EditOutlined />} onClick={() => onEdit(record)}>
+                Edit
+              </Button>
+            )}
+            <Popconfirm title="Sure to cancel?" onConfirm={() => onRemove(record)}>
+              <Button type="link" size="small" icon={<DeleteOutlined />}>
+                Delete
+              </Button>
+            </Popconfirm>
           </Space>
         );
       },
@@ -80,39 +143,75 @@ const TransactionTable = ({ darkMode, setVisible, isOpen }) => {
     console.log("params", pagination, filters, sorter, extra);
   };
 
+  const onEdit = ({ Key, Instrument, Quantity, Average, Buy, Datetime }) => {
+    form.setFieldsValue({ Instrument, Quantity, Average, Buy, Datetime: dayjs(Datetime) });
+    setIdentifier(Key);
+  };
+
+  const onCancel = () => {
+    setIdentifier("");
+  };
+
+  const onRemove = ({ Key }) => {
+    // Delete the data
+  };
+
+  const onSave = async ({ Key }) => {
+    try {
+      const row = await form.validateFields();
+      // Update the data
+      console.log(row);
+
+      // Reset the identifier
+      setIdentifier("");
+    } catch (error) {}
+  };
+
+  const mergedColumns = columns.map((col) => {
+    if (!col.editable) {
+      return col;
+    }
+    return {
+      ...col,
+      onCell: (record) => ({
+        record,
+        title: col.title,
+        inputType:
+          col.dataIndex === "Quantity" || col.dataIndex === "Average"
+            ? "number"
+            : col.dataIndex === "Instrument"
+            ? "text"
+            : col.dataIndex === "Datetime"
+            ? "date"
+            : col.dataIndex === "Buy"
+            ? "switch"
+            : "",
+        dataIndex: col.dataIndex,
+        editing: isEditing(record),
+      }),
+    };
+  });
+
   return (
     <Modal title="Market Order History" open={isOpen} footer={[]} onCancel={() => setVisible(false)} width={"80%"}>
       <Row>
         <Col span={24}>
-          <Table
-            size="small"
-            columns={columns}
-            dataSource={[
-              ...data,
-              ...data,
-              ...data,
-              ...data,
-              ...data,
-              ...data,
-              ...data,
-              ...data,
-              ...data,
-              ...data,
-              ...data,
-              ...data,
-              ...data,
-              ...data,
-              ...data,
-              ...data,
-              ...data,
-              ...data,
-              ...data,
-              ...data,
-              ...data,
-            ]}
-            onChange={onChange}
-            scroll={{ x: 700 }}
-          />
+          <Form form={form} component={false}>
+            <Table
+              bordered
+              size="small"
+              rowKey="Key"
+              scroll={{ x: 1000 }}
+              rowClassName="editable-row"
+              components={{ body: { cell: EditableTransactionCell } }}
+              dataSource={data}
+              onChange={onChange}
+              columns={mergedColumns}
+              pagination={{
+                onChange: onCancel,
+              }}
+            />
+          </Form>
         </Col>
       </Row>
     </Modal>

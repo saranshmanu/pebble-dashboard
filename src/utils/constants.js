@@ -65,6 +65,7 @@ const investmentClasses = [
 
 const equityHoldingData = [
   {
+    Key: "1",
     Instrument: "Zomato",
     Exchange: "NSE",
     Type: "Equity",
@@ -74,6 +75,7 @@ const equityHoldingData = [
     Net: -3400,
   },
   {
+    Key: "2",
     Instrument: "Patym",
     Exchange: "NSE",
     Type: "Equity",
@@ -86,12 +88,24 @@ const equityHoldingData = [
 
 const equityTransactionData = [
   {
+    Key: "1",
     Instrument: "Zomato",
-    Date: new Date().toDateString(),
-    Buy: false,
+    Datetime: "2023-04-23",
+    Buy: true,
     Quantity: 1000,
     Average: 58.3,
+    Current: 60,
     Net: 58300,
+  },
+  {
+    Key: "2",
+    Instrument: "Paytm",
+    Datetime: "2023-04-23",
+    Buy: true,
+    Quantity: 100,
+    Average: 621.3,
+    Current: 688.2,
+    Net: 62130,
   },
 ];
 
