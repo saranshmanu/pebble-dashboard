@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Col, Button, Row, Typography, Divider } from "antd";
 import { PlusCircleOutlined, MinusCircleOutlined, ProfileOutlined } from "@ant-design/icons";
 import TransactionTable from "./TransactionTable";
+import TransactionForm from "./TransactionForm";
 import HoldingTable from "./HoldingTable";
 import HoldingStats from "./HoldingStats";
 import { equityTransactionData } from "../../utils/constants";
@@ -9,7 +10,8 @@ import { equityTransactionData } from "../../utils/constants";
 const { Title } = Typography;
 
 const EquityHolding = () => {
-  const [transactionModalVisible, setTransactionModalVisible] = useState(false);
+  const [transactionTableModalVisible, setTransactionTableModalVisible] = useState(false);
+  const [transactionFormModalVisible, setTransactionFormModalVisible] = useState(false);
 
   const calculateStats = () => {
     let current = 0;
@@ -26,9 +28,10 @@ const EquityHolding = () => {
   return (
     <Row gutter={[40, 0]}>
       <Col span={24}>
-        <TransactionTable isOpen={transactionModalVisible} setVisible={setTransactionModalVisible} />
+        <TransactionForm isOpen={transactionFormModalVisible} setVisible={setTransactionFormModalVisible} />
+        <TransactionTable isOpen={transactionTableModalVisible} setVisible={setTransactionTableModalVisible} />
         <Button
-          onClick={() => setTransactionModalVisible(true)}
+          onClick={() => setTransactionTableModalVisible(true)}
           style={{ marginRight: 10 }}
           icon={<ProfileOutlined />}
           type="primary"
@@ -37,7 +40,7 @@ const EquityHolding = () => {
           Transactions
         </Button>
         <Button
-          onClick={() => {}}
+          onClick={() => setTransactionFormModalVisible(true)}
           style={{ marginRight: 10 }}
           icon={<PlusCircleOutlined />}
           type="primary"
@@ -47,7 +50,7 @@ const EquityHolding = () => {
         </Button>
         <Button
           danger
-          onClick={() => {}}
+          onClick={() => setTransactionFormModalVisible(true)}
           style={{ marginRight: 10 }}
           icon={<MinusCircleOutlined />}
           type="primary"
