@@ -73,7 +73,7 @@ const removeInstitution = async ({ uuid }) => {
   dispatch({ type: "institutions/setStatus", payload: { removingInstitutions: false } });
 };
 
-const updateInstitution = async ({ uuid, label }) => {
+const updateInstitution = async ({ uuid, ...payload }) => {
   try {
     dispatch({ type: "institutions/setStatus", payload: { updatingInstitutions: true } });
     const database = await getDatabase();
@@ -82,9 +82,9 @@ const updateInstitution = async ({ uuid, label }) => {
         selector: { uuid },
       })
       .exec();
-    await holding.patch({ label });
+    await holding.patch({ ...payload });
 
-    dispatch({ type: "institutions/updateInstitution", payload: { uuid, label } });
+    dispatch({ type: "institutions/updateInstitution", payload: { uuid, ...payload } });
     createNotification("Updated the organisation!", "success");
   } catch (error) {
     createNotification("Failed to update the organisation", "error");

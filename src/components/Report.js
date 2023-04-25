@@ -89,8 +89,8 @@ const Report = ({ children, holdingStats, holdingData }) => {
               ["Principal Amount", formatAmount(holdingStats?.totalInvestment, true)],
               ["Accumulated Interest", formatAmount(holdingStats?.accumulatedInterest, true)],
               ["Net Value", formatAmount(holdingStats?.netAmount, true)],
-            ].map((value) => (
-              <View style={styles.tableRow}>
+            ].map((value, index) => (
+              <View style={styles.tableRow} key={index}>
                 <View style={styles.tableCol50P0}>
                   <Text style={styles.tableCell}>{value[0]}</Text>
                 </View>
@@ -113,14 +113,14 @@ const Report = ({ children, holdingStats, holdingData }) => {
                 "Duration (in days)",
                 "Current Value",
                 "Maturity Amount",
-              ].map((column) => (
-                <View style={styles.tableCol12P5}>
+              ].map((column, index) => (
+                <View style={styles.tableCol12P5} key={index}>
                   <Text style={styles.tableCell}>{column}</Text>
                 </View>
               ))}
             </View>
-            {holdingData.map((investment) => (
-              <View style={styles.tableRow}>
+            {holdingData.map((investment, index) => (
+              <View style={styles.tableRow} key={index}>
                 {[
                   investment.institution,
                   formatAmount(investment.principal, true),
@@ -130,8 +130,8 @@ const Report = ({ children, holdingStats, holdingData }) => {
                   investment.duration,
                   formatAmount(investment.currentValue, true),
                   formatAmount(investment.maturityAmount, true),
-                ].map((value) => (
-                  <View style={styles.tableCol12P5}>
+                ].map((value, index) => (
+                  <View style={styles.tableCol12P5} key={index}>
                     <Text style={styles.tableCell}>{value}</Text>
                   </View>
                 ))}

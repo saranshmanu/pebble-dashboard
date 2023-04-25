@@ -60,6 +60,14 @@ const createDatabase = async () => {
     },
     institution: {
       schema: institutionTable,
+      migrationStrategies: {
+        1: (document) => {
+          return { ...document, type: "bank", lastTradingValue: 0 };
+        },
+        2: (document) => {
+          return { ...document, type: "Bank", lastTradingValue: 0 };
+        },
+      },
     },
     notification: {
       schema: notificationTable,

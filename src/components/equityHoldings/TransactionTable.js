@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { Col, Row, Table, Tag, Button, Space, Modal, Popconfirm } from "antd";
 import { Form, InputNumber, Input, DatePicker, Select } from "antd";
@@ -7,14 +7,14 @@ import { EditOutlined, DeleteOutlined, SaveOutlined, CloseCircleOutlined } from 
 import { equityTransactionData } from "../../utils/constants";
 import { formatAmount } from "../../utils/commonFunctions";
 
-const EditableTransactionCell = ({ editing, dataIndex, title, inputType, record, index, children, ...restProps }) => {
+const EditableTransactionCell = ({ instruments, editing, dataIndex, title, record, index, children, ...restProps }) => {
   let inputNode;
 
-  if (inputType === "number") {
+  if (dataIndex === "Quantity" || dataIndex === "Average") {
     inputNode = <InputNumber />;
-  } else if (inputType === "date") {
+  } else if (dataIndex === "Datetime") {
     inputNode = <DatePicker />;
-  } else if (inputType === "switch") {
+  } else if (dataIndex === "Buy") {
     inputNode = (
       <Select
         defaultValue={true}
@@ -23,6 +23,16 @@ const EditableTransactionCell = ({ editing, dataIndex, title, inputType, record,
           { value: true, label: "Buy" },
         ]}
       />
+    );
+  } else if (dataIndex === "Instrument") {
+    inputNode = (
+      <Select placeholder="Zomato">
+        {instruments.map((instrument, index) => (
+          <Select.Option value={instrument?.uuid} key={index}>
+            {instrument?.label}
+          </Select.Option>
+        ))}
+      </Select>
     );
   } else {
     inputNode = <Input />;
@@ -41,7 +51,7 @@ const EditableTransactionCell = ({ editing, dataIndex, title, inputType, record,
   );
 };
 
-const TransactionTable = ({ darkMode, setVisible, isOpen }) => {
+const TransactionTable = ({ darkMode, setVisible, isOpen, instruments = [] }) => {
   const [form] = Form.useForm();
   const [data, setData] = useState([]);
   const [identifier, setIdentifier] = useState("");
@@ -176,18 +186,9 @@ const TransactionTable = ({ darkMode, setVisible, isOpen }) => {
       onCell: (record) => ({
         record,
         title: col.title,
-        inputType:
-          col.dataIndex === "Quantity" || col.dataIndex === "Average"
-            ? "number"
-            : col.dataIndex === "Instrument"
-            ? "text"
-            : col.dataIndex === "Datetime"
-            ? "date"
-            : col.dataIndex === "Buy"
-            ? "switch"
-            : "",
         dataIndex: col.dataIndex,
         editing: isEditing(record),
+        instruments,
       }),
     };
   });

@@ -5,7 +5,7 @@ import { Table, Tag, Space, Button } from "antd";
 import { equityHoldingData } from "../../utils/constants";
 import { formatAmount } from "../../utils/commonFunctions";
 
-const HoldingTable = ({ darkMode }) => {
+const HoldingTable = ({ darkMode, transactionTableVisible }) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -81,7 +81,7 @@ const HoldingTable = ({ darkMode }) => {
       render: (_, record) => {
         return (
           <Space direction="horizontal" size={0}>
-            <Button type="link" size="small" icon={<BarsOutlined />} onClick={() => {}}>
+            <Button type="link" size="small" icon={<BarsOutlined />} onClick={() => transactionTableVisible(true)}>
               Puchase History
             </Button>
             <Button type="link" size="small" icon={<FullscreenOutlined />} onClick={() => {}}>
@@ -98,7 +98,15 @@ const HoldingTable = ({ darkMode }) => {
   };
 
   return (
-    <Table bordered rowKey="Key" size="small" columns={columns} dataSource={data} onChange={onChange} scroll={{ x: 1200 }} />
+    <Table
+      bordered
+      rowKey="Key"
+      size="small"
+      columns={columns}
+      dataSource={data}
+      onChange={onChange}
+      scroll={{ x: 1200 }}
+    />
   );
 };
 

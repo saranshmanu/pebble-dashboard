@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import { useEffect, useState } from "react";
-import { Typography, Divider, Dropdown, Button, Modal, Result } from "antd";
+import { Typography, Divider, Dropdown, Button, Modal, Result, Tag, Space } from "antd";
 import { EditOutlined, DeleteOutlined, MoreOutlined, ExclamationCircleFilled } from "@ant-design/icons";
 import { getInstitutions, removeInstitution, updateInstitution } from "../../database/actions/institution";
 import InstitutionForm from "./InstitutionForm";
@@ -31,9 +31,12 @@ const Institution = ({ institutions, updatingRecord }) => {
           <div key={index}>
             <div className="toggle-item flex-expand">
               <div className="toggle-option">
-                <Title className="toggle-item-label" level={5}>
-                  {institution.label}
-                </Title>
+                <Space direction="horizontal">
+                  <Title className="toggle-item-label" level={5}>
+                    {institution.label}
+                  </Title>
+                  <Tag color="gold">{institution?.type}</Tag>
+                </Space>
               </div>
               <div className="toggle-dropdown">
                 <Dropdown

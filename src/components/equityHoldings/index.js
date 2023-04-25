@@ -1,6 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { connect } from "react-redux";
 import { Col, Button, Row, Typography, Divider } from "antd";
 import { PlusCircleOutlined, MinusCircleOutlined, ProfileOutlined } from "@ant-design/icons";
+
+import { getInstitutions } from "../../database/actions/institution";
 import TransactionTable from "./TransactionTable";
 import TransactionForm from "./TransactionForm";
 import HoldingTable from "./HoldingTable";
@@ -9,7 +12,7 @@ import { equityTransactionData } from "../../utils/constants";
 
 const { Title } = Typography;
 
-const EquityHolding = () => {
+const EquityHolding = ({ instruments = [] }) => {
   const [transactionTableModalVisible, setTransactionTableModalVisible] = useState(false);
   const [transactionFormModalVisible, setTransactionFormModalVisible] = useState(false);
 
@@ -25,11 +28,23 @@ const EquityHolding = () => {
     return { current, net };
   };
 
+  useEffect(() => {
+    getInstitutions();
+  }, []);
+
   return (
     <Row gutter={[40, 0]}>
       <Col span={24}>
-        <TransactionForm isOpen={transactionFormModalVisible} setVisible={setTransactionFormModalVisible} />
-        <TransactionTable isOpen={transactionTableModalVisible} setVisible={setTransactionTableModalVisible} />
+        <TransactionForm
+          isOpen={transactionFormModalVisible}
+          setVisible={setTransactionFormModalVisible}
+          instruments={instruments}
+        />
+        <TransactionTable
+          isOpen={transactionTableModalVisible}
+          setVisible={setTransactionTableModalVisible}
+          instruments={instruments}
+        />
         <Button
           onClick={() => setTransactionTableModalVisible(true)}
           style={{ marginRight: 10 }}
@@ -64,7 +79,7 @@ const EquityHolding = () => {
         <Title level={3} style={{ paddingTop: 0 }}>
           Position
         </Title>
-        <HoldingTable />
+        <HoldingTable transactionTableVisible={setTransactionTableModalVisible} />
       </Col>
       <Col span={24}>
         <Divider style={{ marginTop: 10 }} />
@@ -75,4 +90,7 @@ const EquityHolding = () => {
   );
 };
 
-export default EquityHolding;
+export default connect(
+  (state) => ({ instruments: state.institutions.institutions }),
+  (dispatch) => ({})
+)(EquityHolding);

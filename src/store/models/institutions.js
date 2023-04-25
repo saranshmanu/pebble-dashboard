@@ -16,7 +16,7 @@ const institutionsModel = {
     updateInstitution(state, payload = {}) {
       const institutions = state.institutions.map((institution) => {
         if (institution?.uuid === payload?.uuid) {
-          return { ...institution, label: payload?.label };
+          return { ...institution, ...payload };
         }
         return institution;
       });
