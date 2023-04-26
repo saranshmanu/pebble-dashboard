@@ -53,7 +53,7 @@ const removeInstitution = async ({ uuid }) => {
       .exec();
     await institution.remove();
 
-    // Removes all the associated holdings along with the institution
+    // Removes all the associated fixed income holdings along with the institution
     let holdings = await database.investments
       .find({
         selector: { institution: uuid },
@@ -63,6 +63,17 @@ const removeInstitution = async ({ uuid }) => {
       return holding._data.uuid;
     });
     await database.investments.bulkRemove(holdings);
+
+    // Remove all the assiciated equity holdings along with the institution
+    holdings = await database.equityInvestments
+      .find({
+        selector: { institution: uuid },
+      })
+      .exec();
+    holdings = holdings.map((holding) => {
+      return holding._data.uuid;
+    });
+    await database.equityInvestments.bulkRemove(holdings);
 
     dispatch({ type: "institutions/removeInstitution", payload: { uuid } });
     createNotification("Removed the organisation!", "success");

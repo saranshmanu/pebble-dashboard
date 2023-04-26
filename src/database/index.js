@@ -4,13 +4,14 @@ import { RxDBMigrationPlugin } from "rxdb/plugins/migration";
 import { RxDBJsonDumpPlugin } from "rxdb/plugins/json-dump";
 
 import settingTable from "./schemas/setting";
-import investmentTable from "./schemas/investment";
+import equityInvestmentTable from "./schemas/equityInvestment";
+import fixedIncomeInvestmentTable from "./schemas/fixedIncomeInvestment";
 import institutionTable from "./schemas/institution";
 import notificationTable from "./schemas/notification";
 
 import { createNotification } from "../utils/commonFunctions";
 
-import { getHoldings } from "./actions/holding";
+import { getHoldings, getEquityHoldings } from "./actions/holding";
 import { getInstitutions } from "./actions/institution";
 import { getNotifications } from "./actions/notification";
 
@@ -28,7 +29,7 @@ const createDatabase = async () => {
 
   await window.database.addCollections({
     investments: {
-      schema: investmentTable,
+      schema: fixedIncomeInvestmentTable,
       migrationStrategies: {
         1: (document) => {
           return document;
@@ -38,6 +39,17 @@ const createDatabase = async () => {
         },
         3: (document) => {
           return { ...document, institution: document?.institutionIdentifier };
+        },
+        4: (document) => {
+          return { ...document };
+        },
+      },
+    },
+    equityInvestments: {
+      schema: equityInvestmentTable,
+      migrationStrategies: {
+        4: (document) => {
+          return document;
         },
       },
     },
@@ -91,6 +103,7 @@ const getDatabase = async () => {
 const refreshStore = async () => {
   await getNotifications();
   await getInstitutions();
+  await getEquityHoldings();
   await getHoldings();
 };
 
@@ -99,6 +112,7 @@ const clearCache = async () => {
     const database = await getDatabase();
     await database.institution.remove();
     await database.investments.remove();
+    await database.equityInvestments.remove();
     await database.notification.remove();
     await database.settings.remove();
 

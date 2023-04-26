@@ -3,32 +3,43 @@ import { connect } from "react-redux";
 import { Col, Button, Row, Typography, Divider } from "antd";
 import { PlusCircleOutlined, MinusCircleOutlined, ProfileOutlined } from "@ant-design/icons";
 
+import {
+  getEquityHoldings,
+  createEquityHolding,
+  updateEquityHolding,
+  removeEquityHolding,
+} from "../../database/actions/holding";
 import { getInstitutions } from "../../database/actions/institution";
 import TransactionTable from "./TransactionTable";
 import TransactionForm from "./TransactionForm";
 import HoldingTable from "./HoldingTable";
 import HoldingStats from "./HoldingStats";
-import { equityTransactionData } from "../../utils/constants";
 
 const { Title } = Typography;
 
-const EquityHolding = ({ instruments = [] }) => {
+const EquityHolding = ({ transactions, instruments = [] }) => {
   const [transactionTableModalVisible, setTransactionTableModalVisible] = useState(false);
   const [transactionFormModalVisible, setTransactionFormModalVisible] = useState(false);
+
+  const checkIfNull = (value = 0) => {
+    return value || 0;
+  };
 
   const calculateStats = () => {
     let current = 0;
     let net = 0;
 
-    for (const data of equityTransactionData) {
-      current += data?.Quantity * data?.Average;
-      net += data?.Quantity * (data?.Current - data?.Average);
+    for (const data of transactions) {
+      // current += checkIfNull(data?.quantity) * checkIfNull(data?.average);
+      // net +=
+      //   checkIfNull(data?.quantity) * (checkIfNull(data?.institution?.lastTradingValue) - checkIfNull(data?.average));
     }
 
     return { current, net };
   };
 
   useEffect(() => {
+    getEquityHoldings();
     getInstitutions();
   }, []);
 
@@ -38,11 +49,15 @@ const EquityHolding = ({ instruments = [] }) => {
         <TransactionForm
           isOpen={transactionFormModalVisible}
           setVisible={setTransactionFormModalVisible}
+          createEquityHolding={createEquityHolding}
           instruments={instruments}
         />
         <TransactionTable
           isOpen={transactionTableModalVisible}
           setVisible={setTransactionTableModalVisible}
+          updateEquityHolding={updateEquityHolding}
+          removeEquityHolding={removeEquityHolding}
+          transactions={transactions}
           instruments={instruments}
         />
         <Button
@@ -91,6 +106,9 @@ const EquityHolding = ({ instruments = [] }) => {
 };
 
 export default connect(
-  (state) => ({ instruments: state.institutions.institutions }),
+  (state) => ({
+    instruments: state.institutions.institutions,
+    transactions: state.holdings.equityTransactions,
+  }),
   (dispatch) => ({})
 )(EquityHolding);

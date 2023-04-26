@@ -1,16 +1,59 @@
+import { useEffect } from "react";
+import { v4 } from "uuid";
 import { Col, Row, Modal, Form, InputNumber, DatePicker, Select, Segmented } from "antd";
 
-const TransactionForm = ({ isOpen, setVisible, instruments = [] }) => {
+const TransactionForm = ({ isOpen, setVisible, instruments = [], createEquityHolding }) => {
   const [form] = Form.useForm();
+
   const dateFormat = "YYYY/MM/DD";
+  const resetField = () => {
+    form.resetFields();
+  };
+
+  useEffect(() => {
+    resetField();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
+
+  const onFormSubmit = async () => {
+    try {
+      await form.validateFields();
+
+      const values = form.getFieldsValue();
+      const payload = {
+        uuid: v4(),
+        institution: values["instrument"],
+        buy: values["type"] === "Buy",
+        datetime: values["datetime"]?.format(dateFormat),
+        quantity: values["quantity"],
+        average: values["average"],
+      };
+
+      createEquityHolding(payload);
+
+      setVisible(false);
+    } catch (error) {}
+  };
+
+  const onFormCancel = () => {
+    setVisible(false);
+    resetField();
+  };
+
+  const handleKeypress = (e) => {
+    if (e.keyCode === 13) {
+      onFormSubmit();
+    }
+  };
 
   return (
-    <Modal title="Transaction" open={isOpen} onCancel={() => setVisible(false)} width={"80%"} okText="Save">
+    <Modal title="Transaction" open={isOpen} onCancel={onFormCancel} onOk={onFormSubmit} width={"80%"} okText="Save">
       <Row>
         <Col span={24}>
           <Form
-            className="full-width"
             form={form}
+            className="full-width"
+            onKeyUpCapture={handleKeypress}
             labelCol={{ span: 6 }}
             wrapperCol={{ span: 16 }}
             layout="horizontal"
@@ -60,7 +103,7 @@ const TransactionForm = ({ isOpen, setVisible, instruments = [] }) => {
             <Form.Item
               required
               tooltip="Date on which transaction was executed."
-              name="date"
+              name="datetime"
               label="Date"
               rules={[{ required: true, message: "Date is required" }]}
             >

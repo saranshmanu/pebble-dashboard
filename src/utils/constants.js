@@ -86,27 +86,4 @@ const equityHoldingData = [
   },
 ];
 
-const equityTransactionData = [
-  {
-    Key: "1",
-    Instrument: "Zomato",
-    Datetime: "2023-04-23",
-    Buy: true,
-    Quantity: 1000,
-    Average: 58.3,
-    Current: 60,
-    Net: 58300,
-  },
-  {
-    Key: "2",
-    Instrument: "Paytm",
-    Datetime: "2023-04-23",
-    Buy: true,
-    Quantity: 100,
-    Average: 621.3,
-    Current: 688.2,
-    Net: 62130,
-  },
-];
-
-export { preferences, investmentClasses, equityHoldingData, equityTransactionData };
+export { preferences, investmentClasses, equityHoldingData };

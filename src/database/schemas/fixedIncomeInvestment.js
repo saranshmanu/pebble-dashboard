@@ -1,6 +1,6 @@
-const investmentTable = {
-  title: "investmentTable",
-  version: 3,
+const fixedIncomeInvestmentTable = {
+  title: "fixedIncomeInvestmentTable",
+  version: 4,
   primaryKey: "uuid",
   type: "object",
   properties: {
@@ -50,4 +50,4 @@ const investmentTable = {
   indexes: ["uuid"],
 };
 
-export default investmentTable;
+export default fixedIncomeInvestmentTable;

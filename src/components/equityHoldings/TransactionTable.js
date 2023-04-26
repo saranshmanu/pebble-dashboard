@@ -1,20 +1,19 @@
 import dayjs from "dayjs";
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { connect } from "react-redux";
 import { Col, Row, Table, Tag, Button, Space, Modal, Popconfirm } from "antd";
 import { Form, InputNumber, Input, DatePicker, Select } from "antd";
 import { EditOutlined, DeleteOutlined, SaveOutlined, CloseCircleOutlined } from "@ant-design/icons";
-import { equityTransactionData } from "../../utils/constants";
 import { formatAmount } from "../../utils/commonFunctions";
 
 const EditableTransactionCell = ({ instruments, editing, dataIndex, title, record, index, children, ...restProps }) => {
   let inputNode;
 
-  if (dataIndex === "Quantity" || dataIndex === "Average") {
+  if (dataIndex === "quantity" || dataIndex === "average") {
     inputNode = <InputNumber />;
-  } else if (dataIndex === "Datetime") {
+  } else if (dataIndex === "datetime") {
     inputNode = <DatePicker />;
-  } else if (dataIndex === "Buy") {
+  } else if (dataIndex === "buy") {
     inputNode = (
       <Select
         defaultValue={true}
@@ -24,7 +23,7 @@ const EditableTransactionCell = ({ instruments, editing, dataIndex, title, recor
         ]}
       />
     );
-  } else if (dataIndex === "Instrument") {
+  } else if (dataIndex === "institution") {
     inputNode = (
       <Select placeholder="Zomato">
         {instruments.map((instrument, index) => (
@@ -51,36 +50,41 @@ const EditableTransactionCell = ({ instruments, editing, dataIndex, title, recor
   );
 };
 
-const TransactionTable = ({ darkMode, setVisible, isOpen, instruments = [] }) => {
+const TransactionTable = ({
+  darkMode,
+  setVisible,
+  isOpen,
+  updateEquityHolding,
+  removeEquityHolding,
+  instruments = [],
+  transactions,
+}) => {
   const [form] = Form.useForm();
-  const [data, setData] = useState([]);
+  const dateFormat = "YYYY/MM/DD";
   const [identifier, setIdentifier] = useState("");
-  const isEditing = (record) => record.Key === identifier;
-
-  useEffect(() => {
-    setData([...equityTransactionData]);
-  }, []);
+  const isEditing = (record) => record.uuid === identifier;
 
   const columns = [
     {
-      key: "Instrument",
+      key: "institution",
       title: "Instrument",
-      dataIndex: "Instrument",
-      width: 150,
+      dataIndex: "institution",
+      width: 250,
       fixed: "left",
       editable: true,
+      render: (value) => value?.label,
     },
     {
-      key: "Datetime",
+      key: "datetime",
       title: "Transaction Date",
-      dataIndex: "Datetime",
+      dataIndex: "datetime",
       width: 150,
       editable: true,
     },
     {
-      key: "Type",
+      key: "buy",
       title: "B/S",
-      dataIndex: "Buy",
+      dataIndex: "buy",
       width: 90,
       render: (value) => (
         <Tag color="orange" bordered={!darkMode} style={{ width: "40px", textAlign: "center" }}>
@@ -90,9 +94,9 @@ const TransactionTable = ({ darkMode, setVisible, isOpen, instruments = [] }) =>
       editable: true,
     },
     {
-      key: "Quantity",
+      key: "quantity",
       title: "Quantity",
-      dataIndex: "Quantity",
+      dataIndex: "quantity",
       render: (value) => (
         <Tag color={darkMode ? "gold" : "purple"} bordered={!darkMode} style={{ width: "70px", textAlign: "center" }}>
           {value}
@@ -101,27 +105,26 @@ const TransactionTable = ({ darkMode, setVisible, isOpen, instruments = [] }) =>
       editable: true,
     },
     {
-      key: "Average",
+      key: "average",
       title: "Average (in ₹)",
-      dataIndex: "Average",
+      dataIndex: "average",
       render: (value) => formatAmount(value),
       editable: true,
     },
     {
-      key: "Net",
+      key: "net",
       title: "Net (in ₹)",
-      dataIndex: "Net",
-      sorter: (a, b) => a.Net - b.Net,
-      render: (value) => <b>{formatAmount(value)}</b>,
+      width: 150,
+      sorter: (a, b) => a?.quantity * a?.average - b?.quantity * b?.average,
+      render: (_, record) => <b>{formatAmount(record?.quantity * record?.average)}</b>,
     },
     {
       key: "uuid",
       title: "Action",
-      dataIndex: "Key",
+      dataIndex: "uuid",
       width: 240,
       render: (_, record) => {
         const editable = isEditing(record);
-
         return (
           <Space direction="horizontal" size={0}>
             {editable ? (
@@ -153,24 +156,26 @@ const TransactionTable = ({ darkMode, setVisible, isOpen, instruments = [] }) =>
     console.log("params", pagination, filters, sorter, extra);
   };
 
-  const onEdit = ({ Key, Instrument, Quantity, Average, Buy, Datetime }) => {
-    form.setFieldsValue({ Instrument, Quantity, Average, Buy, Datetime: dayjs(Datetime) });
-    setIdentifier(Key);
+  const onEdit = ({ uuid, institution, quantity, average, buy, datetime }) => {
+    form.setFieldsValue({ institution: institution?.uuid, quantity, average, buy, datetime: dayjs(datetime) });
+    setIdentifier(uuid);
   };
 
   const onCancel = () => {
+    // Reset the identifier
     setIdentifier("");
   };
 
-  const onRemove = ({ Key }) => {
-    // Delete the data
+  const onRemove = ({ uuid }) => {
+    removeEquityHolding(uuid);
   };
 
-  const onSave = async ({ Key }) => {
+  const onSave = async ({ uuid }) => {
     try {
       const row = await form.validateFields();
       // Update the data
       console.log(row);
+      updateEquityHolding(uuid, { ...row, datetime: row.datetime?.format(dateFormat) });
 
       // Reset the identifier
       setIdentifier("");
@@ -201,11 +206,11 @@ const TransactionTable = ({ darkMode, setVisible, isOpen, instruments = [] }) =>
             <Table
               bordered
               size="small"
-              rowKey="Key"
-              scroll={{ x: 1000 }}
+              rowKey="uuid"
+              scroll={{ x: 1200 }}
               rowClassName="editable-row"
               components={{ body: { cell: EditableTransactionCell } }}
-              dataSource={data}
+              dataSource={transactions}
               onChange={onChange}
               columns={mergedColumns}
               pagination={{

@@ -12,6 +12,10 @@ import {
 
 const { dispatch } = store;
 
+/**
+ * Fixed Income Holdings
+ */
+
 const refreshHoldingDistribution = async (holdings) => {
   const distribution = {};
 
@@ -31,7 +35,7 @@ const refreshHoldingDistribution = async (holdings) => {
       value: parseFloat(distribution[institution]?.toFixed(2)),
     });
   }
-  dispatch({ type: "holdings/setDistribution", payload: data });
+  dispatch({ type: "holdings/setFixedIncomeHoldingDistribution", payload: data });
 };
 
 const refreshHoldingProjection = async () => {
@@ -83,7 +87,7 @@ const refreshHoldingProjection = async () => {
     });
   }
 
-  dispatch({ type: "holdings/setProjection", payload: projections });
+  dispatch({ type: "holdings/setFixedIncomeHoldingProjection", payload: projections });
 };
 
 const refreshHoldingStats = async (holdings) => {
@@ -106,7 +110,7 @@ const refreshHoldingStats = async (holdings) => {
   payload.netAmount = payload.totalInvestment + payload.accumulatedInterest;
   payload.averageInterestRate /= payload.totalInvestment;
 
-  dispatch({ type: "holdings/setSummary", payload: payload });
+  dispatch({ type: "holdings/setFixedIncomeHoldingSummary", payload: payload });
 };
 
 const getHoldings = async () => {
@@ -147,7 +151,7 @@ const getHoldings = async () => {
   });
 
   dispatch({ type: "holdings/setStatus", payload: { fetchingholdings: false } });
-  dispatch({ type: "holdings/setHoldings", payload: holdings });
+  dispatch({ type: "holdings/setFixedIncomeHoldings", payload: holdings });
 
   refreshHoldingStats(holdings);
   refreshHoldingProjection();
@@ -186,7 +190,7 @@ const deleteHolding = async (uuid) => {
       .exec();
     await holding.remove();
 
-    dispatch({ type: "holdings/removeHolding", payload: { uuid } });
+    dispatch({ type: "holdings/removeFixedIncomeHolding", payload: { uuid } });
     createNotification("Removed the investment record!", "success");
   } catch (error) {
     createNotification("Failed to remove the investment record", "error");
@@ -233,4 +237,90 @@ const replicateHolding = async (uuid) => {
   dispatch({ type: "holdings/setStatus", payload: { replicatingholdings: false } });
 };
 
-export { updateHolding, deleteHolding, createHolding, replicateHolding, getHoldings };
+/**
+ * Equity Holdings
+ */
+
+const getEquityHoldings = async () => {
+  dispatch({ type: "holdings/setStatus", payload: { fetchingEquityholdings: true } });
+
+  const database = await getDatabase();
+  let holdings = await database.equityInvestments.find().exec();
+
+  let response = [];
+  for (const holding of holdings) {
+    const institution = await holding.populate("institution");
+    response.push({ ...holding._data, institution: institution?._data });
+  }
+
+  dispatch({ type: "holdings/setStatus", payload: { fetchingEquityholdings: false } });
+  dispatch({ type: "holdings/setEquityHoldings", payload: response });
+};
+
+const createEquityHolding = async (payload) => {
+  try {
+    dispatch({ type: "holdings/setStatus", payload: { creatingEquityholdings: true } });
+    const database = await getDatabase();
+    await database.equityInvestments.insert(payload);
+
+    getEquityHoldings();
+    createNotification("Created the equity investment record successfully", "success");
+  } catch (error) {
+    createNotification("Failed to create equity investment record", "error");
+  }
+
+  dispatch({ type: "holdings/setStatus", payload: { creatingEquityholdings: false } });
+};
+
+const updateEquityHolding = async (uuid, payload) => {
+  try {
+    dispatch({ type: "holdings/setStatus", payload: { updatingEquityholdings: true } });
+    const database = await getDatabase();
+    let holding = await database.equityInvestments
+      .findOne({
+        selector: { uuid },
+      })
+      .exec();
+    delete payload.uuid;
+    await holding.patch({ ...payload });
+
+    getEquityHoldings();
+    createNotification("Updated the equity investment record!", "success");
+  } catch (error) {
+    createNotification("Failed to update the equity investment record", "error");
+  }
+
+  dispatch({ type: "holdings/setStatus", payload: { updatingEquityholdings: false } });
+};
+
+const removeEquityHolding = async (uuid) => {
+  try {
+    dispatch({ type: "holdings/setStatus", payload: { removingEquityholdings: true } });
+    const database = await getDatabase();
+    let holding = await database.equityInvestments
+      .findOne({
+        selector: { uuid },
+      })
+      .exec();
+    await holding.remove();
+
+    dispatch({ type: "holdings/removeEquityHolding", payload: { uuid } });
+    createNotification("Removed the equity investment record!", "success");
+  } catch (error) {
+    createNotification("Failed to remove the equity investment record", "error");
+  }
+
+  dispatch({ type: "holdings/setStatus", payload: { removingEquityholdings: false } });
+};
+
+export {
+  getHoldings,
+  updateHolding,
+  deleteHolding,
+  createHolding,
+  replicateHolding,
+  getEquityHoldings,
+  createEquityHolding,
+  updateEquityHolding,
+  removeEquityHolding,
+};
