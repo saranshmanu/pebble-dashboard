@@ -15,7 +15,7 @@ const HoldingStats = ({ data }) => {
       <Col xs={24} sm={12} lg={12} xl={12}>
         <Statistic
           title="Net Profit/Loss"
-          value={data?.net || 0}
+          value={data?.pnl || 0}
           precision={2}
           formatter={(value) => formatAmount(value)}
         />

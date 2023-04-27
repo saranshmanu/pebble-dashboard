@@ -2,21 +2,14 @@ import { connect } from "react-redux";
 import { useEffect, useState } from "react";
 import { FullscreenOutlined, BarsOutlined } from "@ant-design/icons";
 import { Table, Tag, Space, Button } from "antd";
-import { equityHoldingData } from "../../utils/constants";
 import { formatAmount } from "../../utils/commonFunctions";
 
-const HoldingTable = ({ darkMode, transactionTableVisible }) => {
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    setData([...equityHoldingData]);
-  }, []);
-
+const HoldingTable = ({ darkMode, setSelectedInstrumentIdentifier, transactionTableVisible, instruments }) => {
   const columns = [
     {
       key: "Instrument",
       title: "Instrument",
-      dataIndex: "Instrument",
+      dataIndex: "label",
       width: 150,
       fixed: "left",
     },
@@ -24,12 +17,14 @@ const HoldingTable = ({ darkMode, transactionTableVisible }) => {
       key: "Exchange",
       title: "Exchange",
       dataIndex: "Exchange",
+      width: 100,
       fixed: "left",
+      render: (value) => "NSE",
     },
     {
       key: "Type",
       title: "Type",
-      dataIndex: "Type",
+      dataIndex: "type",
       render: (value) => (
         <Tag color="blue" bordered={!darkMode} style={{ width: "70px", textAlign: "center" }}>
           {value}
@@ -39,7 +34,7 @@ const HoldingTable = ({ darkMode, transactionTableVisible }) => {
     {
       key: "Quantity",
       title: "Quantity",
-      dataIndex: "Quantity",
+      dataIndex: "quantity",
       render: (value) => (
         <Tag color={darkMode ? "gold" : "purple"} bordered={!darkMode} style={{ width: "70px", textAlign: "center" }}>
           {value}
@@ -49,26 +44,26 @@ const HoldingTable = ({ darkMode, transactionTableVisible }) => {
     {
       key: "LTP",
       title: "LTP (in ₹)",
-      dataIndex: "LTP",
+      dataIndex: "lastTradingValue",
       render: (value) => formatAmount(value),
     },
     {
       key: "Current",
       title: "Current Value (in ₹)",
-      dataIndex: "Current",
+      dataIndex: "current",
       sorter: (a, b) => a.Current - b.Current,
       render: (value) => <b>{formatAmount(value)}</b>,
     },
     {
       key: "Net",
       title: "Net P/L (in ₹)",
-      dataIndex: "Net",
+      dataIndex: "net",
       sorter: (a, b) => a.Net - b.Net,
       render: (value) => {
         if (value < 0) {
-          return <div style={{ color: "red" }}>{value}</div>;
+          return <div style={{ color: "red" }}>{formatAmount(value)}</div>;
         } else if (value > 0) {
-          return <div style={{ color: "green" }}>{value}</div>;
+          return <div style={{ color: "green" }}>{formatAmount(value)}</div>;
         }
         return value;
       },
@@ -78,10 +73,18 @@ const HoldingTable = ({ darkMode, transactionTableVisible }) => {
       title: "Action",
       dataIndex: "uuid",
       width: 300,
-      render: (_, record) => {
+      render: (value, record) => {
         return (
           <Space direction="horizontal" size={0}>
-            <Button type="link" size="small" icon={<BarsOutlined />} onClick={() => transactionTableVisible(true)}>
+            <Button
+              type="link"
+              size="small"
+              icon={<BarsOutlined />}
+              onClick={() => {
+                setSelectedInstrumentIdentifier(value);
+                transactionTableVisible(true);
+              }}
+            >
               Puchase History
             </Button>
             <Button type="link" size="small" icon={<FullscreenOutlined />} onClick={() => {}}>
@@ -100,10 +103,10 @@ const HoldingTable = ({ darkMode, transactionTableVisible }) => {
   return (
     <Table
       bordered
-      rowKey="Key"
+      rowKey="uuid"
       size="small"
       columns={columns}
-      dataSource={data}
+      dataSource={instruments}
       onChange={onChange}
       scroll={{ x: 1200 }}
     />

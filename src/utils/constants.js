@@ -63,27 +63,4 @@ const investmentClasses = [
   },
 ];
 
-const equityHoldingData = [
-  {
-    Key: "1",
-    Instrument: "Zomato",
-    Exchange: "NSE",
-    Type: "Equity",
-    Quantity: 1000,
-    LTP: 58.3,
-    Current: 58300,
-    Net: -3400,
-  },
-  {
-    Key: "2",
-    Instrument: "Patym",
-    Exchange: "NSE",
-    Type: "Equity",
-    Quantity: 100,
-    LTP: 521.3,
-    Current: 52130,
-    Net: 3400,
-  },
-];
-
-export { preferences, investmentClasses, equityHoldingData };
+export { preferences, investmentClasses };

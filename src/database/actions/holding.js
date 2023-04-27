@@ -257,6 +257,47 @@ const getEquityHoldings = async () => {
   dispatch({ type: "holdings/setEquityHoldings", payload: response });
 };
 
+const getEquityHoldingsSummary = async () => {
+  try {
+    dispatch({ type: "holdings/setStatus", payload: { fetchingEquitySummary: true } });
+
+    const database = await getDatabase();
+    let institutions = await database.institution.find().exec();
+    institutions = institutions.map((holding) => {
+      return { ...holding._data };
+    });
+
+    const response = [];
+    for (const institution of institutions) {
+      let transactions = await database.equityInvestments.find({ selector: { institution: institution?.uuid } }).exec();
+      transactions = transactions.map((transaction) => {
+        return { ...transaction._data };
+      });
+
+      let quantity = 0;
+      let net = 0;
+
+      for (const transaction of transactions) {
+        if (transaction?.buy) {
+          quantity += transaction?.quantity;
+          net += transaction?.quantity * transaction?.average;
+        } else {
+          quantity -= transaction?.quantity;
+          net -= transaction?.quantity * transaction?.average;
+        }
+      }
+
+      const current = quantity * institution?.lastTradingValue;
+      net = current - net;
+      response.push({ ...institution, net, quantity, current });
+    }
+
+    dispatch({ type: "holdings/setEquitySummary", payload: response });
+  } catch (error) {}
+
+  dispatch({ type: "holdings/setStatus", payload: { fetchingEquitySummary: false } });
+};
+
 const createEquityHolding = async (payload) => {
   try {
     dispatch({ type: "holdings/setStatus", payload: { creatingEquityholdings: true } });
@@ -264,6 +305,7 @@ const createEquityHolding = async (payload) => {
     await database.equityInvestments.insert(payload);
 
     getEquityHoldings();
+    getEquityHoldingsSummary();
     createNotification("Created the equity investment record successfully", "success");
   } catch (error) {
     createNotification("Failed to create equity investment record", "error");
@@ -285,6 +327,7 @@ const updateEquityHolding = async (uuid, payload) => {
     await holding.patch({ ...payload });
 
     getEquityHoldings();
+    getEquityHoldingsSummary();
     createNotification("Updated the equity investment record!", "success");
   } catch (error) {
     createNotification("Failed to update the equity investment record", "error");
@@ -304,6 +347,7 @@ const removeEquityHolding = async (uuid) => {
       .exec();
     await holding.remove();
 
+    getEquityHoldingsSummary();
     dispatch({ type: "holdings/removeEquityHolding", payload: { uuid } });
     createNotification("Removed the equity investment record!", "success");
   } catch (error) {
@@ -320,6 +364,7 @@ export {
   createHolding,
   replicateHolding,
   getEquityHoldings,
+  getEquityHoldingsSummary,
   createEquityHolding,
   updateEquityHolding,
   removeEquityHolding,

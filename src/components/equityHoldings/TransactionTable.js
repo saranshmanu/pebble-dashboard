@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
-import { useState } from "react";
 import { connect } from "react-redux";
+import { useState, useEffect } from "react";
 import { Col, Row, Table, Tag, Button, Space, Modal, Popconfirm } from "antd";
 import { Form, InputNumber, Input, DatePicker, Select } from "antd";
 import { EditOutlined, DeleteOutlined, SaveOutlined, CloseCircleOutlined } from "@ant-design/icons";
@@ -54,6 +54,7 @@ const TransactionTable = ({
   darkMode,
   setVisible,
   isOpen,
+  selectedInstrumentIdentifier,
   updateEquityHolding,
   removeEquityHolding,
   instruments = [],
@@ -61,8 +62,24 @@ const TransactionTable = ({
 }) => {
   const [form] = Form.useForm();
   const dateFormat = "YYYY/MM/DD";
+  const [data, setData] = useState([]);
   const [identifier, setIdentifier] = useState("");
   const isEditing = (record) => record.uuid === identifier;
+
+  useEffect(() => {
+    const filtered = transactions.filter((transaction) => {
+      if (
+        selectedInstrumentIdentifier === "" ||
+        selectedInstrumentIdentifier === null ||
+        selectedInstrumentIdentifier === transaction?.institution?.uuid
+      ) {
+        return transaction;
+      }
+      return null;
+    });
+
+    setData(filtered);
+  }, [selectedInstrumentIdentifier, transactions]);
 
   const columns = [
     {
@@ -210,7 +227,7 @@ const TransactionTable = ({
               scroll={{ x: 1200 }}
               rowClassName="editable-row"
               components={{ body: { cell: EditableTransactionCell } }}
-              dataSource={transactions}
+              dataSource={data}
               onChange={onChange}
               columns={mergedColumns}
               pagination={{

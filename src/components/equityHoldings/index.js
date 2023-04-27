@@ -5,6 +5,7 @@ import { PlusCircleOutlined, MinusCircleOutlined, ProfileOutlined } from "@ant-d
 
 import {
   getEquityHoldings,
+  getEquityHoldingsSummary,
   createEquityHolding,
   updateEquityHolding,
   removeEquityHolding,
@@ -17,8 +18,9 @@ import HoldingStats from "./HoldingStats";
 
 const { Title } = Typography;
 
-const EquityHolding = ({ transactions, instruments = [] }) => {
+const EquityHolding = ({ transactions, institutions = [], equitySummary }) => {
   const [defaultType, setDefaultType] = useState("Buy");
+  const [selectedInstrumentIdentifier, setSelectedInstrumentIdentifier] = useState("");
   const [transactionTableModalVisible, setTransactionTableModalVisible] = useState(false);
   const [transactionFormModalVisible, setTransactionFormModalVisible] = useState(false);
 
@@ -28,19 +30,19 @@ const EquityHolding = ({ transactions, instruments = [] }) => {
 
   const calculateStats = () => {
     let current = 0;
-    let net = 0;
+    let pnl = 0;
 
-    for (const data of transactions) {
-      // current += checkIfNull(data?.quantity) * checkIfNull(data?.average);
-      // net +=
-      //   checkIfNull(data?.quantity) * (checkIfNull(data?.institution?.lastTradingValue) - checkIfNull(data?.average));
+    for (const instrument of equitySummary) {
+      current += checkIfNull(instrument?.current);
+      pnl += checkIfNull(instrument?.net);
     }
 
-    return { current, net };
+    return { current, pnl };
   };
 
   useEffect(() => {
     getEquityHoldings();
+    getEquityHoldingsSummary();
     getInstitutions();
   }, []);
 
@@ -51,19 +53,23 @@ const EquityHolding = ({ transactions, instruments = [] }) => {
           isOpen={transactionFormModalVisible}
           setVisible={setTransactionFormModalVisible}
           createEquityHolding={createEquityHolding}
-          instruments={instruments}
+          instruments={institutions}
           defaultType={defaultType}
         />
         <TransactionTable
           isOpen={transactionTableModalVisible}
           setVisible={setTransactionTableModalVisible}
+          selectedInstrumentIdentifier={selectedInstrumentIdentifier}
           updateEquityHolding={updateEquityHolding}
           removeEquityHolding={removeEquityHolding}
           transactions={transactions}
-          instruments={instruments}
+          instruments={institutions}
         />
         <Button
-          onClick={() => setTransactionTableModalVisible(true)}
+          onClick={() => {
+            setSelectedInstrumentIdentifier("");
+            setTransactionTableModalVisible(true);
+          }}
           style={{ marginRight: 10 }}
           icon={<ProfileOutlined />}
           type="primary"
@@ -102,7 +108,11 @@ const EquityHolding = ({ transactions, instruments = [] }) => {
         <Title level={3} style={{ paddingTop: 0 }}>
           Position
         </Title>
-        <HoldingTable transactionTableVisible={setTransactionTableModalVisible} />
+        <HoldingTable
+          transactionTableVisible={setTransactionTableModalVisible}
+          setSelectedInstrumentIdentifier={setSelectedInstrumentIdentifier}
+          instruments={equitySummary}
+        />
       </Col>
       <Col span={24}>
         <Divider style={{ marginTop: 10 }} />
@@ -115,8 +125,9 @@ const EquityHolding = ({ transactions, instruments = [] }) => {
 
 export default connect(
   (state) => ({
-    instruments: state.institutions.institutions,
+    institutions: state.institutions.institutions,
     transactions: state.holdings.equityTransactions,
+    equitySummary: state.holdings.equitySummary,
   }),
   (dispatch) => ({})
 )(EquityHolding);

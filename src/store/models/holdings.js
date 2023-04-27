@@ -16,7 +16,9 @@ const holdingsModel = {
       netAmount: 0,
     },
     // Equity Holdings
+    equitySummary: [],
     equityTransactions: [],
+    fetchingEquitySummary: false,
     fetchingEquityholdings: false,
     creatingEquityholdings: false,
     updatingEquityholdings: false,
@@ -43,6 +45,9 @@ const holdingsModel = {
       return { ...state, ...payload };
     },
     // Functions related to equity holdings
+    setEquitySummary(state, payload = []) {
+      return { ...state, equitySummary: payload };
+    },
     setEquityHoldings(state, payload = []) {
       return { ...state, equityTransactions: payload };
     },
