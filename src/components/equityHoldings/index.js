@@ -18,6 +18,7 @@ import HoldingStats from "./HoldingStats";
 const { Title } = Typography;
 
 const EquityHolding = ({ transactions, instruments = [] }) => {
+  const [defaultType, setDefaultType] = useState("Buy");
   const [transactionTableModalVisible, setTransactionTableModalVisible] = useState(false);
   const [transactionFormModalVisible, setTransactionFormModalVisible] = useState(false);
 
@@ -51,6 +52,7 @@ const EquityHolding = ({ transactions, instruments = [] }) => {
           setVisible={setTransactionFormModalVisible}
           createEquityHolding={createEquityHolding}
           instruments={instruments}
+          defaultType={defaultType}
         />
         <TransactionTable
           isOpen={transactionTableModalVisible}
@@ -70,7 +72,10 @@ const EquityHolding = ({ transactions, instruments = [] }) => {
           Transactions
         </Button>
         <Button
-          onClick={() => setTransactionFormModalVisible(true)}
+          onClick={() => {
+            setDefaultType("Buy");
+            setTransactionFormModalVisible(true);
+          }}
           style={{ marginRight: 10 }}
           icon={<PlusCircleOutlined />}
           type="primary"
@@ -80,7 +85,10 @@ const EquityHolding = ({ transactions, instruments = [] }) => {
         </Button>
         <Button
           danger
-          onClick={() => setTransactionFormModalVisible(true)}
+          onClick={() => {
+            setDefaultType("Sell");
+            setTransactionFormModalVisible(true);
+          }}
           style={{ marginRight: 10 }}
           icon={<MinusCircleOutlined />}
           type="primary"

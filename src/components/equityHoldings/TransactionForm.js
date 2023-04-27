@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { v4 } from "uuid";
 import { Col, Row, Modal, Form, InputNumber, DatePicker, Select, Segmented } from "antd";
 
-const TransactionForm = ({ isOpen, setVisible, instruments = [], createEquityHolding }) => {
+const TransactionForm = ({ isOpen, setVisible, instruments = [], createEquityHolding, defaultType }) => {
   const [form] = Form.useForm();
 
   const dateFormat = "YYYY/MM/DD";
@@ -11,7 +11,11 @@ const TransactionForm = ({ isOpen, setVisible, instruments = [], createEquityHol
   };
 
   useEffect(() => {
-    resetField();
+    if (isOpen) {
+      form.setFieldsValue({ type: defaultType });
+    } else {
+      resetField();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
