@@ -90,6 +90,7 @@ const TransactionTable = ({
       fixed: "left",
       editable: true,
       render: (value) => value?.label,
+      sorter: (a, b) => a?.institution?.label?.localeCompare(b?.institution?.label),
     },
     {
       key: "datetime",
@@ -97,6 +98,7 @@ const TransactionTable = ({
       dataIndex: "datetime",
       width: 150,
       editable: true,
+      sorter: (a, b) => a?.datetime?.localeCompare(b?.datetime),
     },
     {
       key: "buy",

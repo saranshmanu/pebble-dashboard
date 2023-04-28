@@ -128,7 +128,6 @@ const InstitutionForm = ({
           <Segmented options={["Bank", "Equity"]} defaultValue={defaultType} />
         </Form.Item>
         <Form.Item
-          required
           name="graphIdentifier"
           label="Instrument Identifier"
           tooltip={{

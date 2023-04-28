@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Col, Row, Button, Result } from "antd";
@@ -5,9 +6,15 @@ import { Col, Row, Button, Result } from "antd";
 import SummaryCard from "./card/Summary";
 import TimelineCard from "./card/Timeline";
 import DistributionCard from "./card/Distribution";
+import { getEquityHoldings, getEquityHoldingsSummary } from "../../database/actions/holding";
 
-const Summary = () => {
+const Summary = ({ equityStats, equitySummary }) => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    getEquityHoldings();
+    getEquityHoldingsSummary();
+  }, []);
 
   return (
     <Row gutter={[10, 10]}>
@@ -24,10 +31,10 @@ const Summary = () => {
         </Col>
       ) : null}
       <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={10}>
-        <SummaryCard />
+        <SummaryCard stats={equityStats} />
       </Col>
       <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={14}>
-        <DistributionCard data={{}} />
+        <DistributionCard summary={equitySummary} />
       </Col>
       <Col span={24}>
         <TimelineCard data={{}} />
@@ -37,6 +44,9 @@ const Summary = () => {
 };
 
 export default connect(
-  (state) => ({}),
-  () => ({})
+  (state) => ({
+    equitySummary: state.holdings.equitySummary,
+    equityStats: state.holdings.equityStats,
+  }),
+  (dispatch) => ({})
 )(Summary);

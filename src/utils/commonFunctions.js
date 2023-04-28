@@ -57,6 +57,10 @@ const createNotification = async (notification = "", type = "") => {
   }
 };
 
+const checkIfNull = (value = 0) => {
+  return value || 0;
+};
+
 export {
   formatNumber,
   calculateDateDifference,
@@ -66,4 +70,5 @@ export {
   formatAmount,
   formatPercentage,
   createNotification,
+  checkIfNull,
 };

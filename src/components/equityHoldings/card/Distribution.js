@@ -7,17 +7,23 @@ import Card from "../../Card";
 
 const { Title } = Typography;
 
-const DistributionCard = ({ darkMode }) => {
+const DistributionCard = ({ darkMode, summary }) => {
+  const [data, setData] = useState([]);
   const G = G2.getEngine("canvas");
 
-  const data = [
-    { type: "Zomato", value: 27 },
-    { type: "Paytm", value: 25 },
-    { type: "SBI Cards", value: 18 },
-    { type: "HDFC Bank", value: 15 },
-    { type: "Edelweiss", value: 10 },
-    { type: "JM Financials", value: 5 },
-  ];
+  useEffect(() => {
+    const distribution = summary
+      .map((holding) => {
+        return {
+          type: holding?.label,
+          value: holding?.current,
+        };
+      })
+      .filter(({ value }) => value !== 0);
+
+    setData(distribution);
+  }, [summary]);
+
   return (
     <Card icon={<PieChartOutlined />}>
       <Title className="title" level={5} style={{ margin: "0px 0px 20px 0px" }}>

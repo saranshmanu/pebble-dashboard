@@ -6,15 +6,7 @@ import Card from "../../Card";
 
 const { Title } = Typography;
 
-const SummaryCard = ({
-  data = {
-    current: 100000,
-    change: 23400,
-    topGains: { title: "Vendanta", value: 1290 },
-    topLosses: { title: "Zomato", value: -3644 },
-  },
-  darkMode,
-}) => {
+const SummaryCard = ({ stats }) => {
   return (
     <Card icon={<BankOutlined />}>
       <Row>
@@ -23,15 +15,15 @@ const SummaryCard = ({
             Current Value
           </Title>
           <Title className="no-margin" level={3}>
-            {formatAmount(data?.current)}
+            {formatAmount(stats?.current)}
           </Title>
           <div style={{ marginBottom: 20 }} />
           <Title className="no-margin title" level={4}>
             Net Profit/ Loss
           </Title>
           <Title className="no-margin" level={3}>
-            {formatAmount(data?.change)}
-            {data?.change >= 0 ? (
+            {formatAmount(stats?.pnl)}
+            {stats?.pnl >= 0 ? (
               <CaretUpOutlined style={{ color: "#237804" }} />
             ) : (
               <CaretDownOutlined style={{ color: "#ff4d4f" }} />
@@ -42,7 +34,7 @@ const SummaryCard = ({
             Net Profit/ Loss %
           </Title>
           <Title className="no-margin" level={3}>
-            {formatPercentage((data?.change * 100) / data?.current)}
+            {formatPercentage((stats?.pnl * 100) / stats?.current)}
           </Title>
         </Col>
         <Col span={12}>
@@ -50,20 +42,20 @@ const SummaryCard = ({
             Top Gains
           </Title>
           <Title className="no-margin" level={3} style={{ color: "#237804" }}>
-            {data?.topGains?.title}
+            {stats?.topGains?.title}
           </Title>
           <Title className="no-margin" level={3} style={{ color: "#237804" }}>
-            {formatAmount(data?.topGains?.value)}
+            {formatAmount(stats?.topGains?.value)}
           </Title>
           <div style={{ marginBottom: 20 }} />
           <Title className="no-margin title" level={4}>
             Top Losses
           </Title>
           <Title className="no-margin" level={3} style={{ color: "#ff4d4f" }}>
-            {data?.topLosses?.title}
+            {stats?.topLosses?.title}
           </Title>
           <Title className="no-margin" level={3} style={{ color: "#ff4d4f" }}>
-            {formatAmount(data?.topLosses?.value)}
+            {formatAmount(stats?.topLosses?.value)}
           </Title>
         </Col>
       </Row>

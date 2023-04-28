@@ -1,5 +1,4 @@
 import { connect } from "react-redux";
-import { useEffect, useState } from "react";
 import { FullscreenOutlined, BarsOutlined } from "@ant-design/icons";
 import { Table, Tag, Space, Button } from "antd";
 import { formatAmount } from "../../utils/commonFunctions";
@@ -18,19 +17,22 @@ const HoldingTable = ({
       dataIndex: "label",
       width: 150,
       fixed: "left",
+      sorter: (a, b) => a?.label?.localeCompare(b?.label),
     },
     {
       key: "Exchange",
       title: "Exchange",
-      dataIndex: "Exchange",
+      dataIndex: "exchange",
       width: 100,
       fixed: "left",
       render: (value) => "NSE",
+      sorter: (a, b) => a?.exchange?.localeCompare(b?.exchange),
     },
     {
       key: "Type",
       title: "Type",
       dataIndex: "type",
+      sorter: (a, b) => a?.type?.localeCompare(b?.type),
       render: (value) => (
         <Tag color="blue" bordered={!darkMode} style={{ width: "70px", textAlign: "center" }}>
           {value}
@@ -41,6 +43,7 @@ const HoldingTable = ({
       key: "Quantity",
       title: "Quantity",
       dataIndex: "quantity",
+      sorter: (a, b) => a.quantity - b.quantity,
       render: (value) => (
         <Tag color={darkMode ? "gold" : "purple"} bordered={!darkMode} style={{ width: "70px", textAlign: "center" }}>
           {value}
@@ -51,6 +54,7 @@ const HoldingTable = ({
       key: "LTP",
       title: "LTP (in ₹)",
       dataIndex: "lastTradingValue",
+      sorter: (a, b) => a.lastTradingValue - b.lastTradingValue,
       render: (value) => formatAmount(value),
     },
     {

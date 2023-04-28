@@ -19,28 +19,12 @@ import TradingChart from "./TradingChart";
 
 const { Title } = Typography;
 
-const EquityHolding = ({ transactions, institutions = [], equitySummary }) => {
+const EquityHolding = ({ transactions, institutions = [], equitySummary, equityStats }) => {
   const [defaultType, setDefaultType] = useState("Buy");
   const [selectedInstrumentIdentifier, setSelectedInstrumentIdentifier] = useState("");
   const [tradingChartModalVisible, setTradingChartModalVisible] = useState(false);
   const [transactionTableModalVisible, setTransactionTableModalVisible] = useState(false);
   const [transactionFormModalVisible, setTransactionFormModalVisible] = useState(false);
-
-  const checkIfNull = (value = 0) => {
-    return value || 0;
-  };
-
-  const calculateStats = () => {
-    let current = 0;
-    let pnl = 0;
-
-    for (const instrument of equitySummary) {
-      current += checkIfNull(instrument?.current);
-      pnl += checkIfNull(instrument?.net);
-    }
-
-    return { current, pnl };
-  };
 
   useEffect(() => {
     getEquityHoldings();
@@ -139,7 +123,7 @@ const EquityHolding = ({ transactions, institutions = [], equitySummary }) => {
       </Col>
       <Col span={24}>
         <Divider style={{ marginTop: 10 }} />
-        <HoldingStats data={calculateStats()} />
+        <HoldingStats data={equityStats} />
         <Divider />
       </Col>
     </Row>
@@ -151,6 +135,7 @@ export default connect(
     institutions: state.institutions.institutions,
     transactions: state.holdings.equityTransactions,
     equitySummary: state.holdings.equitySummary,
+    equityStats: state.holdings.equityStats,
   }),
   (dispatch) => ({})
 )(EquityHolding);

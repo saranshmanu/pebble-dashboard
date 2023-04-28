@@ -8,6 +8,7 @@ import {
   calculateCurrentAmount,
   getCompoundFrequencyType,
   createNotification,
+  checkIfNull,
 } from "../../utils/commonFunctions";
 
 const { dispatch } = store;
@@ -267,6 +268,7 @@ const getEquityHoldingsSummary = async () => {
       return { ...holding._data };
     });
 
+    // Calculates Equity Summary
     const response = [];
     for (const institution of institutions) {
       let transactions = await database.equityInvestments.find({ selector: { institution: institution?.uuid } }).exec();
@@ -293,6 +295,29 @@ const getEquityHoldingsSummary = async () => {
     }
 
     dispatch({ type: "holdings/setEquitySummary", payload: response });
+
+    // Calculates Equity Stats
+    let current = 0;
+    let pnl = 0;
+    let topGains = { title: "", value: 0 };
+    let topLosses = { title: "", value: 0 };
+
+    for (const instrument of response) {
+      const instrumentCurrentValue = checkIfNull(instrument?.current);
+      const instrumentPnlValue = checkIfNull(instrument?.net);
+
+      current += instrumentCurrentValue;
+      pnl += instrumentPnlValue;
+
+      if (topGains.value <= instrumentPnlValue) {
+        topGains = { title: instrument?.label, value: instrumentPnlValue };
+      }
+      if (topLosses.value >= instrumentPnlValue) {
+        topLosses = { title: instrument?.label, value: instrumentPnlValue };
+      }
+    }
+
+    dispatch({ type: "holdings/setEquityStats", payload: { current, pnl, topGains, topLosses } });
   } catch (error) {}
 
   dispatch({ type: "holdings/setStatus", payload: { fetchingEquitySummary: false } });
