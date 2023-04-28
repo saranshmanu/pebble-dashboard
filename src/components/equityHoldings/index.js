@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { Col, Button, Row, Typography, Divider } from "antd";
-import { PlusCircleOutlined, MinusCircleOutlined, ProfileOutlined } from "@ant-design/icons";
+import { BarChartOutlined, PlusCircleOutlined, MinusCircleOutlined, ProfileOutlined } from "@ant-design/icons";
 
 import {
   getEquityHoldings,
@@ -15,12 +15,14 @@ import TransactionTable from "./TransactionTable";
 import TransactionForm from "./TransactionForm";
 import HoldingTable from "./HoldingTable";
 import HoldingStats from "./HoldingStats";
+import TradingChart from "./TradingChart";
 
 const { Title } = Typography;
 
 const EquityHolding = ({ transactions, institutions = [], equitySummary }) => {
   const [defaultType, setDefaultType] = useState("Buy");
   const [selectedInstrumentIdentifier, setSelectedInstrumentIdentifier] = useState("");
+  const [tradingChartModalVisible, setTradingChartModalVisible] = useState(false);
   const [transactionTableModalVisible, setTransactionTableModalVisible] = useState(false);
   const [transactionFormModalVisible, setTransactionFormModalVisible] = useState(false);
 
@@ -49,6 +51,14 @@ const EquityHolding = ({ transactions, institutions = [], equitySummary }) => {
   return (
     <Row gutter={[40, 0]}>
       <Col span={24}>
+        {tradingChartModalVisible && (
+          <TradingChart
+            isOpen={tradingChartModalVisible}
+            setVisible={setTradingChartModalVisible}
+            selectedInstrumentIdentifier={selectedInstrumentIdentifier}
+          />
+        )}
+
         <TransactionForm
           isOpen={transactionFormModalVisible}
           setVisible={setTransactionFormModalVisible}
@@ -102,6 +112,18 @@ const EquityHolding = ({ transactions, institutions = [], equitySummary }) => {
         >
           Sell
         </Button>
+        <Button
+          onClick={() => {
+            setSelectedInstrumentIdentifier("");
+            setTradingChartModalVisible(true);
+          }}
+          style={{ marginRight: 10 }}
+          icon={<BarChartOutlined />}
+          type="default"
+          size="large"
+        >
+          Trading View
+        </Button>
       </Col>
       <Col span={24}>
         <Divider style={{ marginTop: 10, marginBottom: 10 }} />
@@ -109,6 +131,7 @@ const EquityHolding = ({ transactions, institutions = [], equitySummary }) => {
           Position
         </Title>
         <HoldingTable
+          setTradingChartModalVisible={setTradingChartModalVisible}
           transactionTableVisible={setTransactionTableModalVisible}
           setSelectedInstrumentIdentifier={setSelectedInstrumentIdentifier}
           instruments={equitySummary}

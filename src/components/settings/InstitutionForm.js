@@ -34,6 +34,7 @@ const InstitutionForm = ({
       form.setFieldValue("name", response?.label);
       form.setFieldValue("type", response?.type);
       form.setFieldValue("price", response?.lastTradingValue);
+      form.setFieldValue("graphIdentifier", response?.graphIdentifier);
 
       setDisabled(false);
     } catch (error) {
@@ -68,9 +69,10 @@ const InstitutionForm = ({
       const label = form.getFieldValue("name");
       const type = form.getFieldValue("type");
       const price = form.getFieldValue("price");
+      const graphIdentifier = form.getFieldValue("graphIdentifier");
 
-      if (inUpdateMode) updateInstitution({ type, uuid: selected, label, lastTradingValue: price });
-      else createInstitution({ label, type, lastTradingValue: price });
+      if (inUpdateMode) updateInstitution({ type, uuid: selected, label, lastTradingValue: price, graphIdentifier });
+      else createInstitution({ label, type, lastTradingValue: price, graphIdentifier });
 
       onClose();
     } catch (error) {}
@@ -124,6 +126,18 @@ const InstitutionForm = ({
           tooltip={{ title: "Organisation type", icon: <InfoCircleOutlined /> }}
         >
           <Segmented options={["Bank", "Equity"]} defaultValue={defaultType} />
+        </Form.Item>
+        <Form.Item
+          required
+          name="graphIdentifier"
+          label="Instrument Identifier"
+          tooltip={{
+            title:
+              "The identifier is a unique key that will be used to display the stock performance chart using the Trading View service.",
+            icon: <InfoCircleOutlined />,
+          }}
+        >
+          <Input placeholder="NSE:SBIN" />
         </Form.Item>
       </Form>
     </Modal>

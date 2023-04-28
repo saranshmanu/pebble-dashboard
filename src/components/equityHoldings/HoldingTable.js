@@ -4,7 +4,13 @@ import { FullscreenOutlined, BarsOutlined } from "@ant-design/icons";
 import { Table, Tag, Space, Button } from "antd";
 import { formatAmount } from "../../utils/commonFunctions";
 
-const HoldingTable = ({ darkMode, setSelectedInstrumentIdentifier, transactionTableVisible, instruments }) => {
+const HoldingTable = ({
+  darkMode,
+  setTradingChartModalVisible,
+  setSelectedInstrumentIdentifier,
+  transactionTableVisible,
+  instruments,
+}) => {
   const columns = [
     {
       key: "Instrument",
@@ -51,14 +57,14 @@ const HoldingTable = ({ darkMode, setSelectedInstrumentIdentifier, transactionTa
       key: "Current",
       title: "Current Value (in ₹)",
       dataIndex: "current",
-      sorter: (a, b) => a.Current - b.Current,
+      sorter: (a, b) => a.current - b.current,
       render: (value) => <b>{formatAmount(value)}</b>,
     },
     {
       key: "Net",
       title: "Net P/L (in ₹)",
       dataIndex: "net",
-      sorter: (a, b) => a.Net - b.Net,
+      sorter: (a, b) => a.net - b.net,
       render: (value) => {
         if (value < 0) {
           return <div style={{ color: "red" }}>{formatAmount(value)}</div>;
@@ -87,7 +93,15 @@ const HoldingTable = ({ darkMode, setSelectedInstrumentIdentifier, transactionTa
             >
               Puchase History
             </Button>
-            <Button type="link" size="small" icon={<FullscreenOutlined />} onClick={() => {}}>
+            <Button
+              type="link"
+              size="small"
+              icon={<FullscreenOutlined />}
+              onClick={() => {
+                setSelectedInstrumentIdentifier(record?.graphIdentifier);
+                setTradingChartModalVisible(true);
+              }}
+            >
               View Chart
             </Button>
           </Space>

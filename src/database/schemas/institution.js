@@ -1,6 +1,6 @@
 const institutionTable = {
   title: "institutionTable",
-  version: 2,
+  version: 3,
   primaryKey: "uuid",
   type: "object",
   properties: {
@@ -19,12 +19,16 @@ const institutionTable = {
       minimum: 0,
       maximum: 3650,
     },
+    graphIdentifier: {
+      type: "string",
+      maxLength: 100,
+    },
     label: {
       type: "string",
       maxLength: 20,
     },
   },
-  required: ["uuid", "label"],
+  required: ["uuid", "label", "type", "lastTradingValue"],
   indexes: ["uuid"],
 };
 
