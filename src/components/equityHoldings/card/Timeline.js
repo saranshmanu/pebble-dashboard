@@ -1,49 +1,30 @@
-import dayjs from "dayjs";
 import { Typography } from "antd";
 import { connect } from "react-redux";
-import { useState, useEffect } from "react";
 import { Area } from "@ant-design/plots";
 import { AppstoreOutlined } from "@ant-design/icons";
 import Card from "../../Card";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
-const TimelineCard = ({ darkMode }) => {
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    asyncFetch();
-  }, []);
-
-  const asyncFetch = () => {
-    const values = [];
-    const total = 365;
-
-    for (let i = 0; i <= total; i += 1) {
-      const date = dayjs().subtract(i, "day");
-      values.push({
-        Date: date.format("DD/MM/YYYY").toString(),
-        scales: 0,
-      });
-    }
-
-    setData(values.reverse());
-  };
-
+const TimelineCard = ({ darkMode, timeline }) => {
   return (
     <Card icon={<AppstoreOutlined />}>
-      <Title className="title" level={5} style={{ margin: "0px 0px 10px 0px" }}>
-        Timeline
-      </Title>
+      <div style={{ marginBottom: 40 }}>
+        <Title className="title" level={5}>
+          Timeline
+        </Title>
+        <Text type="secondary">Net amount invested based on the transaction history</Text>
+      </div>
       <Area
         {...{
-          data,
+          data: timeline,
           height: 250,
-          xField: "Date",
+          xField: "date",
           smooth: true,
           yField: "scales",
           line: { color: "#faad14" },
           yAxis: {
+            min: 0,
             title: { text: "Invested Amount" },
             grid: {
               line: { style: { stroke: !darkMode ? "#eee" : "#333" } },

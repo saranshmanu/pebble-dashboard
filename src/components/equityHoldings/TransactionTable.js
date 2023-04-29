@@ -193,7 +193,6 @@ const TransactionTable = ({
     try {
       const row = await form.validateFields();
       // Update the data
-      console.log(row);
       updateEquityHolding(uuid, { ...row, datetime: row.datetime?.format(dateFormat) });
 
       // Reset the identifier

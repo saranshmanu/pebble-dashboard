@@ -1,4 +1,8 @@
 import dayjs from "dayjs";
+import isBetween from "dayjs/plugin/isBetween";
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+
 import { v4 } from "uuid";
 import store from "../../store";
 import { getDatabase } from "..";
@@ -318,6 +322,104 @@ const getEquityHoldingsSummary = async () => {
     }
 
     dispatch({ type: "holdings/setEquityStats", payload: { current, pnl, topGains, topLosses } });
+
+    // Calculate Equity Timeline
+    dayjs.extend(isBetween);
+    dayjs.extend(isSameOrBefore);
+    dayjs.extend(isSameOrAfter);
+
+    let transactions = await database.equityInvestments.find().exec();
+    transactions = transactions
+      .map((transaction) => {
+        return { ...transaction._data, datetime: dayjs(transaction?.datetime) };
+      })
+      .sort((a, b) => {
+        if (a?.datetime.isSame(b?.datetime)) {
+          if (a?.buy && !b?.buy) {
+            return -1;
+          }
+          if (!a?.buy && b?.buy) {
+            return 1;
+          }
+        }
+        return a?.datetime?.isAfter(b?.datetime) ? 1 : -1;
+      });
+
+    if (!transactions.length) {
+      return;
+    }
+    const start = transactions[0]?.datetime.subtract(1, "day");
+    const end = dayjs();
+
+    let value = 0;
+    const values = [];
+    let removed = [];
+    const totalDays = end.diff(start, "day") + 1;
+
+    for (let i = 0; i < totalDays; i += 1) {
+      const date = start.add(i, "day");
+
+      let count = 0;
+      for (const transaction of transactions) {
+        const datetime = transaction?.datetime;
+        if (date.isSameOrAfter(datetime)) {
+          if (transaction?.buy) {
+            value += transaction?.quantity * transaction?.average;
+            removed.push(transaction);
+          } else {
+            let quantity = transaction?.quantity;
+            let complete = false;
+            // eslint-disable-next-line no-loop-func
+            removed = removed.map((record) => {
+              if (complete || record === null) {
+                return record;
+              }
+              if (record?.institution === transaction?.institution) {
+                if (quantity < record?.quantity) {
+                  value -= quantity * record?.average;
+
+                  record.quantity -= quantity;
+                  quantity = 0;
+
+                  complete = true;
+                  return record;
+                } else if (quantity === record?.quantity) {
+                  value -= record?.quantity * record?.average;
+
+                  quantity = 0;
+                  record.quantity = 0;
+
+                  complete = true;
+                  return null;
+                } else {
+                  value -= record?.quantity * record?.average;
+
+                  quantity -= record?.quantity;
+                  record.quantity = 0;
+
+                  complete = false;
+                  return null;
+                }
+              }
+
+              return record;
+            });
+          }
+          count += 1;
+        }
+      }
+
+      values.push({
+        date: date.format("DD/MM/YYYY").toString(),
+        scales: value,
+      });
+
+      for (let i = 0; i < count; i += 1) {
+        transactions.shift();
+      }
+    }
+
+    dispatch({ type: "holdings/setEquityTimeline", payload: values });
   } catch (error) {}
 
   dispatch({ type: "holdings/setStatus", payload: { fetchingEquitySummary: false } });

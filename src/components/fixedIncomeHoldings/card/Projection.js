@@ -10,9 +10,9 @@ const ProjectionCard = ({ data = [], segregated = false, lineGraphCap = 0, barGr
   return (
     <Card icon={<LineChartOutlined />}>
       <div style={{ marginBottom: 20 }}>
-        <Title className="title" level={5}>Projection Graph</Title>
-      </div>
-      <div style={{ marginBottom: 20 }}>
+        <Title className="title" level={5}>
+          Projection Graph
+        </Title>
         <Text type="secondary">
           (Projections based on next {!segregated ? lineGraphCap : barGraphCap} years of continuous investment)
         </Text>
@@ -63,8 +63,6 @@ const ProjectionCard = ({ data = [], segregated = false, lineGraphCap = 0, barGr
           }}
         />
       )}
-
-      
     </Card>
   );
 };

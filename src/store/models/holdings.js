@@ -18,6 +18,7 @@ const holdingsModel = {
     // Equity Holdings
     equityStats: {},
     equitySummary: [],
+    equityTimeline: [],
     equityTransactions: [],
     fetchingEquitySummary: false,
     fetchingEquityholdings: false,
@@ -54,6 +55,9 @@ const holdingsModel = {
     },
     setEquityHoldings(state, payload = []) {
       return { ...state, equityTransactions: payload };
+    },
+    setEquityTimeline(state, payload = []) {
+      return { ...state, equityTimeline: payload };
     },
     removeEquityHolding(state, payload = {}) {
       return {

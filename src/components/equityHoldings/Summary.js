@@ -8,7 +8,7 @@ import TimelineCard from "./card/Timeline";
 import DistributionCard from "./card/Distribution";
 import { getEquityHoldings, getEquityHoldingsSummary } from "../../database/actions/holding";
 
-const Summary = ({ equityStats, equitySummary }) => {
+const Summary = ({ equityStats, equitySummary, equityTimeline }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -37,7 +37,7 @@ const Summary = ({ equityStats, equitySummary }) => {
         <DistributionCard summary={equitySummary} />
       </Col>
       <Col span={24}>
-        <TimelineCard data={{}} />
+        <TimelineCard timeline={equityTimeline} />
       </Col>
     </Row>
   );
@@ -45,6 +45,7 @@ const Summary = ({ equityStats, equitySummary }) => {
 
 export default connect(
   (state) => ({
+    equityTimeline: state.holdings.equityTimeline,
     equitySummary: state.holdings.equitySummary,
     equityStats: state.holdings.equityStats,
   }),
