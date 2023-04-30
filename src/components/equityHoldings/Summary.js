@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Col, Row, Button, Result } from "antd";
+import { Col, Row, Button, Result, Typography } from "antd";
 
 import SummaryCard from "./card/Summary";
 import TimelineCard from "./card/Timeline";
@@ -18,6 +18,9 @@ const Summary = ({ equityStats, equitySummary, equityTimeline }) => {
 
   return (
     <Row gutter={[10, 10]}>
+      <Col span={24}>
+        <Typography.Title level={2}>Equity Investments</Typography.Title>
+      </Col>
       {false ? (
         <Col span={24} style={{ marginTop: "80px" }}>
           <Result

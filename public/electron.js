@@ -1,4 +1,4 @@
-const { app, BrowserWindow, protocol, ipcMain } = require("electron");
+const { app, BrowserWindow, protocol, ipcMain, webFrame } = require("electron");
 
 const path = require("path");
 const url = require("url");
@@ -10,6 +10,7 @@ function createWindow() {
     minWidth: 800,
     minHeight: 600,
     webPreferences: {
+      zoomFactor: 0.9,
       nodeIntegration: true,
       enableRemoteModule: true,
       contextIsolation: false,
@@ -17,6 +18,7 @@ function createWindow() {
       devTools: app.isPackaged ? false : true,
     },
   });
+
 
   // In production, set the initial browser path to the local bundle generated
   // by the Create React App build process.
@@ -30,6 +32,8 @@ function createWindow() {
         })
       : "http://localhost:3000/"
   );
+
+
 }
 
 // This method will be called when Electron has finished its initialization and

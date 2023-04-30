@@ -1,9 +1,7 @@
 import { connect } from "react-redux";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Col, Row, Button, Result } from "antd";
-import { FileDoneOutlined } from "@ant-design/icons";
-import Report from "../Report";
+import { Col, Row, Button, Result, Typography } from "antd";
 
 import { getHoldings } from "../../database/actions/holding";
 import SummaryCard from "./card/Summary";
@@ -33,11 +31,7 @@ const Summary = ({ holdingDistribution, holdingProjection, holdingStats }) => {
   return (
     <Row gutter={[10, 10]}>
       <Col span={24}>
-        <Report>
-          <Button style={{ marginRight: 10 }} icon={<FileDoneOutlined />} size="large">
-            Generate Report
-          </Button>
-        </Report>
+        <Typography.Title level={2}>Fixed Income Securities</Typography.Title>
       </Col>
       {isScreenEmpty(settings) ? (
         <Col span={24} style={{ marginTop: "80px" }}>

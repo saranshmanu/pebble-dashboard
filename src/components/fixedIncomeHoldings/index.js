@@ -2,7 +2,7 @@
 import { connect } from "react-redux";
 import React, { useState, useEffect } from "react";
 import { Col, Row, Button, Modal, Divider, Typography } from "antd";
-import { PlusCircleOutlined, ExclamationCircleFilled } from "@ant-design/icons";
+import { PlusCircleOutlined, ExclamationCircleFilled, FileDoneOutlined } from "@ant-design/icons";
 
 import {
   updateHolding,
@@ -15,6 +15,7 @@ import { getInstitutions } from "../../database/actions/institution";
 import HoldingStats from "./HoldingStats";
 import HoldingTable from "./HoldingTable";
 import HoldingForm from "./HoldingForm";
+import Report from "../Report";
 
 const { confirm, info } = Modal;
 const { Title } = Typography;
@@ -90,6 +91,11 @@ function FixedIncomeHolding({ institutions, holdingData, holdingStats }) {
           >
             Investment
           </Button>
+          <Report>
+            <Button style={{ marginRight: 10 }} icon={<FileDoneOutlined />} size="large">
+              Generate Report
+            </Button>
+          </Report>
         </Col>
         <Col span={24}>
           <Divider style={{ marginTop: 10, marginBottom: 10 }} />
