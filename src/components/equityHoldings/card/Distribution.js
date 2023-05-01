@@ -1,11 +1,8 @@
-import { Typography } from "antd";
 import { connect } from "react-redux";
 import { useState, useEffect } from "react";
 import { PieChartOutlined } from "@ant-design/icons";
 import { Pie, G2 } from "@ant-design/plots";
 import Card from "../../Card";
-
-const { Title } = Typography;
 
 const DistributionCard = ({ darkMode, summary }) => {
   const [data, setData] = useState([]);
@@ -25,10 +22,7 @@ const DistributionCard = ({ darkMode, summary }) => {
   }, [summary]);
 
   return (
-    <Card icon={<PieChartOutlined />}>
-      <Title className="title" level={5} style={{ margin: "0px 0px 20px 0px" }}>
-        Distribution
-      </Title>
+    <Card icon={<PieChartOutlined />} title=" Distribution">
       <Pie
         {...{
           data,

@@ -8,7 +8,7 @@ const { Title } = Typography;
 
 const SummaryCard = ({ data, darkMode }) => {
   return (
-    <Card icon={<BankOutlined />}>
+    <Card icon={<BankOutlined />} title="Investment Summary">
       <Title className="no-margin title" level={4}>
         Invested Amount
       </Title>

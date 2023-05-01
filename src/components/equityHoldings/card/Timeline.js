@@ -4,15 +4,12 @@ import { Area } from "@ant-design/plots";
 import { AppstoreOutlined } from "@ant-design/icons";
 import Card from "../../Card";
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 const TimelineCard = ({ darkMode, timeline }) => {
   return (
-    <Card icon={<AppstoreOutlined />}>
+    <Card icon={<AppstoreOutlined />} title="Timeline">
       <div style={{ marginBottom: 40 }}>
-        <Title className="title" level={5}>
-          Timeline
-        </Title>
         <Text type="secondary">Net amount invested based on the transaction history</Text>
       </div>
       <Area

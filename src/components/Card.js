@@ -1,21 +1,30 @@
+import { Card } from "antd";
 import { connect } from "react-redux";
 
-const Card = ({ children, icon, darkMode }) => {
+const CardComponent = ({ children, icon, darkMode, title }) => {
   const style = {
-    ...(darkMode ? { color: "#fff", borderColor: "#424242" } : { borderColor: "#d9d9d9" }),
+    ...(darkMode ? { color: "#fff", borderColor: "#424242" } : { borderColor: "#777" }),
   };
 
   return (
-    <div style={style} className="information-card">
+    <Card
+      style={style}
+      className="information-card"
+      title={
+        <div className="card-title">
+          <div className="icon">{icon}</div>
+          <span>{title}</span>
+        </div>
+      }
+    >
       <div className="card-body flex-expand">
-        <div className="icon">{icon}</div>
         <div>{children}</div>
       </div>
-    </div>
+    </Card>
   );
 };
 
 export default connect(
   (state) => ({ darkMode: state.settings.darkMode }),
   () => ({})
-)(Card);
+)(CardComponent);

@@ -4,15 +4,12 @@ import { LineChartOutlined } from "@ant-design/icons";
 import { Line, Column } from "@ant-design/plots";
 import Card from "../../Card";
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 const ProjectionCard = ({ data = [], segregated = false, lineGraphCap = 0, barGraphCap = 0, darkMode }) => {
   return (
-    <Card icon={<LineChartOutlined />}>
+    <Card icon={<LineChartOutlined />} title="Projection Graph">
       <div style={{ marginBottom: 20 }}>
-        <Title className="title" level={5}>
-          Projection Graph
-        </Title>
         <Text type="secondary">
           (Projections based on next {!segregated ? lineGraphCap : barGraphCap} years of continuous investment)
         </Text>
