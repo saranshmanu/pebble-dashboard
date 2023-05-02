@@ -7,6 +7,7 @@ import { CloseCircleOutlined } from "@ant-design/icons";
 import { investmentClasses } from "../utils/constants";
 import FixedIncomeHolding from "../components/fixedIncomeHoldings";
 import EquityHolding from "../components/equityHoldings";
+import EmployeeProvidentFundHolding from "../components/employeeProvidentFundHoldings";
 import "../styles/Holdings.scss";
 
 const Window = ({ onClassSelection }) => {
@@ -32,7 +33,11 @@ const Window = ({ onClassSelection }) => {
                     <Tag bordered={false} color="gold">
                       Coming Soon
                     </Tag>
-                  ) : null}
+                  ) : (
+                    <Tag bordered={false} color="cyan">
+                      Now Live
+                    </Tag>
+                  )}
                 </div>
               </Button>
             </Col>
@@ -41,6 +46,7 @@ const Window = ({ onClassSelection }) => {
       )}
       {selectedWindow === 1 && <FixedIncomeHolding />}
       {selectedWindow === 2 && <EquityHolding />}
+      {selectedWindow === 3 && <EmployeeProvidentFundHolding />}
     </div>
   );
 };

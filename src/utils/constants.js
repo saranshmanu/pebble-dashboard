@@ -33,21 +33,21 @@ const investmentClasses = [
   },
   {
     key: 3,
+    live: true,
+    title: "Employees Provident Fund (EPF)",
+    icon: <GoldOutlined className="illustration" />,
+  },
+  {
+    key: 4,
     live: false,
     title: "Mutual Funds",
     icon: <BankOutlined className="illustration" />,
   },
   {
-    key: 4,
+    key: 5,
     live: false,
     title: "G-Sec Bonds",
     icon: <RiseOutlined className="illustration" />,
-  },
-  {
-    key: 5,
-    live: false,
-    title: "Employees Provident Fund (EPF)",
-    icon: <GoldOutlined className="illustration" />,
   },
   {
     key: 6,
