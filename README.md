@@ -2,7 +2,7 @@
 
 ## Functions
 
-- Currently only supports fixed income investments
+- Currently only supports fixed income investments and equity segment investments
 
 ## Build instructions
 
