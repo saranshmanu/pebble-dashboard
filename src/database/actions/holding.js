@@ -484,6 +484,142 @@ const removeEquityHolding = async (uuid) => {
   dispatch({ type: "holdings/setStatus", payload: { removingEquityholdings: false } });
 };
 
+/**
+ * Employee Provident Fund Holding
+ */
+
+const getEPFStats = async () => {
+  try {
+    let employeeShare = 0;
+    let employerShare = 0;
+    let pensionShare = 0;
+
+    const database = await getDatabase();
+    let transactions = await database.employeeProvidentFund.find().exec();
+    if (!transactions.length) throw new Error("Transaction not found");
+    transactions = transactions.map((transaction) => {
+      return transaction?._data;
+    });
+
+    for (const transaction of transactions) {
+      employeeShare += transaction?.employeeShare || 0;
+      employerShare += transaction?.employerShare || 0;
+      pensionShare += transaction?.pensionShare || 0;
+    }
+
+    dispatch({
+      type: "holdings/setEPFStats",
+      payload: {
+        employeeShare,
+        employerShare,
+        pensionShare,
+      },
+    });
+  } catch (error) {
+    createNotification("Failed to calculate EPF stats", "error");
+  }
+};
+
+const getEPFTransactions = async () => {
+  dispatch({ type: "holdings/setStatus", payload: { fetchingEPFTransactions: true } });
+
+  const database = await getDatabase();
+  let transactions = await database.employeeProvidentFund.find().exec();
+  if (!transactions.length) throw new Error("Transaction not found");
+  transactions = transactions.map((transaction) => {
+    return transaction?._data;
+  });
+
+  getEPFStats();
+  dispatch({ type: "holdings/setEPFTransactions", payload: transactions });
+  dispatch({ type: "holdings/setStatus", payload: { fetchingEPFTransactions: false } });
+};
+
+const createEPFTransaction = async (payload) => {
+  try {
+    dispatch({ type: "holdings/setStatus", payload: { creatingEPFTransaction: true } });
+    const database = await getDatabase();
+    await database.employeeProvidentFund.insert(payload);
+
+    getEPFTransactions();
+    createNotification("Created the EPF transaction record successfully", "success");
+  } catch (error) {
+    createNotification("Failed to create EPF transaction record", "error");
+  }
+
+  dispatch({ type: "holdings/setStatus", payload: { creatingEPFTransaction: false } });
+};
+
+const updateEPFTransaction = async (uuid, payload) => {
+  try {
+    dispatch({ type: "holdings/setStatus", payload: { updatingEPFTransaction: true } });
+    const database = await getDatabase();
+    let transaction = await database.employeeProvidentFund
+      .findOne({
+        selector: { uuid },
+      })
+      .exec();
+    delete payload.uuid;
+    if (!transaction) throw new Error("Transaction not found");
+    await transaction.patch({ ...payload });
+
+    getEPFTransactions();
+    createNotification("Updated the EPF transaction record!", "success");
+  } catch (error) {
+    createNotification("Failed to update the EPF transaction record", "error");
+  }
+
+  dispatch({ type: "holdings/setStatus", payload: { updatingEPFTransaction: false } });
+};
+
+const deleteEPFTransaction = async (uuid) => {
+  try {
+    dispatch({ type: "holdings/setStatus", payload: { removingEPFTransaction: true } });
+    const database = await getDatabase();
+    let transaction = await database.employeeProvidentFund
+      .findOne({
+        selector: { uuid },
+      })
+      .exec();
+    if (!transaction) throw new Error("Transaction not found");
+    await transaction.remove();
+
+    getEPFStats();
+    dispatch({ type: "holdings/removeEPFTransaction", payload: { uuid } });
+    createNotification("Removed the EPF transaction record!", "success");
+  } catch (error) {
+    createNotification("Failed to remove the EPF transaction record", "error");
+  }
+
+  dispatch({ type: "holdings/setStatus", payload: { removingEPFTransaction: false } });
+};
+
+const replicateEPFTransaction = async (uuid) => {
+  try {
+    dispatch({ type: "holdings/setStatus", payload: { replicatingEPFTransaction: true } });
+    const database = await getDatabase();
+    const transaction = await database.employeeProvidentFund
+      .findOne({
+        selector: { uuid },
+      })
+      .exec();
+
+    if (!transaction) throw new Error("Transaction not found");
+
+    await database.employeeProvidentFund.insert({
+      ...transaction._data,
+      uuid: v4(),
+    });
+
+    getEPFTransactions();
+    createNotification("Replicated the EPF transaction successfully", "success");
+  } catch (error) {
+    createNotification("Failed to replicate EPF transaction", "error");
+  }
+
+  dispatch({ type: "holdings/setStatus", payload: { replicatingEPFTransaction: false } });
+};
+
 export {
   getHoldings,
   updateHolding,
@@ -495,4 +631,9 @@ export {
   createEquityHolding,
   updateEquityHolding,
   removeEquityHolding,
+  getEPFTransactions,
+  createEPFTransaction,
+  updateEPFTransaction,
+  deleteEPFTransaction,
+  replicateEPFTransaction,
 };

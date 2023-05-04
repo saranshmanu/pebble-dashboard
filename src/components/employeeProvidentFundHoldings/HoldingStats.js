@@ -4,34 +4,34 @@ import { formatAmount } from "../../utils/commonFunctions";
 const HoldingStats = ({ data }) => {
   return (
     <Row gutter={16}>
-      <Col xs={24} sm={12} lg={12} xl={12}>
+      <Col xs={24} sm={12} lg={12} xl={6}>
         <Statistic
-          title="Current Employee Contribution Value"
-          value={data?.current || 0}
+          title="Total Employee Contribution"
+          value={data?.employeeShare || 0}
           precision={2}
           formatter={(value) => formatAmount(value)}
         />
       </Col>
-      <Col xs={24} sm={12} lg={12} xl={12}>
+      <Col xs={24} sm={12} lg={12} xl={6}>
         <Statistic
-          title="Current Employer Contribution Value"
-          value={data?.current || 0}
+          title="Total Employer Contribution"
+          value={data?.employerShare || 0}
           precision={2}
           formatter={(value) => formatAmount(value)}
         />
       </Col>
-      <Col xs={24} sm={12} lg={12} xl={12}>
+      <Col xs={24} sm={12} lg={12} xl={6}>
         <Statistic
-          title="Current Pension Share Value"
-          value={data?.current || 0}
+          title="Total Pension Share"
+          value={data?.pensionShare || 0}
           precision={2}
           formatter={(value) => formatAmount(value)}
         />
       </Col>
-      <Col xs={24} sm={12} lg={12} xl={12}>
+      <Col xs={24} sm={12} lg={12} xl={6}>
         <Statistic
-          title="Net Investment"
-          value={data?.pnl || 0}
+          title="Net Value"
+          value={data?.employeeShare + data?.employerShare + data?.pensionShare || 0}
           precision={2}
           formatter={(value) => formatAmount(value)}
         />

@@ -1,15 +1,20 @@
 import { connect } from "react-redux";
 import { Table, Button, Space } from "antd";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { EditOutlined, DeleteOutlined, CopyOutlined } from "@ant-design/icons";
 import { formatAmount } from "../../utils/commonFunctions";
 
-const TransactionTable = ({ data, showDeleteHoldingModal, showUpdateHoldingModal, darkMode }) => {
+const TransactionTable = ({ data, showDeleteHoldingModal, showUpdateHoldingModal, showReplicateHoldingModal }) => {
   const columns = [
     {
       key: "datetime",
       title: "Period",
       dataIndex: "datetime",
       width: "110px",
+      fixed: "left",
+      sorter: {
+        compare: (a, b) => new Date(a?.datetime) - new Date(b?.datetime),
+        multiple: 1,
+      },
     },
     {
       key: "employeeShare",
@@ -61,6 +66,16 @@ const TransactionTable = ({ data, showDeleteHoldingModal, showUpdateHoldingModal
               }}
             >
               Edit
+            </Button>
+            <Button
+              type="link"
+              size="small"
+              icon={<CopyOutlined />}
+              onClick={() => {
+                showReplicateHoldingModal(record?.uuid);
+              }}
+            >
+              Replicate
             </Button>
             <Button
               type="link"

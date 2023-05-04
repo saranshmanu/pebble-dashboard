@@ -122,7 +122,7 @@ const EquityHolding = ({ transactions, institutions = [], equitySummary, equityS
         />
       </Col>
       <Col span={24}>
-        <Divider style={{ marginTop: 10 }} />
+        <Divider style={{ marginTop: 0 }} />
         <HoldingStats data={equityStats} />
         <Divider />
       </Col>

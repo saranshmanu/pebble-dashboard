@@ -25,6 +25,16 @@ const holdingsModel = {
     creatingEquityholdings: false,
     updatingEquityholdings: false,
     removingEquityholdings: false,
+    // Employee Provident Fund Holdings
+    epfStats: {},
+    epfSummary: {},
+    epfTransactions: [],
+    fetchingEPFSummary: false,
+    fetchingEPFTransactions: false,
+    replicatingEPFTransaction: false,
+    creatingEPFTransaction: false,
+    updatingEPFTransaction: false,
+    removingEPFTransaction: false,
   },
   reducers: {
     // Functions related to fixed income holdings
@@ -63,6 +73,22 @@ const holdingsModel = {
       return {
         ...state,
         equityTransactions: [...state.equityTransactions.filter(({ uuid }) => uuid !== payload?.uuid)],
+      };
+    },
+    // Functions related to employee provident fund holdings
+    setEPFStats(state, payload = {}) {
+      return { ...state, epfStats: payload };
+    },
+    setEPFSummary(state, payload = []) {
+      return { ...state, epfSummary: payload };
+    },
+    setEPFTransactions(state, payload = []) {
+      return { ...state, epfTransactions: payload };
+    },
+    removeEPFTransaction(state, payload = {}) {
+      return {
+        ...state,
+        epfTransactions: [...state.epfTransactions.filter(({ uuid }) => uuid !== payload?.uuid)],
       };
     },
   },

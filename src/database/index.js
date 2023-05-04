@@ -5,6 +5,7 @@ import { RxDBJsonDumpPlugin } from "rxdb/plugins/json-dump";
 
 import settingTable from "./schemas/setting";
 import equityInvestmentTable from "./schemas/equityInvestment";
+import employeeProvidentFundTable from "./schemas/employeeProvidentFund";
 import fixedIncomeInvestmentTable from "./schemas/fixedIncomeInvestment";
 import institutionTable from "./schemas/institution";
 import notificationTable from "./schemas/notification";
@@ -31,15 +32,6 @@ const createDatabase = async () => {
     investments: {
       schema: fixedIncomeInvestmentTable,
       migrationStrategies: {
-        1: (document) => {
-          return document;
-        },
-        2: (document) => {
-          return document;
-        },
-        3: (document) => {
-          return { ...document, institution: document?.institutionIdentifier };
-        },
         4: (document) => {
           return { ...document };
         },
@@ -53,18 +45,12 @@ const createDatabase = async () => {
         },
       },
     },
+    employeeProvidentFund: {
+      schema: employeeProvidentFundTable,
+    },
     settings: {
       schema: settingTable,
       migrationStrategies: {
-        1: (document) => {
-          return {
-            ...document,
-            investmentProjectionCap: {
-              segregatedBarGraph: 10,
-              lineGraph: 50,
-            },
-          };
-        },
         2: (document) => {
           return { ...document };
         },
@@ -109,6 +95,7 @@ const clearCache = async () => {
     const database = await getDatabase();
     await database.institution.remove();
     await database.investments.remove();
+    await database.employeeProvidentFund.remove();
     await database.equityInvestments.remove();
     await database.notification.remove();
     await database.settings.remove();

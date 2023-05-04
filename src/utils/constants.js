@@ -63,14 +63,4 @@ const investmentClasses = [
   },
 ];
 
-const contributions = [
-  {
-    uuid: "0",
-    datetime: "1/10/2023",
-    employeeShare: 3900,
-    employerShare: 2650,
-    pensionShare: 1250,
-  },
-];
-
-export { preferences, investmentClasses, contributions };
+export { preferences, investmentClasses };
