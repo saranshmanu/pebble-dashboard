@@ -2,7 +2,7 @@
 import { v4 } from "uuid";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
-import { DatePicker, Form, InputNumber, Modal } from "antd";
+import { DatePicker, Form, InputNumber, Modal, Switch } from "antd";
 import { getDatabase } from "../../database";
 import { createNotification } from "../../utils/commonFunctions";
 
@@ -37,6 +37,7 @@ const TransactionForm = ({
         "employer-share": transaction?.employerShare,
         "pension-share": transaction?.pensionShare,
         "time-period": dayjs(transaction?.datetime, dateFormat),
+        "interest-toggle": transaction?.isInterest || false,
       });
 
       setDisabled(false);
@@ -68,6 +69,7 @@ const TransactionForm = ({
         employerShare: values["employer-share"],
         pensionShare: values["pension-share"],
         datetime: datetime?.format(dateFormat),
+        isInterest: values["interest-toggle"],
       };
 
       if (!updateMode) createTransaction(payload);
@@ -145,6 +147,16 @@ const TransactionForm = ({
             rules={[{ required: true, message: "Contribution period is required" }]}
           >
             <DatePicker className="full-width" format={dateFormat} picker="month" />
+          </Form.Item>
+          <Form.Item
+            required
+            tooltip="Interest toggle is selected if the amount received is the earned interest for the fiscal year."
+            name="interest-toggle"
+            label="Interest Toggle"
+            valuePropName="checked"
+            rules={[{ required: true, message: "Interest toggle is required" }]}
+          >
+            <Switch />
           </Form.Item>
         </Form>
       </div>

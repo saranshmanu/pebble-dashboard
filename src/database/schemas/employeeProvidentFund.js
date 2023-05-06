@@ -1,12 +1,16 @@
 const employeeProvidentFundTable = {
   title: "employeeProvidentFundTable",
-  version: 1,
+  version: 2,
   primaryKey: "uuid",
   type: "object",
   properties: {
     uuid: {
       type: "string",
       maxLength: 100,
+    },
+    isInterest: {
+      type: "boolean",
+      default: false,
     },
     employeeShare: {
       type: "number",

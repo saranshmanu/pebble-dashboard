@@ -1,9 +1,15 @@
 import { connect } from "react-redux";
-import { Table, Button, Space } from "antd";
+import { Table, Button, Space, Tag } from "antd";
 import { EditOutlined, DeleteOutlined, CopyOutlined } from "@ant-design/icons";
 import { formatAmount } from "../../utils/commonFunctions";
 
-const TransactionTable = ({ data, showDeleteHoldingModal, showUpdateHoldingModal, showReplicateHoldingModal }) => {
+const TransactionTable = ({
+  data,
+  showDeleteHoldingModal,
+  showUpdateHoldingModal,
+  showReplicateHoldingModal,
+  darkMode,
+}) => {
   const columns = [
     {
       key: "datetime",
@@ -15,6 +21,17 @@ const TransactionTable = ({ data, showDeleteHoldingModal, showUpdateHoldingModal
         compare: (a, b) => new Date(a?.datetime) - new Date(b?.datetime),
         multiple: 1,
       },
+    },
+    {
+      key: "type",
+      title: "Type",
+      dataIndex: "isInterest",
+      width: "70px",
+      render: (value) => (
+        <Tag color="blue" bordered={!darkMode} style={{ minWidth: "70px", textAlign: "center" }}>
+          {value ? "Interest": "Contribution"}
+        </Tag>
+      ),
     },
     {
       key: "employeeShare",

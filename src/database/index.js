@@ -47,6 +47,11 @@ const createDatabase = async () => {
     },
     employeeProvidentFund: {
       schema: employeeProvidentFundTable,
+      migrationStrategies: {
+        2: (document) => {
+          return { ...document };
+        },
+      },
     },
     settings: {
       schema: settingTable,
