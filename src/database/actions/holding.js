@@ -503,11 +503,12 @@ const getEPFStats = async () => {
     });
 
     for (const transaction of transactions) {
-      employeeShare += transaction?.employeeShare || 0;
-      employerShare += transaction?.employerShare || 0;
-      pensionShare += transaction?.pensionShare || 0;
       if (transaction?.isInterest) {
         interest += transaction?.employeeShare + transaction?.employerShare + transaction?.pensionShare;
+      } else {
+        employeeShare += transaction?.employeeShare || 0;
+        employerShare += transaction?.employerShare || 0;
+        pensionShare += transaction?.pensionShare || 0;
       }
     }
 
@@ -517,7 +518,7 @@ const getEPFStats = async () => {
         employeeShare,
         employerShare,
         pensionShare,
-        interest
+        interest,
       },
     });
   } catch (error) {

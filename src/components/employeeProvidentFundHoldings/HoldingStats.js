@@ -30,16 +30,16 @@ const HoldingStats = ({ data }) => {
       </Col>
       <Col xs={24} sm={12} lg={12} xl={8}>
         <Statistic
-          title="Net Value"
-          value={data?.employeeShare + data?.employerShare + data?.pensionShare || 0}
+          title="Total Interest Earned"
+          value={data?.interest || 0}
           precision={2}
           formatter={(value) => formatAmount(value)}
         />
       </Col>
       <Col xs={24} sm={12} lg={12} xl={8}>
         <Statistic
-          title="Total Interest Earned"
-          value={data?.interest || 0}
+          title="Net Value"
+          value={data?.employeeShare + data?.employerShare + data?.pensionShare + data?.interest || 0}
           precision={2}
           formatter={(value) => formatAmount(value)}
         />
