@@ -493,6 +493,7 @@ const getEPFStats = async () => {
     let employeeShare = 0;
     let employerShare = 0;
     let pensionShare = 0;
+    let interest = 0;
 
     const database = await getDatabase();
     let transactions = await database.employeeProvidentFund.find().exec();
@@ -505,6 +506,9 @@ const getEPFStats = async () => {
       employeeShare += transaction?.employeeShare || 0;
       employerShare += transaction?.employerShare || 0;
       pensionShare += transaction?.pensionShare || 0;
+      if (transaction?.isInterest) {
+        interest += transaction?.employeeShare + transaction?.employerShare + transaction?.pensionShare;
+      }
     }
 
     dispatch({
@@ -513,6 +517,7 @@ const getEPFStats = async () => {
         employeeShare,
         employerShare,
         pensionShare,
+        interest
       },
     });
   } catch (error) {
